@@ -10,8 +10,11 @@
 
 require.config({
 	shim: {
+        'zui':['jquery']
     },
 	paths:{
+		'jquery':'../public/js/jquery.min',
+		'zui':'../public/js/zui',
 		'user':'../user/js/user',
 	},
 	map:{
@@ -21,7 +24,7 @@ require.config({
 	}
 });
 
-require(['jquery','user'],function($,user){
+require(['jquery','zui','user','css!../user/css/user'],function($,zui,user){
 	//入口程序
     user.run();
 });

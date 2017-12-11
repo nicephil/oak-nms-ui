@@ -57,62 +57,62 @@ var optionsConfig = {
 
 
 //接口地址
-var _HOST = 'http://clouddev.oakridge.vip';
+var _HOST = 'http://clouddev.oakridge.vip/nms/';
 
 var _IFA = new Array();
 
 //入口信息
-_IFA['permittedorganization'] = _HOST+'/nms/authority/permittedorganization';
+_IFA['permittedorganization'] = _HOST+'authority/permittedorganization';
 
 //获取用户组--get
-_IFA['groups_list'] = _HOST+'/nms/users/local/groups?org_ids=';
+_IFA['groups_list'] = _HOST+'users/local/groups?org_ids=';
 
 //创建用户组-post
-_IFA['groups_create'] = _HOST+'/nms/users/local/groups';
+_IFA['groups_create'] = _HOST+'users/local/groups';
 
 //更新用户组-put/{id}
-_IFA['groups_update'] = _HOST+'/nms/users/local/groups/';
+_IFA['groups_update'] = _HOST+'users/local/groups/';
 
 //删除用户组-DELETE/{id}
-_IFA['groups_delete'] = _HOST+'/nms/users/local/groups/';
+_IFA['groups_delete'] = _HOST+'users/local/groups/';
 
 //查询用户-GET
-_IFA['user_local'] = _HOST+'/nms/users/local';
+_IFA['user_local'] = _HOST+'users/local';
 
 //创建用户-POST
-_IFA['user_create'] = _HOST+'/nms/users/local';
+_IFA['user_create'] = _HOST+'users/local';
 
 //批量创建用户-POST
-_IFA['user_create_bulk'] = _HOST+'/nms/users/local/bulk';
+_IFA['user_create_bulk'] = _HOST+'users/local/bulk';
 
 //更新用户-PUT{id}
-_IFA['user_update'] = _HOST+'/nms/users/local/';
+_IFA['user_update'] = _HOST+'users/local/';
 
 //批量更新用户-PUT{id}
-_IFA['user_update_bulk'] = _HOST+'/nms/users/local';
+_IFA['user_update_bulk'] = _HOST+'users/local';
 
 //删除用户-DELETE{id}
-_IFA['user_delete'] = _HOST+'/nms/users/local/';
+_IFA['user_delete'] = _HOST+'users/local/';
 
 //批量删除用户-POST
-_IFA['user_delete_bulk'] = _HOST+'/nms/users/local/delete';
+_IFA['user_delete_bulk'] = _HOST+'users/local/delete';
 
 //检查用户是否存在-POST
-_IFA['user_exist'] = _HOST+'/nms/users/local/exist';
+_IFA['user_exist'] = _HOST+'users/local/exist';
 
 //获取用户摘要-GET
-_IFA['user_brief'] = _HOST+'/nms/users/local/brief';
+_IFA['user_brief'] = _HOST+'users/local/brief';
 
 //导入用户-POST
-_IFA['user_import'] = _HOST+'/nms/users/local/import';
+_IFA['user_import'] = _HOST+'users/local/import';
 
 //用户导出-GET
-_IFA['user_export'] = _HOST+'/nms/users/local/export';
+_IFA['user_export'] = _HOST+'users/local/export';
 
 //结果导出-GET
-_IFA['user_export_result'] = _HOST+'/nms/users/local/export/result';
+_IFA['user_export_result'] = _HOST+'users/local/export/result';
 
 //邮件通知
-_IFA['user_notify_email'] = _HOST+'/nms/users/local/notify/email';
+_IFA['user_notify_email'] = _HOST+'users/local/notify/email';
 
 

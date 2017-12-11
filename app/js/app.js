@@ -11,7 +11,7 @@ define(['jquery','global','functions','provide','zui'],function($,_g,_f,provide,
 	//设置全局变量
 	var target = $('#page');
 	
-	//
+	var taskHeight = 0;
 	
 	//初始化布局
 	var initLayout = function(){
@@ -32,6 +32,7 @@ define(['jquery','global','functions','provide','zui'],function($,_g,_f,provide,
 	            'region': taskBlankPos
 	       }); 
         taskBlank.appendTo(target);
+        $('<div class="taskbar-shadow" />').appendTo(target);
         
         //ui布局
     	target.layout();
@@ -48,7 +49,7 @@ define(['jquery','global','functions','provide','zui'],function($,_g,_f,provide,
 		var taskBar = $('<div class="container-fluid"/>');
 		
 		//开始菜单按钮
-		var start = $('<div class="start"><i class="icon-menu"></i></div>'); 
+		var start = $('<div class="refresh"></div><div class="start"></div><div class="start-line"></div>'); 
 		
 		//创建任务区域
 		var taskList = $('<div class="task-content"/>'); 
@@ -57,10 +58,10 @@ define(['jquery','global','functions','provide','zui'],function($,_g,_f,provide,
 	    var rightMenu = $('<div class="task-end right"/>'); 
 	    
 	    //加载右侧工具栏-自定义
-	    var customMenu = $('<div class="shortcut"><span class="icon-task-config"></span><span class="icon-task-number">99</span></div>');
+	    var customMenu = $('<div class="task-end-sep"></div><div class="shortcut"><span class="icon-task-config"></span><span class="icon-task-number">99</span></div>');
 		
 		//加载右侧工具栏-用户
-		var userMenu = $('<div class="shortcut"><span class="icon-task-user"></span><span class="icon-task-downarrow"></span></div>');
+		var userMenu = $('<div class="shortcut btn-task-user"><span class="icon-task-user"></span><span class="icon-task-downarrow"></span></div>');
 		
 		//加载右侧工具栏-中英文
 		var langMenu = $('<div class="shortcut"><span class="icon-task-country"></span><span class="icon-task-downarrow"></span></div>');
@@ -68,6 +69,12 @@ define(['jquery','global','functions','provide','zui'],function($,_g,_f,provide,
 		
 		//载入任务条-开始菜单
 		start.appendTo(taskBar);
+		
+		//内容区域追加到任务栏，返回追加对象
+		var listWrap = taskList.appendTo(taskBar);
+		
+		//追加应用列表
+		var list = $('<ul/>').addClass('app-list-list').appendTo(listWrap);
 		
 		//载入任务条-自定义菜单
 		customMenu.appendTo(rightMenu);
@@ -85,10 +92,52 @@ define(['jquery','global','functions','provide','zui'],function($,_g,_f,provide,
 		taskBar.appendTo(taskBlank);
 	
 	}
+	//添加任务栏站位
+	var appendToList = function(uuid,text){
+		//获取任务栏容器
+		var taskList = $('.task-content');
+		
+		var list = taskList.find('ul.app-list-list');
+		
+		//追加应用到容器
+		var img = '<img src="'+text+'" />';
+		
+		var item = $('<li/>').attr("l_id", uuid).addClass('selected').html(img).attr('status', 'opened');
+		
+		if ($('li[l_id="' + uuid + '"]', list).length) {
+			$('li[l_id="' + uuid + '"]', list).addClass('selected');
+		}else{
+			list.append(item);
+			item.unbind().bind('click',function() {
+				$('div[w_id="' + uuid + '"]').window('open');
+			});
+		}
+		//对容器做事件处理
+		//当窗口关闭时，任务栏应用图标也跟着移出
+		//当窗口放大时，只占用应用容器而不占用整个桌面
+		//当窗口缩小时，改变任务栏的选中状态
+		//当前打开的应用关联任务栏的状态
+	}
+	//删除任务栏站位
+	var removeListItem = function(uuid){
+		var item = $('li[l_id="' + uuid + '"]');
+        var wrap = item.parent().parent();
+        item.remove();
+	}
+	//加载APP
+	var loadApp = function(app,uuid){
+		var rows = $('.app-rows');
+		var element = '<div class="row-element">';
+		element += '<img src="'+app.icon+'" />';
+    	element += '<div class="app-row-text">'+app.title+'</div>';		
+    	element += '</div>';
+    	$(element).appendTo(rows).find('img').click(function(){
+    		$('li[app_id="' + uuid + '"]').click();
+    	});
+	}
 	//初始化桌面
 	var initDesktop = function(){
 		log('初始化桌面');
-
         if (loadUrl.app && !loaded) {
             $.ajax({
                 url: loadUrl.app,
@@ -96,41 +145,37 @@ define(['jquery','global','functions','provide','zui'],function($,_g,_f,provide,
                 async: true,
                 cache: false,
                 success: function(resp) {
+                	$(target).data('apps',resp);
                     initApp(resp);
+                    provide.run();
                 },
                 error: function(XMLHttpRequest, textStatus, errorThrown) {
-                    $.messager.alert("", textStatus || errorThrown, "error");
+                    _alert("", textStatus || errorThrown, "error");
                 }
             });
         }
 		
 		//切换用户模块事件
-		$('.task-end .shortcut:nth-child(2)').click(function(e){
+		$('.btn-task-user .icon-task-user ,.btn-task-user .icon-task-downarrow').click(function(e){
 			if( $('.user-menu').hasClass('none') ){
 				$('.user-menu').removeClass('none');
 			}else{
 				$('.user-menu').addClass('none');
 			}
-			
-			$(document).unbind().bind("click",function(e){
-				if( !$('.user-menu').hasClass('none') ){
-					$('.user-menu').addClass('none');
-				}
-			});
 			e.stopPropagation();
 		});
 		
 		//账号名称
 		$('.user-menu li:nth-child(1)').click(function(){
-			$.messager.alert('信息提示','此功能暂不开放');
+			_alert('此功能暂不开放');
 		});
 		//软件版本
 		$('.user-menu li:nth-child(2)').click(function(){
-			$.messager.alert('信息提示','此功能暂不开放');
+			_alert('此功能暂不开放');
 		});
 		//返回云端
 		$('.user-menu li:nth-child(3)').click(function(){
-			$.messager.alert('信息提示','此功能暂不开放');
+			_alert('此功能暂不开放');
 		});
 		//退出账号
 		$('.user-menu li:nth-child(4)').click(function(){
@@ -138,20 +183,56 @@ define(['jquery','global','functions','provide','zui'],function($,_g,_f,provide,
 		});
 		
 		//加载开始菜单遮罩
-		$('.start .icon-menu').click(function(e){
-			if( $('.wall-mask').hasClass('none') ){
+		$('.start').click(function(e){
+			if($('.wall-mask').hasClass('none') ){
 				$('.wall-mask').removeClass('none');
+				$('.row-element').animate({padding:'10px 30px 30px -30px'},'fast','linear');
+				e.stopPropagation();
 			}else{
+				$('.row-element').animate({padding:'0px'},'fast','swing');
 				$('.wall-mask').addClass('none');
+				e.stopPropagation();
 			}
 			
-			$(document).unbind().bind("click",function(e){
-				if( !$('.wall-mask').hasClass('none') ){
-					$('.wall-mask').addClass('none');
-				}
-			});
-			e.stopPropagation();
+		});
+		
+		//全局处理 other even
+		$(document).unbind().bind("click",function(e){
+			if( !$('.wall-mask').hasClass('none') ){
+				$('.row-element').animate({padding:'0px'},'fast','swing');
+				$('.wall-mask').addClass('none');
+				e.stopPropagation();
+			}
+			if($('.start').hasClass('start-pressed')){
+				$('.start').removeClass('start-hover');
+				$('.start').removeClass('start-pressed');
+				e.stopPropagation();
+			}
+			if( !$('.user-menu').hasClass('none') ){
+				$('.user-menu').addClass('none');
+				e.stopPropagation();
+			}
 			
+			$('.dropdown-menu').addClass('none');
+			$('.btn').removeClass('open');
+		});
+		
+		//开始菜单效果
+		$('.start').mouseenter(function(e){
+			$(this).addClass('start-hover');
+			e.stopPropagation();
+		}).mouseleave(function(e){
+			$(this).removeClass('start-hover');
+			e.stopPropagation();
+		}).mousedown(function(e){
+			if($(this).hasClass('start-pressed')){
+				$(this).removeClass('start-hover');
+				$(this).removeClass('start-pressed');
+			}else{
+				$(this).addClass('start-hover');
+				$(this).addClass('start-pressed');
+			}
+			e.stopPropagation();
 		});
 	}
 	//初始化app
@@ -204,15 +285,20 @@ define(['jquery','global','functions','provide','zui'],function($,_g,_f,provide,
             appItem.data('app', app); 
             
             //指定app的唯一标识
-            appItem.attr("app_id", UUID()); 
-
+            var uuid = UUID();
+            appItem.attr("app_id", uuid); 
+            loadApp(app,uuid);
+            console.log(app);
             appItem.css({
                 left: left,
                 top: top
             });
 			
+			var wrap = $('<span class="'+app.class+'"/>');
+			
 			//设置应用图片宽高
-            var icon = $('<img/>').height(iconSize+1).width(iconSize).attr('src', app.icon).appendTo(appItem);
+            var icon = $('<img/>').height(iconSize+1).width(iconSize).attr('src', app.icon);
+            wrap.appendTo(appItem).append(icon);
             
             //设置应用标题
             var text = $('<span/>').text(app.title).appendTo(appItem);
@@ -299,7 +385,8 @@ define(['jquery','global','functions','provide','zui'],function($,_g,_f,provide,
         appItem.draggable({
             revert: true,
             cursor: "pointer",
-            onStopDrag:function(e){
+            onBeforeDrag:function(e){
+            	return false;
             }
         }).droppable({
             onDrop: function(e, source) {
@@ -310,9 +397,7 @@ define(['jquery','global','functions','provide','zui'],function($,_g,_f,provide,
                 }
                 setTimeout(function() {
                     //appReset(target);
-                },
-                0);
-                
+                },0);
             },
             accept: '.app-container li'
         });
@@ -326,7 +411,7 @@ define(['jquery','global','functions','provide','zui'],function($,_g,_f,provide,
 	var openApp = function(options){
 		log('打开app');
 		if(target.data('org')==undefined){
-			$.messager.alert('消息提示','未获取site访问权限!','error');
+			_alert('未获取site访问权限!');
 			return false;
 		}
 		
@@ -351,9 +436,61 @@ define(['jquery','global','functions','provide','zui'],function($,_g,_f,provide,
 		
 		//定义默认事件
 		var defaultRequiredConfig = {
-			onClose:function(){
-				//$(this).window("destroy");
-			}
+			inline: true,
+	        	cache: false,
+				onClose:function(){
+				removeListItem($(this).attr('w_id'));
+			},
+			onOpen:function(){
+				var opts = $.data(this, 'panel').options;
+				
+				//追加任务栏图标
+				appendToList($(this).attr('w_id'), appOpt.taskIcon);
+				
+				//打开窗口后居中
+				//$(this).window('center');
+			},
+			onMinimize: function() {
+                if ($(this).prev('.window-header').find('.panel-tool-restore').length == 1) {
+                    var opts = $.data(this, 'panel').options;
+                    opts.maximized = true;
+                }
+                //添加任务栏关闭状态
+                $('li[l_id="' + $(this).attr('w_id') + '"]').attr('status', 'closed');
+                
+                //当发生缩小事件时，清除任务栏状态
+                $('li[l_id="' + $(this).attr('w_id') + '"]').removeClass('selected');
+            },
+            onMove:function(left,top){
+            	var opts = $.data(this, 'panel').options;
+            	if(top < taskHeight) {
+                    $(this).window("move", {
+                        "left": left,
+                        "top": 1
+                    });
+                }else if(opts.maximized) {
+                    $(this).window("restore");
+                }
+            },
+            onMaximize:function(){
+            	target.layout('panel', 'center').parent('.layout-panel').css('top','40px');
+            },
+            onResize:function(width,height){
+            	if(width<850){
+        			$(this).window('resize',{
+        				width:850,
+        				height:height
+        			});
+            	}
+            	if(height<500){
+            		$(this).window('resize',{
+            				width:width,
+            				height:500
+            		});
+            	}
+            },onClose:function(){
+            	$(this).window("destroy");
+            }
 		}
 		
 		//合并窗口参数
@@ -423,13 +560,18 @@ define(['jquery','global','functions','provide','zui'],function($,_g,_f,provide,
 	        },
 	        500);
 	        
+	        //加载显示桌面事件
+	        var refreshDesktop = $('.refresh').click(function(){
+	        	$('div[w_id^="UUID"]').window('minimize');
+	        });
+	        
 	        //初始化接口信息
 	        var url = _IFA['permittedorganization'];
            _ajax(url,'get','',function(resp){
            		target.data('org',resp);console.log(resp);
            },function(error){
            	    if(error.readyState<4){
-           	    	$.messager.alert('消息提示','获取bussiness信息失败,请登录云端系统！','error');
+           	    	_alert('获取bussiness信息失败,请登录云端系统！','error');
            	    	window.open(" http://clouddev.oakridge.vip/nms/authority");
            	    	return false;
            	    };

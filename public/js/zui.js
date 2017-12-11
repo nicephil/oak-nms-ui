@@ -2757,8 +2757,8 @@ define(['jquery'],function($){
 		top-=tip._outerHeight()+12+(opts.trackMouse?12:0);
 		break;
 		case "bottom":
-		left-=(tip._outerWidth()-t._outerWidth())/2;
-		top+=t._outerHeight()+12+(opts.trackMouse?12:0);
+		left-=(tip._outerWidth()-t._outerWidth())/2-50;
+		top+=t._outerHeight()+12+(opts.trackMouse?12:0)-5;
 		break;
 		}
 		return {left:left,top:top};

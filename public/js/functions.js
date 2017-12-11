@@ -139,6 +139,15 @@ var _ajax = function(url,type,data,func,error){
     });
 }
 
+//生成uuid
+var createId = function(){
+	function S4() {
+            return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+        }
+
+    return "UUID-" + (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
+}
+
 //消息提示
 var messager = function(msg,title,showType){
 	if(title=='' || title==undefined){
@@ -151,6 +160,35 @@ var messager = function(msg,title,showType){
 		title:title,
 		msg:msg,
 		showType:showType
+	});
+}
+var _confirm = function(title, msg, fn){
+	$.extend($.messager.defaults,{
+        ok:"确定",
+        cancel:"取消"
+    });
+	$.messager.confirm(title,msg,fn);
+}
+
+//弹窗提示
+var _alert = function(msg,title,icon,fn){
+	$.extend($.messager.defaults,{
+        ok:"确定",
+        cancel:"取消"
+    });
+	if(title=='' || title==undefined){
+		title="消息提示";
+	}
+	
+	if(icon=='' || icon==undefined){
+		icon='info';
+	}
+	
+	$.messager.alert({
+		title:title,
+		msg:msg,
+		icon:icon,
+		fn,fn
 	});
 }
 
@@ -222,3 +260,55 @@ var getRandomInt = function(n){
 	rnd+=Math.floor(Math.random()*10);   
 	return rnd;   
 } 
+//验证mac地址
+var isMac = function(val){
+	if(val=='' || val==undefined){
+		return true;
+	}
+	var mac_rule = /[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}/;
+    if(!mac_rule.test(val))
+    {
+        return false;
+    }else{
+    	return true;
+    }
+}
+//验证手机
+var checkPhone = function(phone){
+	var me = /^1[34578]\d{9}$/;
+    if (me.test(phone) == false || me.test(phone) == undefined) {
+        return false;
+    }
+    return true;
+}
+//验证邮箱
+var checkEmail = function(email){
+	var me = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/ ;
+	if (me.test(email) == false || me.test(email) == undefined) {
+        return false;
+    }
+    return true;
+}
+//验证IP
+var isIp = function(strIP) {
+    if (!strIP) return false;
+    var re=/^(\d+)\.(\d+)\.(\d+)\.(\d+)$/g //匹配IP地址的正则表达式
+    if(re.test(strIP))
+    {
+    if( RegExp.$1 <256 && RegExp.$2<256 && RegExp.$3<256 && RegExp.$4<256) return true;
+    }
+    return false;
+}
+/*
+ * 名称:关闭当前多余的窗口
+ * @param
+ * @return
+ * */
+var onOpenDelete = function (name) {
+    if(name == undefined){
+        return false;
+    }
+    if($(name+':eq(1)')){
+        $(name+':eq(1)').window('destroy');
+    }
+};

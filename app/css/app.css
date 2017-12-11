@@ -29,6 +29,20 @@ a:hover{
 	text-indent: 5px;
 }
 
+.w-sep{
+	width:18px;
+}
+.w-top{
+	width:20px;
+}
+
+.transparent {
+	background: transparent;
+}
+
+.over-hide{
+	overflow: hidden;
+}
 label{
 	font-size:14px;
 }
@@ -67,6 +81,7 @@ label{
 #page{
 	background-image:url(../images/bj.jpg);
 	background-size:cover;
+	background-position: center;
 }
 /*-----通用-----*/
 .dropdown-menu li:hover{
@@ -83,66 +98,121 @@ label{
     top: 39px;
     z-index: 999999;
 }
+.wall-mask .app-rows{
+	width:65%;
+	margin:70px auto;
+}
+.wall-mask .app-rows .row-element{/*136*100*/
+	width:100px;height:64px;float:left;
+	padding-top:20px;
+	text-align: center;
+}
+.wall-mask .app-rows .row-element img:hover{
+	cursor: pointer;
+}
+.wall-mask .app-rows .app-row-text{
+	color: #ffffff;
+    text-shadow: 1px 2px 3px #000000;
+    font-size: 16px;
+	
+}
 /*-----/通用-----*/
 
 /*-----task-----*/
 .topbar{
-	height:48px;
+	height:39px;
 	min-width:600px;
 	width: 100%;
 	position: relative;
 	background: url(../images/taskbar-bj.png) repeat-x;
 }
+.taskbar-shadow{
+	width: 100%;
+    height: 4px;
+    position: absolute;
+    top: 39px;
+    background: url(../images/taskbar_shadow.png) repeat-x;
+}
 .topbar .container-fluid{
-	padding: 0px 36px 0px 22px;
+	padding: 0px 22px 0px 0px;
+}
+.topbar .refresh{
+	width: 22px;
+    height: 39px;
+    float: left;
+    background: url(../images/sprite-bj.png) no-repeat 0px -96px;
+}
+.topbar .refresh:hover{
+	cursor: pointer;
+    background-position: 0px -135px;
 }
 .topbar .start{
-	width:126px;
-	height: 48px;
+	width:89px;
+	height: 39px;
 	float: left;
-	background: url(../images/start-bj.png) no-repeat center center;	
+	background: url(../images/sprite-bj.png) no-repeat 0px -252px;	
 }
-.topbar .start .icon-menu{
-	width: 126px;
-	height: 40px;
-	display: inline-block;
-	background: url(../images/s-menu.png) no-repeat center center;		
+.topbar .start-line{
+	width:8px;
+	height: 39px;
+	float: left;
+    background: transparent no-repeat;
+    background-image: url(../images/sprite-bj.png);
+    background-position: 0 -369px;
 }
 .topbar .start:hover{
 	cursor: pointer;
 }
-.topbar .start .icon-menu:hover{
-	width: 126px;
-	height: 40px;
-	display: inline-block;
-	background: url(../images/s-menu-hover.png) no-repeat center center;		
+.topbar .start-hover{
+	background-position: 0 -291px;
+}
+.topbar .start-pressed{
+	background-position: 0 -330px;
+}
+.topbar .task-end-sep{
+	background: no-repeat;
+    background-image: url(../images/sprite-bj.png);
+    background-position: 0 -603px;
+    width: 2px;
+    height: 33px;
+    float: left;
+    position: relative;
+    top: 6px;
 }
 .topbar .task-content{
-	height: 40px;
-	line-height: 40px;
+	height: 39px;
+	line-height: 39px;
 	float:left;
-	margin-left:15px;
+	min-width: 100px;
 }
-.topbar .task-content .app-task-block{
+.topbar .task-content .app-list-list{
 	height:39px;
-	width: 63px;
-	float: left;
-	background: url(../images/app-task-bj.png) no-repeat center center;
 }
-.topbar .task-content .app-task-block .icon-user{
-	height: 40px;
-	width: 63px;
-	display: inline-block;
-	background: url(../images/icon-user.png) no-repeat center center;		
+.topbar .task-content .app-list-list li{
+	float:left;
+	height: 39px;
+    width: 62px;
+    text-align: center;
+    background: transparent no-repeat;
+    background-image: url(../images/sprite-bj.png);
+    background-position: -124px -213px;
+}
+.topbar .task-content .app-list-list li:hover{
+	cursor: pointer;
+}
+.topbar .task-content .app-list-list li img{
+	vertical-align: middle;
+	width:32px;
+	height:32px;
 }
 .topbar .task-end{
-	width:204px;
+	width:190px;
 	height: 39px;
 	line-height: 39px;
 	float: right;
 }
 .topbar .task-end .shortcut{
-	width:68px;
+	width:62px;
 	height: 39px;
 	line-height: 39px;
 	float: left;
@@ -153,14 +223,14 @@ label{
 	height: 39px;
 	line-height: 39px;
 	width:48px;
-	display: inline-block;
+	display: block;
 	background: url(../images/icon-task-config.png) no-repeat center center;
 }
 .topbar .task-end .shortcut .icon-task-number{
 	height: 20px;
 	line-height: 20px;
 	width:20px;
-	display: inline-block;
+	display: block;
 	position: absolute;
 	top:2px;
 	left:34px;
@@ -208,7 +278,7 @@ label{
 .topbar .task-end .shortcut .icon-task-downarrow{
 	height: 39px;
 	line-height: 39px;
-	width:23px;
+	width:12px;
 	display: inline-block;float:left;
 	background: url(../images/icon-task-down-arrow.png) no-repeat center center;
 }
@@ -441,7 +511,7 @@ label{
 }
 /*覆盖分页*/
 .pagination-wrap{
-	width:95%;margin:0px auto;border-top: 1px solid #e2e2e3;
+	margin:0px auto;border-top: 1px solid #e2e2e3;
 }
 .pagination>li>a, .pagination>li>span{
  	color:#4f5358;

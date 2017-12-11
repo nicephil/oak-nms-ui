@@ -8,80 +8,106 @@
 </head>
 <body>
 <!-- 用户模块 -->
-    <div class="app-user-window">
-        <!-- 伸展 -->
-        <div class="win-nav">
-            <div class="left-menu">
-                <div class="btn-to-collect"><img src="user/images/icon-collect.png" /></div>
-                <a href="#" class="btn btn-create-group" >新增</a>
-                <div class="btn-group">
-                  <a class="btn btn-menu-more" href="#">更多<span class="caret"></span></a>
-                  <ul class="dropdown-menu none">
-                    <li class="btn-update-group">修改</li>
-                    <li class="btn-delete-group">删除</li>
-                    <li class="btn-import-user">导入</li>
-                    <li class="last btn-export-user">导出</li>
-                  </ul>
-                </div>
-            </div>
-            <div class="nav-home-title"></div>
-            <div class="nav-segment"></div>
-            <ul class="group-list">
-            </ul>
-        </div>
-        <!-- 折叠 -->
-        <div class="win-nav-small">
-            <ul>
-                <li class="btn-to-expand"><img src="user/images/icon-expand.png" /></li>
-                <li class="btn-add-group"><img src="user/images/icon-add.png" /></li>
-                <li><img src="user/images/icon-more.png" /></li>
-            </ul>
-        </div>
-        <div class="win-content">
-            <div class="right-menu">
-                <div class="btn-group">
-                  <a class="btn btn-menu-user-create" href="#">
-                    新增
-                    <span class="caret"></span>
-                  </a>
-                  <ul class="dropdown-menu none" >
-                    <li class="btn-new-user">逐条新增</li>
-                    <li class="last btn-batch-new-user">批量新增</li>
-                  </ul>
-                </div>
-                <a class="btn lpx15 btn-edit btn-edit-user" href="#">编辑</a>
-                <div class="btn-group lpx15">
-                  <a class="btn btn-menu-user-more" data-toggle="dropdown" href="#">更多<span class="caret"></span></a>
-                  <ul class="dropdown-menu none">
-                    <li class="btn-enable-user">启用</li>
-                    <li class="btn-disable-user">禁用</li>
-                    <li class="btn-notice-user">通知</li>
-                    <li class="last btn-delete-user">删除</li>
-                  </ul>
-                </div>
-                
-                
-                  <!-- search -->
-                  <input type="text" class="input-search" placeholder="">
-                  <span class="icon-magnifier btn-search-user"></span>
-            </div>
-            <div class="app-table">
-				<table class="tb table-user">
-				</table>
-            </div>
-            <!-- 分页 -->
-            <footer>
-	            <div class="pagination-wrap">
-	            	<div id="pagination_user"></div>
-	            </div>
-            </footer>
-            
-
-        </div>
-    </div>
-    <!-- /用户模块 -->
+ <div id="app-user-layout" class="easyui-layout" fit="true">
+ 	<!--左侧布局-->
+ 	<div data-options="region:'west',border:false" class="user-region-west">
+ 		<div class="easyui-layout app-left" fit="true" class="transparent">
+			<div data-options="region:'north',border:false" class="w-top transparent"></div>
+			<div data-options="region:'east',border:false" class="w-sep transparent"></div>
+			<div data-options="region:'south',border:false" class="transparent"></div>
+			<div data-options="region:'center',border:false" class="transparent over-hide ncenter">
+				<!-- 伸展 -->
+		        <div class="win-nav">
+		            <div class="left-menu">
+		                <div class="btn-to-collect"><img src="user/images/icon-collect.png" /></div>
+		                <a href="#" class="btn btn-create-group" >新增</a>
+		                <div class="btn-group">
+		                  <a class="btn btn-menu-more" href="#">更多<span class="caret"></span></a>
+		                  <ul class="dropdown-menu none">
+		                    <li class="btn-update-group">修改</li>
+		                    <li class="btn-delete-group">删除</li>
+		                    <li class="btn-import-user">导入</li>
+		                    <li class="last btn-export-user">导出</li>
+		                  </ul>
+		                </div>
+		            </div>
+		            <div class="nav-home-title"></div>
+		            <div class="nav-segment"></div>
+		            <ul class="group-list">
+		            </ul>
+		        </div>
+		        <!-- 折叠 -->
+		        <div class="win-nav-small">
+		            <ul>
+		                <li class="btn-to-expand"><img src="user/images/icon-expand.png" /></li>
+		                <li class="btn-add-group"><img src="user/images/icon-add.png" /></li>
+		                <li class="btn-import-export" style="position: relative;">
+		                	<img src="user/images/icon-more.png" />
+		                	<ul class="dropdown-menu-left none" style="position: absolute;">
+			                    <li class="btn-import-user">导入</li>
+			                    <li class="last btn-export-user">导出</li>
+			                  </ul>
+		                </li>
+		            </ul>
+		        </div>
+			</div>
+		</div>
+ 	</div>
+ 	<!--右侧布局-->
+	<div data-options="region:'center',border:false" class="user-region-center">
+		<div class="easyui-layout app-right"  fit="true">
+			<div data-options="region:'north',border:false" class="w-top transparent"></div>
+			<div data-options="region:'west',border:false" class="w-sep transparent"></div>
+			<div data-options="region:'east',border:false" class="w-sep transparent"></div>
+			<div data-options="region:'center',border:false" class="transparent" style="position:relative;overflow:hidden;">
+				<div class="win-content">
+		            <div class="right-menu">
+		                <div class="btn-group">
+		                  <a class="btn btn-menu-user-create" href="#">
+		                    新增
+		                    <span class="caret"></span>
+		                  </a>
+		                  <ul class="dropdown-menu none" >
+		                    <li class="btn-new-user">逐条新增</li>
+		                    <li class="last btn-batch-new-user">批量新增</li>
+		                  </ul>
+		                </div>
+		                <a class="btn lpx15 btn-edit btn-edit-user" href="#">编辑</a>
+		                <div class="btn-group lpx15">
+		                  <a class="btn btn-menu-user-more" data-toggle="dropdown" href="#">更多<span class="caret"></span></a>
+		                  <ul class="dropdown-menu none">
+		                    <li class="btn-enable-user">启用</li>
+		                    <li class="btn-disable-user">禁用</li>
+		                    <li class="btn-notice-user">通知</li>
+		                    <li class="last btn-delete-user">删除</li>
+		                  </ul>
+		                </div>
+		                
+		                
+		                  <!-- search -->
+		                  <input type="text" class="input-search" placeholder="">
+		                  <span class="icon-magnifier btn-search-user"></span>
+		            </div>
+		            <div class="app-table">
+						<table class="easyui-datagrid tb table-user" style="height:450px;overflow: hidden;">
+						</table>
+		            </div>
+		            <!-- 分页 -->
+		            <footer>
+			            <div class="pagination-wrap">
+			            	<div id="pagination_user"></div>
+			            </div>
+		            </footer>
+		            
+		
+		        </div>
+			</div>
+		</div>
+	</div>
+ </div>  
+<!-- /用户模块 -->
     <!--用户组新增、修改-->
-    <div id="win-create-group" style="display: none;">
+    <div id="win-create-group" class="win-create-group none">
     	<div class="user-box">
 			<form method="post" action="" id="create-user-group">
 				<div class="cont-box03">
@@ -107,7 +133,7 @@
     </div>
     <!--/用户组新增、修改-->
     <!--用户导入-->
-    <div id="win-import-user" style="display: none;">
+    <div id="win-import-user" class="win-import-user none">
 	    <div class="user-box">
 			<form method="post" action="" id="import-user-form">
 				<div class="cont-box02">
@@ -144,7 +170,7 @@
     <!--/用户导入-->
     
     <!--导出用户-->
-    <div id="win-export-user" style="display: none;">
+    <div id="win-export-user" class="win-export-user none">
     	<div class="user-box">
 			<form method="post" action="">
 				<div class="cont-box02">
@@ -163,38 +189,43 @@
     <!--/导出用户-->
     
     <!--逐条新增-->
-    <div id="win-add-user" style="display: none;">
+    <div id="win-add-user" class="win-add-user none">
     	<div class="user-box">
 			<form method="post" action="" id="create-user">
 				<div class="cont-box">
 					<div class="cont-title">基本信息</div>
 					<div class="cont-cont">
-						<div class="input-box">
+						<div class="input-box validate-name">
 							<div class="input-left">姓名：</div>
-							<input type="text" name="first_name" class="input-text input-selected indent5"/><!-- input-selected为点击选中的样式 -->
+							<input type="text" name="first_name" class="input-text input-selected indent5 name"/><!-- input-selected为点击选中的样式 -->
+							<span class="error-name"><!--获取焦点，准备输入文字--></span>
 						</div>
-						<div class="input-box" style="height:54px">
+						<div class="input-box validate-email"  style="height:54px">
 							<div class="input-boxBox">
 								<div class="input-left">邮箱：</div>
-								<input type="text" name="email" class="input-text indent5"/><!-- input-selected为输入错误的样式 -->
+								<input type="text" name="email" class="input-text indent5 email"/><!-- input-selected为输入错误的样式 -->
+								
+								<span class="error-email"><!--获取焦点，准备输入文字--></span>
 							</div>
 							
 						</div>
-						<div class="input-box">
+						<div class="input-box validate-phone">
 							<div class="input-left">手机号：</div>
 							<div class="input-boxBox01">
 								<select class="select-box" id="select-box-mobile" name="country_code">
 									<option value="+86" selected="selected">+86</option>
 									<option value="+1">+1</option>
 								</select>
-								<input type="text" name="phone" class="input-text01 indent5"/>
+								<input type="text" name="phone" class="input-text01 indent5 phone"/>
+								<span class="error-phone"><!--获取焦点，准备输入文字--></span>
 							</div>
 						</div>
-						<div class="input-box">
+						<div class="input-box validate-password">
 							<div class="input-left">密码：</div>
 							<div class="input-boxBox01">
-								<input type="password" name="password" class="input-text01 indent5"/>
+								<input type="text" name="password" class="input-text01 indent5 password"/>
 								<div class="refresh"></div>
+								<span class="error-password"><!--获取焦点，准备输入文字--></span>
 							</div>
 						</div>
 					</div>
@@ -209,17 +240,19 @@
 							<div class="input-left01">账户有效时间：</div>
 							<div class="input-boxBox02">
 								<div class="choice choice-selected">
-									<label><input name="select_expire" checked="checked" type="radio" value="0" />从不过期 </label>
+									<label><input name="select_expire" class="select-time-no"  checked="checked" type="radio" value="0" />
+										<span class="select-time-no-text">从不过期 </span>
+									</label>
 								</div>
 								<div class="choice choice-noselected">
 									<input name="select_expire" class="select-radio" type="radio" value="1" />
+									<span class="time-box-time">过期时间</span>
 									<div class="select-div">
 										<div class="select-date"></div>
 										<input id="user-timer" type="text" style="width:178px" name="expire_at">
 									</div>
 								</div>
-								
-								<div class="choice choice-noselected">
+								<div class="choice choice-noselected" style="display: none;">
 									<label><input name="select_expire" type="radio" value="-1" />过期</label>
 								</div>
 							</div>
@@ -238,9 +271,90 @@
     </div>
     <!--/逐条新增-->
     
+    <!--逐条修改-->
+    <div id="win-update-user" class="win-update-user none">
+    	<div class="user-box">
+			<form method="post" action="" id="update-user">
+				<div class="cont-box">
+					<div class="cont-title">基本信息</div>
+					<div class="cont-cont">
+						<div class="input-box validate-name">
+							<div class="input-left">姓名：</div>
+							<input type="text" name="first_name" class="input-text input-selected indent5 name"/><!-- input-selected为点击选中的样式 -->
+							<span class="error-name"><!--获取焦点，准备输入文字--></span>
+						</div>
+						<div class="input-box validate-email"  style="height:54px">
+							<div class="input-boxBox">
+								<div class="input-left">邮箱：</div>
+								<input type="text" name="email" class="input-text indent5 email"/><!-- input-selected为输入错误的样式 -->
+								<span class="error-email"><!--获取焦点，准备输入文字--></span>
+							</div>
+						</div>
+						<div class="input-box validate-phone">
+							<div class="input-left">手机号：</div>
+							<div class="input-boxBox01">
+								<select class="select-box" id="select-box-update-mobile" name="country_code">
+									<option value="+86" selected="selected">+86</option>
+									<option value="+1">+1</option>
+								</select>
+								<input type="text" name="phone" class="input-text01 indent5 phone"/>
+								<span class="error-phone"><!--获取焦点，准备输入文字--></span>
+							</div>
+						</div>
+						<div class="input-box validate-password">
+							<div class="input-left">密码：</div>
+							<div class="input-boxBox01">
+								<input type="text" name="password" class="input-text01 indent5 password"/>
+								<div class="refresh"></div>
+								<span class="error-password"><!--获取焦点，准备输入文字--></span>
+							</div>
+						</div>
+					</div>
+
+					<div class="cont-title margin-top10">设置</div>
+					<div class="cont-cont">
+						<div class="input-box margin-top30">
+							<div class="input-left">用户组：</div>
+							<input id="select-update-user-group" name="group_id" value="">
+						</div>
+						<div class="input-box  margin-top30 padding-bottom30">
+							<div class="input-left01">账户有效时间：</div>
+							<div class="input-boxBox02">
+								<div class="choice choice-selected">
+									<label><input name="select_expire" class="select-time-no"  type="radio" value="0" />
+										<span class="select-time-no-text">从不过期 </span>
+									</label>
+								</div>
+								<div class="choice choice-noselected">
+									<input name="select_expire" class="select-radio" type="radio" value="1" />
+									<span class="time-box-time">过期时间</span>
+									<div class="select-div">
+										<div class="select-date"></div>
+										<input id="user-update-timer" type="text" style="width:178px" name="expire_at">
+									</div>
+								</div>
+								
+								<div class="choice choice-noselected" style="display: none;">
+									<label><input name="select_expire" type="radio" value="-1" />过期</label>
+								</div>
+							</div>
+						</div>
+					</div>					
+				</div>
+				<div class="user-footer">
+					<div class="button btn-pre" style="float: left;">上一条</div>
+					<div class="button btn-next" style="float: left;">下一条</div>
+					<div class="but-conserve conserve-hover" style="float: right;">保存</div>
+					<div class="button window-close" style="float: right;">退出</div>
+				</div>
+			</form>
+		</div>
+    </div>
+    <!--/逐条修改-->
+    
     
     <!--批量新增-->
-    <div id="win-add-batch-user" style="display: none;">
+    <div id="win-add-batch-user" class="win-add-batch-user none">
     	<div class="user-box">
 			<form method="post" action="" id="create-user-batch">
 				<div class="cont-box">
@@ -282,14 +396,11 @@
 								</div>
 								<div class="choice choice-noselected">
 									<input name="select_expire" class="select-radio" type="radio" value="1" />
+									<span class="time-box-time">过期时间</span>
 									<div class="select-div">
 										<div class="select-date"></div>
 										<input id="user-batch-timer" type="text" style="width:178px" name="expire_at">
 									</div>
-								</div>
-								
-								<div class="choice choice-noselected">
-									<label><input name="select_expire" type="radio" value="-1" />过期</label>
 								</div>
 							</div>
 						</div>
@@ -306,7 +417,7 @@
     </div>
     <!--/批量新增-->
     <!--批量修改用户-->
-    <div id="win-update-batch-user">
+    <div id="win-update-batch-user" class="win-update-batch-user none">
     	<div class="user-box">
 			<form method="post" action="" id="form-batch-update-user">
 				<div class="cont-box02">
@@ -327,11 +438,11 @@
 							<div class="top-box">密码重置：</div>
 							<div class="bottom-box">
 								<div class="choice01 choice-selected01">
-									<label><input type="radio" value="1" checked="checked" name="select_reset_password" />指定密码</label>
+									<label><input type="radio" value="1" checked="checked" name="select_reset_password"  />指定密码</label>
 								</div>
-								<input type="password" name="reset_password_value" class="input-text02"/>
+								<input type="text" name="reset_password_value" class="input-text02"/>
 								<div class="choice01 choice-noselected01" style="float: right;">
-									<label><input type="radio" value="2" name="select_reset_password" />随机密码</label>
+									<label><input type="radio" value="2" name="select_reset_password" class="select_reset_password" />随机密码</label>
 								</div>
 							</div>
 						</div>
@@ -343,13 +454,11 @@
 									</div>
 									<div class="choice01 choice-noselected01" style="margin-left: 34px;">
 										<input name="select_expire" class="select-radio" type="radio" value="1" />
+										<span class="time-box-time">过期时间</span>
 											<div class="select-div">
 												<div class="select-date"></div>
 												<input id="user-resetpassword-timer" type="text" style="width:178px" name="expire_at">
 											</div>
-									</div>
-									<div class="choice01 choice-noselected01" style="float: right;">
-										<label><input name="select_expire" type="radio" value="-1" />过期</label>
 									</div>
 								</div>
 							</div>
@@ -366,7 +475,7 @@
     </div>
     
     <!--用户通知-->
-    <div id="win-notice-user">
+    <div id="win-notice-user" class="win-notice-user none">
     	<div class="user-box">
 			<form method="post" action="" id="form-notice-user">
 				<div class="cont-box03">
@@ -399,7 +508,7 @@
 						</div>
 						<div class="notice-contBox">
 							<div class="notice-choiceOne notice-choiceOne-selected">定制通知内容</div>
-							<textarea class="notice-textarea" name="content" placeholder="欢迎使用Oakridge网络！您的wifi登录账号是#email#，您的初始密码是#password#。你可以在连接网络后，通过登录“http：//pwd.me”，来更改您的密码。"></textarea>
+							<textarea class="notice-textarea" name="content" >欢迎使用Oakridge网络！您的wifi登录账号是#email#，您的初始密码是#password#。你可以在连接网络后，通过登录“http：//pwd.me”，来更改您的密码。</textarea>
 						</div>
 					</div>
 				</div>
@@ -412,7 +521,7 @@
     <!--/用户通知-->
     
     <!--导入用户结果-->
-    <div id="win-import-user-result">
+    <div id="win-import-user-result" class="win-import-user-result none">
     	<div class="user-box">
 			<form method="post" action="">
 				<div class="cont-box01">
@@ -434,7 +543,6 @@
 		</div>
     </div>
     <!--/导入用户结果-->
-</div>
 <script src="./user/js/main.js" ></script>
 </body>
 </html>

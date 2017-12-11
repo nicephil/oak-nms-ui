@@ -10,6 +10,9 @@
 //定义引导配置文件文件
 require.config({
 	baseUrl:'./js',
+	shim: {
+        'zui':['jquery']
+    },
 	paths:{
 		'jquery':'../public/js/jquery.min',
 		'zui':'../public/js/zui',

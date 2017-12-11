@@ -40,9 +40,9 @@ define(['jquery','functions'],function($,_f){
         		}
         	}
         },
-		{field:'email',title:'邮箱',sortable:true,align:'center'},
-		{field:'phone',title:'电话',sortable:true,align:'center'},
-		{field:'first_name',title:'姓名',sortable:true,align:'center'},
+		{field:'email',title:'邮箱',width:140,sortable:true,align:'center'},
+		{field:'phone',title:'电话',width:140,sortable:true,align:'center'},
+		{field:'first_name',title:'姓名',width:160,sortable:true,align:'center'},
 		{field:'expire_at',title:'过期',sortable:true,align:'center',formatter:
 			function(value,row,index){
 				if(value>0){
@@ -104,10 +104,8 @@ define(['jquery','functions'],function($,_f){
 	}
 	/*调整树结构样式*/
 	var adjustTreeStyle = function(obj){
-		var appLeft = $('.app-left').layout('panel','center');
-		var height = $(appLeft).panel('options').height;
 		obj.css({
-				'height':height-140+'px',
+			    'height': '70%',
 			    'overflow-y': 'auto',
 			    'overflow-x': 'hidden'
 		});
@@ -145,9 +143,7 @@ define(['jquery','functions'],function($,_f){
 					}
 				});
 			}
-			
 		});
-		
 	}
 	
 	/*获取用户组*/
@@ -204,11 +200,7 @@ define(['jquery','functions'],function($,_f){
 				$(table).datagrid({
 					data:data.list,
 					columns:columns,
-					fit:true,
 					fitColumns:true,
-					scrollbarSize:0,
-					resizable:false,
-					striped:true,
 					onBeforeLoad:function(param){
 						
 					},
@@ -389,29 +381,43 @@ define(['jquery','functions'],function($,_f){
 				return new Date();
 			}
 		}
-		$.each(timerIds,function(index,val){
-
-			
-			//载入时间插件
-			$(val).datetimebox({
-			    required: true,
-			    value:getNowTimer(),
-			    showSeconds: true,
-			    okText:'确认',
-			    currentText:'今天',
-			    closeText:'关闭',
-			    height:'28',
-			    panelWidth:'218',
-			    onShowPanel:function(){
-			    	
-			    }
+		if(timerIds!=undefined){
+			$.each(timerIds,function(index,val){
+				//载入时间插件
+				$(val).datetimebox({
+				    required: true,
+				    value:getNowTimer(),
+				    showSeconds: true,
+				    okText:'确认',
+				    currentText:'今天',
+				    closeText:'关闭',
+				    height:'28',
+				    panelWidth:'218',
+				    onShowPanel:function(){
+				    	
+				    }
+				});
+				
+				//载入时间插件
+				$(val).datetimebox({
+				    required: true,
+				    value:getNowTimer(),
+				    showSeconds: true,
+				    okText:'确认',
+				    currentText:'今天',
+				    closeText:'关闭',
+				    height:'28',
+				    panelWidth:'218',
+				    onShowPanel:function(){
+				    	
+				    }
+				});
+				
+				/*调整时间位置*/
+				var panel = $(val).datetimebox('panel');
+				$(panel).parent('.combo-p').addClass('adjust-timer');
 			});
-			
-			/*调整时间位置*/
-			var panel = $(val).datetimebox('panel');
-			$(panel).parent('.combo-p').addClass('adjust-timer');
-		});
-		
+		}
 		
 	}
 	/*转换时间戳*/
@@ -445,12 +451,6 @@ define(['jquery','functions'],function($,_f){
 		  		active:row.active
 		  	});	
 		  	$(table).datagrid('refreshRow',index);
-		  	if(data.error_code==0){
-					messager('操作成功');
-				loadTable();
-			}else{
-				messager(data.error_message);
-			}
 		});
 	  }
 	/*获取所有和更新过的用户数*/
@@ -468,7 +468,7 @@ define(['jquery','functions'],function($,_f){
 		org_ids = getOrg(target.data('org')).parent;
 		
 		//初始化时间格式
-		initDateTimer(['#user-timer','#user-update-timer','#user-batch-timer','#user-resetpassword-timer']);
+		initDateTimer(['#user-timer','#user-batch-timer','#user-resetpassword-timer']);
 	}
 	
 	/*增加新的用户记录*/
@@ -489,122 +489,18 @@ define(['jquery','functions'],function($,_f){
 	    });
 	}
 	
-	/*监听面板调整*/
-	var listPanel = function(){
-		//调整左侧树的滚动条
-		var center = $('#app-user-layout').layout('panel','center');
-		var appRight = $('.app-right').layout('panel','center');
-		$(center).panel({
-			onResize:function(width,height){
-				var h = height-150;
-				$('.user-region-west .win-nav').css({
-					height:h+'px'
-				});
-				//控制表格
-				$('.app-table').css({
-					height:h-20+'px',
-					'overflow-y':'auto',
-					'overflow-x':'none'
-				});
-			}
-		});
-	}
-	
-	/*关闭时间组件*/
-	var closeDateTimer = function(){
-		var timers = ['#user-timer','#user-batch-timer','#user-resetpassword-timer'];
-		$.each(timers,function(index,data){
-			$(data).datetimebox('hidePanel');
-		});
-	}
-		
-	/*移除时间时触发*/
-	var moveDateTimer = function(){
-		var timers = ['#user-timer','#user-batch-timer','#user-resetpassword-timer'];
-		$.each(timers,function(index,data){
-			var combo = $(data).datetimebox('panel');
-			$(combo).mouseleave(function(){
-				$(data).datetimebox('hidePanel');
-			});
-		});
-	}
-	/*更新form表单信息*/
-	var updateUserForm = function(){
-		var checked = $(table).datagrid('getChecked');
-		var node = checked[0];
-		var group = findNode(node.group_id);
-		node.group_name = group.text;
-		$(".win-update-user input[name='first_name']").val(node.first_name);
-		$(".win-update-user input[name='email']").val(node.email);
-		$(".win-update-user input[name='phone']").val(node.phone);
-		$(".win-update-user input[name='password']").val(node.password);
-		$('#select-update-user-group').combotree('setValue', { id: node.group_id, text:node.group_name});
-		$(".win-update-user .select-box").find("option[value='"+node.country_code+"']").prop("selected",true);
-		var active = node.expire_at;
-		if(active>0){
-			active = 1;
-			node.expire_at=toTimeString(node.expire_at);
-		}else{
-			node.expire_at=getNowTimer();
-		}
-		$('#user-update-timer').datetimebox('setValue', node.expire_at);
-		$(".win-update-user input[name='select_expire'][value='"+active+"']").prop("checked",true); 
-	}
-	
-	/*打开导入结果页面*/
-	var winImportUserResult = function(data){
-		onOpenDelete('.win-import-user-result');
-		if(data.error_code==0){
-			$('.win-import-user-result').window({
-				width:650,
-				height:387,
-				title:'导入结果',
-				headerCls:'sm-header',
-				collapsible:false,
-				minimizable:false,
-				maximizable:false,
-				resizable:false,
-				modal:true,
-				onOpen:function(){
-					closeWindow('#win-import-user');
-					//写入导入结果信息
-					$('.win-import-user-result .user-import-total').text(data.total);
-					$('.win-import-user-result .user-import-error').text(data.error);
-					$('.win-import-user-result .user-import-ignore').text(data.ignore);
-					$('.win-import-user-result .user-import-success').text(data.success);
-				}
-			});
-		}else{
-			messager(data.error_message);
-		}
-	};
-	
 	/*绑定事件*/
 	var bindEven = function(){
+		
 		/*收缩*/
 		var btnToCollect = $('.btn-to-collect img').click(function(){
 			$('.win-nav').css('display','none');
-			$('.win-nav-small').css('display','block');
-			
-			$('.user-region-west').panel({
-				width:60
-			});
-			$('#app-user-layout').layout('resize');
-			//加个边框
-			$('#app-user-layout').layout('panel','west').parent('.layout-panel').css({
-			    'border-right':'1px solid #e2e2e3'
-			});
-			
+			$('.win-nav-small').css('display','table-cell');
 		});
 		/*展开*/
 		var btnToExpand = $('.btn-to-expand img').click(function(){
 			$('.win-nav-small').css('display','none');
-			$('.win-nav').css('display','block');
-			$('.user-region-west').panel({
-				width:246
-			});
-			$('#app-user-layout').layout('resize');
-			loadTree();
+			$('.win-nav').css('display','table-cell');
 		});
 		/*更多下拉列表*/
 		var btnMenuMore = $('.btn-menu-more').click(function(e){
@@ -612,15 +508,16 @@ define(['jquery','functions'],function($,_f){
 			if($(this).next('ul').hasClass('none')){
 				$(this).next('ul').removeClass('none');
 				$(this).addClass('open');
-				e.stopPropagation();
 			}else{
 				$(this).next('ul').addClass('none');
 				$(this).removeClass('open');
-				e.stopPropagation();
 			}
-			$(this).next('ul').mouseleave(function(){
-				$(this).addClass('none');
+			
+			$(document).unbind().bind("click",function(e){
+				$('.dropdown-menu').addClass('none');
+				$('.btn').removeClass('open');
 			});
+			e.stopPropagation();
 		});
 		
 		/*用户新增下拉列表*/
@@ -629,16 +526,16 @@ define(['jquery','functions'],function($,_f){
 			if($(this).next('ul').hasClass('none')){
 				$(this).next('ul').removeClass('none');
 				$(this).addClass('open');
-				e.stopPropagation();
 			}else{
 				$(this).next('ul').addClass('none');
 				$(this).removeClass('open');
-				e.stopPropagation();
 			}
 			
-			$(this).next('ul').mouseleave(function(){
-				$(this).addClass('none');
+			$(document).unbind().bind("click",function(e){
+				$('.dropdown-menu').addClass('none');
+				$('.btn').removeClass('open');
 			});
+			e.stopPropagation();
 		});
 		
 		/*用户更多下拉列表*/
@@ -647,15 +544,15 @@ define(['jquery','functions'],function($,_f){
 			if($(this).next('ul').hasClass('none')){
 				$(this).next('ul').removeClass('none');
 				$(this).addClass('open');
-				e.stopPropagation();
 			}else{
 				$(this).next('ul').addClass('none');
 				$(this).removeClass('open');
-				e.stopPropagation();
 			}
-			$(this).next('ul').mouseleave(function(){
-				$(this).addClass('none');
+			$(document).unbind().bind("click",function(e){
+				$('.dropdown-menu').addClass('none');
+				$('.btn').removeClass('open');
 			});
+			e.stopPropagation();
 		});
 		
 		/*创建用户组提交*/
@@ -672,7 +569,7 @@ define(['jquery','functions'],function($,_f){
 			if(result['parent']==-1){
 				result['parent'] = node.id;
 			}console.log(node);
-			if(!$('.win-create-group').hasClass('save')){
+			if(!$('#win-create-group').hasClass('save')){
 				var url = _IFA['groups_create'];
 				var type = 'POST';
 			}else{
@@ -692,8 +589,8 @@ define(['jquery','functions'],function($,_f){
 				}else{
 					messager('操作成功');
 					$('#create-user-group').form('clear');
-					$('.win-create-group').window('close');
-					if(!$('.win-create-group').hasClass('save')){
+					$('#win-create-group').window('close');
+					if(!$('#win-create-group').hasClass('save')){
 						appendNode(tree,resp);
 					}else{
 						updateNode(tree,resp);
@@ -705,19 +602,18 @@ define(['jquery','functions'],function($,_f){
 		
 		/*取消用户组提交*/
 		var btnSubmitCancel = $('.submit-cancel').click(function(){
-			$('.win-create-group').window('close');
+			$('#win-create-group').window('close');
 			$('#create-user-group').form('clear');
 		});
 		
 		/*修改用户组*/
 		var btnUpdateGroup = $('.btn-update-group').click(function(){
-			onOpenDelete('.win-create-group');
 			var node = $(tree).tree('getSelected');
 			if(node==null){
 				messager('请选择要修改的用户组');
 				return false;
 			}
-			$('.win-create-group').window({
+			$('#win-create-group').window({
 				width:650,
 				height:366,
 				title:'修改用户组',
@@ -730,8 +626,8 @@ define(['jquery','functions'],function($,_f){
 				onOpen:function(){
 					$('#create-user-group').form('clear');
 					$("input[name='name']").val(node.text);
-					if(node.memo!=""){
-						$("textarea[name='memo']").val(node.memo);
+					if(node.memo!=undefined){
+						$("input[name='memo']").val(node.memo);
 					}
 					$(this).addClass('save');
 				}
@@ -745,7 +641,7 @@ define(['jquery','functions'],function($,_f){
 				messager('请选择要删除的用户组');
 				return false;
 			}
-			_confirm('提示信息', '您确认要删除记录吗?', function(r){
+			$.messager.confirm('提示信息', '您确认要删除记录吗?', function(r){
 				if (r){
 					var url_groups = _IFA['groups_delete']+node.id;
 					_ajax(url_groups,'DELETE','',function(data){
@@ -761,48 +657,52 @@ define(['jquery','functions'],function($,_f){
 			
 		});
 		
-		/*左边栏创建工作组*/
-		var leftToolCreateUserGroup = $('.btn-add-group img').click(function(){
-			$('.btn-create-group').trigger('click');
-		});
-		
 		/*逐条新增用户-保存*/
-		var btnConserveUser = $('.win-add-user .but-conserve').click(function(){
+		var btnConserveUser = $('#win-add-user .but-conserve').click(function(){
 			var result = getFormValue('#create-user');
 			result.org_id = org_ids;
 			//获取用户组
+			//result.group_id = getSelected(tree).id;
 			if(result.select_expire<=0){
 				result.expire_at = result.select_expire;
 			}else{
 				result.expire_at = toTimeStamp(result.expire_at);
 			}
-			
-			var url = _IFA['user_create'];
-			var type = 'POST';
-			var data = JSON.stringify(result);
-			
+			if(!$('#win-add-user').hasClass('save')){
+				var url = _IFA['user_create'];
+				var type = 'POST';
+				var data = JSON.stringify(result);
+				
+			}else{
+				var checked = getChecked();console.log(checked);
+				var url = _IFA['user_update']+checked[0].id;
+				var type = 'PUT';
+				var data = JSON.stringify(result);
+			};
 			_ajax(url,type,data,function(data){
 				if(data.error_code==0){
 					messager('操作成功');
 					clearForm('#create-user');
-					$('.win-add-user').window('close');
+					$('#win-add-user').window('close');
 					loadTable();
 				}else{
 					messager(data.error_message);
 				}
 			});
+			
 		});
 		
 		/*逐条新增用户-保存&新增*/
-		var btnConserveNewUser = $('.win-add-user .but-update').click(function(){
+		var btnConserveNewUser = $('#win-add-user .but-update').click(function(){
 			var result = getFormValue('#create-user');
 			result.org_id = org_ids;
+			//result.group_id = getSelected(tree).id;
 			if(result.select_expire<=0){
 				result.expire_at = result.select_expire;
 			}else{
 				result.expire_at = toTimeStamp(result.expire_at);
 			}
-			if(!$('.win-add-user').hasClass('save')){
+			if(!$('#win-add-user').hasClass('save')){
 				var url = _IFA['user_create'];
 				var type = 'POST';
 				var data = JSON.stringify(result);
@@ -825,54 +725,20 @@ define(['jquery','functions'],function($,_f){
 		});
 		
 		/*逐条新增用户-取消*/
-		var btnConcelUser = $('.win-add-user .but-cancel').click(function(){
+		var btnConcelUser = $('#win-add-user .but-cancel').click(function(){
 			clearForm('#create-user');
-			closeWindow('.win-add-user');
-		});
-		
-		/*逐条修改用户*/
-		var btnUpdateUser = $('.win-update-user .but-conserve').click(function(){
-			var result = getFormValue('#update-user');
-			result.org_id = org_ids;
-			//获取用户组
-			if(result.select_expire<=0){
-				result.expire_at = result.select_expire;
-			}else{
-				result.expire_at = toTimeStamp(result.expire_at);
-			}
-			var checked = getChecked();
-			var url = _IFA['user_update']+checked[0].id;
-			var type = 'PUT';
-			var data = JSON.stringify(result);
-			_ajax(url,type,data,function(data){
-				if(data.error_code==0){
-					messager('操作成功');
-					clearForm('#update-user');
-					$('.win-update-user').window('close');
-					loadTable();
-				}else{
-					messager(data.error_message);
-				}
-			});
-			
-		});
-		
-		/*逐条修改用户-取消*/
-		var btnConcelUpdateUser = $('.win-update-user .window-close').click(function(){
-			clearForm('#update-user');
-			closeWindow('.win-update-user');
+			closeWindow('#win-add-user');
 		});
 		
 		/*更新用户窗口*/
 		var btnEditUser = $('.btn-edit-user').click(function(){
-			onOpenDelete('.win-update-user');
 			var checked = getChecked();
 			var len = getJsonLen(checked);
 			if(len==0){
 				messager('请选择要编辑的用户');
 				return false;
 			}else if(len==1){
-				$('.win-update-user').window({
+				$('#win-add-user').window({
 					width:650,
 					height:579,
 					title:'修改用户',
@@ -887,24 +753,42 @@ define(['jquery','functions'],function($,_f){
 						getGroups(function(data){
 							var subGroup = data.list[0].children;
 							subGroup = filterData(subGroup);
-							$('#select-update-user-group').combotree({
+							$('#select-user-group').combotree({
 							   required: true,
 							   data:subGroup,
 							   onLoadSuccess:function(node,data){
-									//更新表单
-									updateUserForm();
+							   	    console.log(data);
+							   	  	//设置记录的信息
+									var node = checked[0];
+									var group = findNode(node.group_id);
+									node.group_name = group.text;
+									$("input[name='first_name']").val(node.first_name);
+									$("input[name='email']").val(node.email);
+									$("input[name='phone']").val(node.phone);
+									$("input[name='password']").val(node.password);
+									$('#select-user-group').combotree('setValue', { id: node.group_id, text:node.group_name});
+									$(".select-box").find("option[value='"+node.country_code+"']").prop("selected",true);
+									var active = node.expire_at;
+									if(active>0){
+										active = 1;
+										node.expire_at=toTimeString(node.expire_at);
+									}else{
+										node.expire_at=getNowTimer();
+									}console.log(active);
+									$('#user-timer').datetimebox('setValue', node.expire_at);
+									$("input[name='select_expire'][value='"+active+"']").prop("checked",true); 
 							   }
 							});
 						});
+						
+						$(this).addClass('save');
 					},
 					onClose:function(){
-						clearForm('#update-user');
-						closeDateTimer();
+						clearForm('#create-user');
 					}
 				});	
 			}else if(len>1){
-				onOpenDelete('.win-update-batch-user');
-				$('.win-update-batch-user').window({
+				$('#win-update-batch-user').window({
 					width:650,
 					height:490,
 					title:'批量修改用户',
@@ -937,69 +821,15 @@ define(['jquery','functions'],function($,_f){
 						var firstName = selections[0].email;
 						var len = selections.length;
 						//加载数量
-						$('.win-update-batch-user .people').text(firstName);
-						$('.win-update-batch-user .amount').text(len);
-					},
-					onClose:function(){
-						closeDateTimer();
+						$('#win-update-batch-user .people').text(firstName);
+						$('#win-update-batch-user .amount').text(len);
+						
 					}
 				});	
 			}
 		});
 		
-		/*更新上一条记录*/
-		var btnEditUserNext = $('.win-update-user .btn-pre').click(function(){
-			
-			var rows = $(table).datagrid('getRows');
-			
-			//获取当前被checked的记录
-			var checked = $(table).datagrid('getChecked');
-			
-			//获取当前行的索引
-			var index = $(table).datagrid('getRowIndex',checked[0]);
-
-			index--;
-			
-			if(index<0){
-				messager('没有下一条记录了');
-			}else{
-				//清除选中的行
-				$(table).datagrid('clearChecked');
-				//通过索引获取行
-				$(table).datagrid('checkRow',index);
-				//获取被选中的行
-				checked = $(table).datagrid('getChecked');
-				//更新表单
-				updateUserForm();
-			}
-		});
 		
-		/*更新下一条记录*/
-		var btnEditUserNext = $('.win-update-user .btn-next').click(function(){
-			
-			var rows = $(table).datagrid('getRows');
-			
-			//获取当前被checked的记录
-			var checked = $(table).datagrid('getChecked');
-			
-			//获取当前行的索引
-			var index = $(table).datagrid('getRowIndex',checked[0]);
-
-			index++;
-			
-			if(index>rows.length-1){
-				messager('没有下一条记录了');
-			}else{
-				//清除选中的行
-				$(table).datagrid('clearChecked');
-				//通过索引获取行
-				$(table).datagrid('checkRow',index);
-				//获取被选中的行
-				checked = $(table).datagrid('getChecked');
-				//更新表单
-				updateUserForm();
-			}
-		});
 		
 		/*删除用户*/
 		var btnDeleteUser = $('.btn-delete-user').click(function(){
@@ -1022,7 +852,7 @@ define(['jquery','functions'],function($,_f){
 				});
 				data = JSON.stringify({'ids':ids});
 			}
-			_confirm('提示信息', '您确认要删除记录吗?', function(r){
+			$.messager.confirm('提示信息', '您确认要删除记录吗?', function(r){
 				if (r){
 					_ajax(url,type,data,function(data){
 						if(data.error_code==0){
@@ -1057,7 +887,7 @@ define(['jquery','functions'],function($,_f){
         });
         
         /*导入用户提交*/
-       var btnImportUser = $('.win-import-user .but-conserve').click(function(){
+       var btnImportUser = $('#win-import-user .but-conserve').click(function(){
        		var data=new FormData($("#import-user-form")[0]);
        		var url = _IFA['user_import'];
        		var type = 'POST';
@@ -1071,7 +901,7 @@ define(['jquery','functions'],function($,_f){
        });
         
         /*导出用户提交*/
-       var btnExportUser = $('.win-export-user .but-conserve').click(function(){
+       var btnExportUser = $('#win-export-user .but-conserve').click(function(){
        		var nodes = $('#tree-export-user').tree('getChecked');
        		var groupIds = '';
        		$.each(nodes, function(index,data) {
@@ -1085,29 +915,17 @@ define(['jquery','functions'],function($,_f){
        		
        		var url = _IFA['user_export']+'?org_id='+org_ids+groupIds+'&group_subordinate=0';
             window.open(url);
-       		closeWindow('.win-export-user');
+       		closeWindow('#win-export-user');
        });
        
-       /*侧边栏导出导入窗口*/
-      var btnWinImportExport = $('.btn-import-export img').click(function(){
-      	 if($('.dropdown-menu-left').hasClass('none')){
-      	 	$('.dropdown-menu-left').removeClass('none');
-      	 }else{
-      	 	$('.dropdown-menu-left').addClass('none');
-      	 }
-      	 $('.dropdown-menu-left').mouseleave(function(){
-      	 	$(this).addClass('none');
-      	 });
-      });
-       
        /*取消导出用户提交*/
-       var btnCancelExportUser = $('.win-export-user .but-cancel').click(function(){
-       		closeWindow('.win-export-user');
+       var btnCancelExportUser = $('#win-export-user .but-cancel').click(function(){
+       		closeWindow('#win-export-user');
        });
        
        /*关闭导入结果*/
-       var btnCancelImportResult = $('.win-import-user-result .but-conserve').click(function(){
-       		closeWindow('.win-import-user-result');
+       var btnCancelImportResult = $('#win-import-user-result .but-conserve').click(function(){
+       		closeWindow('#win-import-user-result');
        });
        
        /*导入文件提示处理*/
@@ -1122,7 +940,7 @@ define(['jquery','functions'],function($,_f){
 	   	   window.open(url);
 	   });
 	   /*下载用户导入结果*/
-	   var downloadUserImportResult = $('.win-import-user-result .but-download').click(function(){
+	   var downloadUserImportResult = $('#win-import-user-result .but-download').click(function(){
 	   	var url = _IFA['user_export_result']+'?org_id='+org_ids;
 	   	   window.open(url);
 	   });
@@ -1209,11 +1027,11 @@ define(['jquery','functions'],function($,_f){
 	 	}
 	 });
 	/*批量新增用户退出*/
-	var btnCancelBatchUser = $('.win-add-batch-user .but-cancel').click(function(){
-		closeWindow('.win-add-batch-user');
+	var btnCancelBatchUser = $('#win-add-batch-user .but-cancel').click(function(){
+		closeWindow('#win-add-batch-user');
 	});
 	/*批量新增用户保存*/
-	var btnAddBatchUser = $('.win-add-batch-user .but-conserve').click(function(){
+	var btnAddBatchUser = $('#win-add-batch-user .but-conserve').click(function(){
 		var result = getFormValue('#create-user-batch',true);
 		var selected = getSelected(tree);
 		result.org_id = org_ids;
@@ -1229,23 +1047,18 @@ define(['jquery','functions'],function($,_f){
 			if(data.error_code==0){
 				messager('操作成功');
 				loadTable();
-				closeWindow('.win-add-batch-user');					
+				closeWindow('#win-add-batch-user');					
 			}else{
 				messager(data.error_message);
 			}
 		});
 	});
 	/*批量修改用户-退出*/
-	var btnBatchUpdateUserExit = $('.win-update-batch-user .but-cancel').click(function(){
-		closeWindow('.win-update-batch-user');
+	var btnBatchUpdateUserExit = $('#win-update-batch-user .but-cancel').click(function(){
+		closeWindow('#win-update-batch-user');
 	});
-	/*批量修改用户-密码随机*/
-	var btnRadioRefresh = $('.select_reset_password').click(function(){
-		console.log(getRandomInt(8))
-		$('.input-text02').val(getRandomInt(8))
-	})
 	/*批量修改用户-保存并退出*/
-	var btnBatchUpdateUserSave = $('.win-update-batch-user .but-conserve01').click(function(){
+	var btnBatchUpdateUserSave = $('#win-update-batch-user .but-conserve01').click(function(){
 		//获取数据
 		var result = getFormValue('#form-batch-update-user');
 		//获取所选的用户
@@ -1283,14 +1096,14 @@ define(['jquery','functions'],function($,_f){
 			if(data.error_code==0){
 				messager('操作成功');
 				loadTable();
-				closeWindow('.win-update-batch-user');
+				closeWindow('#win-update-batch-user');
 			}else{
 				messager(data.error_message);
 			}
 		});
 	});
 	/*发送通知*/
-	var sendNotice = $('.win-notice-user .but-conserve').click(function(){
+	var sendNotice = $('#win-notice-user .but-conserve').click(function(){
 		var result = getFormValue('#form-notice-user');
 		var url = _IFA['user_notify_email'];
 		var type = 'POST';
@@ -1337,20 +1150,19 @@ define(['jquery','functions'],function($,_f){
 		_ajax(url,type,data,function(data){
 			if(data.error_code==0){
 				messager('发送成功');
-				closeWindow('.win-notice-user');
+				closeWindow('#win-notice-user');
 			}else{
 				messager(data.error_message);
 			}
 		});
 	});
 	/*触发批量新增用户事件*/
-	var btnBatchAddUser = $('.win-add-batch-user .batch-add').click(function(){
+	var btnBatchAddUser = $('#win-add-batch-user .batch-add').click(function(){
 		addUserInfo('.user-list');
 	});
 	  /*打开创建组窗口*/
-		var btnCreateGroup = $('.btn-create-group').click(function(e){
-            onOpenDelete('.win-create-group');
-			$('.win-create-group').window({
+		var btnCreateGroup = $('.btn-create-group').click(function(){
+			$('#win-create-group').window({
 				width:650,
 				height:366,
 				title:'新增用户组',
@@ -1363,17 +1175,13 @@ define(['jquery','functions'],function($,_f){
 				onOpen:function(){
 					clearForm('#create-user-group');
 					$(this).removeClass('save');
-				},
-				onClose:function(){
-					
 				}
 			});
 		});
 		
 		/*打开导入用户窗口*/
 		var winInportUser = $('.btn-import-user').click(function(){
-			onOpenDelete('.win-import-user');
-			$('.win-import-user').window({
+			$('#win-import-user').window({
 				width:650,
 				height:355,
 				title:'导入用户',
@@ -1388,14 +1196,14 @@ define(['jquery','functions'],function($,_f){
 					$('#rel-file').val('');
 					$('.file-prompt').text('未选取任何文件');
 				}
-			});	
-			$('.dropdown-menu-left').addClass('none');
+			});		
 		});
+		
+		
 		
 		/*打开导出用户窗口*/
 		var winExportUser = $('.btn-export-user').click(function(){
-			onOpenDelete('.win-export-user');
-			$('.win-export-user').window({
+			$('#win-export-user').window({
 				width:650,
 				height:422,
 				title:'导出用户',
@@ -1425,13 +1233,11 @@ define(['jquery','functions'],function($,_f){
 					});
 				}
 			});		
-			$('.dropdown-menu-left').addClass('none');
 		});
 		
 		/*打开逐条新增用户窗口*/
 		var winNewUser = $('.btn-new-user').click(function(){
-			onOpenDelete('.win-add-user');
-			$('.win-add-user').window({
+			$('#win-add-user').window({
 				width:650,
 				height:579,
 				title:'新增用户',
@@ -1451,8 +1257,9 @@ define(['jquery','functions'],function($,_f){
 						   data:subGroup,
 						   onLoadSuccess:function(node,data){console.log(data);
 						   	  //设置默认值
-						   	  $('.win-add-user #select-box-mobile').find("option[value='1']").prop("selected",true);
-						   	  $('.win-add-user #user-timer').datetimebox('setValue', getNowTimer());
+						   	  $('#select-user-group').combotree('setValue', { id: data[0].id, text:data[0].text}); 
+						   	  $('#select-box-mobile').find("option[value='1']").prop("selected",true);
+						   	  $('#user-timer').datetimebox('setValue', getNowTimer());
 						   }
 						});
 					});
@@ -1460,16 +1267,13 @@ define(['jquery','functions'],function($,_f){
 				},
 				onClose:function(){
 					clearForm('#create-user');
-					closeDateTimer();
 				}
 			});		
-			$(".name").focus();
 		});
 		
 		/*打开批量新增用户窗口*/
 		var winBatchNewUser = $('.btn-batch-new-user').click(function(){
-			onOpenDelete('.win-add-batch-user');
-			$('.win-add-batch-user').window({
+			$('#win-add-batch-user').window({
 				width:650,
 				height:639,
 				title:'批量新增用户',
@@ -1496,20 +1300,17 @@ define(['jquery','functions'],function($,_f){
 						});
 					});
 					//清空用户列表记录
-					$('.win-add-batch-user .user-list').empty();
+					$('#win-add-batch-user .user-list').empty();
 					addUserInfo('.user-list');
 					$(this).removeClass('save');
-				},
-				onClose:function(){
-					closeDateTimer();
 				}
 			});		
 		});
 		
+		
 		/*打开用户通知窗口*/
 		var winNoticeUser = $('.btn-notice-user').click(function(){
-			onOpenDelete('.win-notice-user');
-			$('.win-notice-user').window({
+			$('#win-notice-user').window({
 				width:650,
 				height:523,
 				title:'通知',
@@ -1538,128 +1339,33 @@ define(['jquery','functions'],function($,_f){
 				}
 			});		
 		});
+		/*打开导入结果页面*/
+		var winImportUserResult = function(data){
+			if(data.error_code==0){
+				$('#win-import-user-result').window({
+					width:650,
+					height:387,
+					title:'导入结果',
+					headerCls:'sm-header',
+					collapsible:false,
+					minimizable:false,
+					maximizable:false,
+					resizable:false,
+					modal:true,
+					onOpen:function(){
+						closeWindow('#win-import-user');
+						//写入导入结果信息
+						$('#win-import-user-result .user-import-total').text(data.total);
+						$('#win-import-user-result .user-import-error').text(data.error);
+						$('#win-import-user-result .user-import-ignore').text(data.ignore);
+						$('#win-import-user-result .user-import-success').text(data.success);
+					}
+				});
+			}else{
+				messager(data.error_message);
+			}
+		};
 		
-		/*新增用户验证姓名*/
-		var checkNameFocus = $('.name').focus(function(){
-			$('.error-name').hide()
-			$('.name').css({
-				'border':'1px solid #ededed'
-			});
-		});
-		var checkNameBlur = $('.name').blur(function(){
-			var resName = $('.name').val();
-			if(resName==""){
-				$('.error-name').text("姓名不能为空");
-				$('.error-name').show();
-				$('.name').css({
-					'border':'1px solid red',
-			    });
-			
-			}
-		});
-		/*新增用户验证邮件*/
-		var checkEmailFocus = $('.email').focus(function(){
-			$('.error-email').show();
-			$('.email').css({
-				'border':'1px solid #9bcce6'
-			});
-			
-		});
-		var checkEmailBlur = $('.email').blur(function(){
-			var resEmail = $('.email').val();
-			if(resEmail==""){
-				$('.error-email').text("邮箱不能为空");
-				$('.error-email').show();
-				$('.email').css({
-					'border':'1px solid red'
-			    });
-			    	
-				return 
-			}
-			if( resEmail !="" && checkEmail(resEmail)){
-				$('.error-email').hide();
-				$('.email').css({
-					'border':'1px solid #ededed'
-			    });
-			}else{
-				$('.error-email').text("您输入的邮箱格式不正确");
-				$('.error-email').show();
-				$('.email').css({
-					'border':'1px solid red'
-			    });
-			}
-		});
-		/*新增用户验证手机号码*/
-		var checkPhoneFocus = $('.phone').focus(function(){
-			$('.error-phone').show();
-			$('.phone').css({
-				'border':'1px solid #9bcce6'
-			});
-			
-		});
-		var checkPhoneBlur = $('.phone').blur(function(){
-			var resphone = $('.phone').val();
-			if(resphone==""){
-				$('.error-phone').text("手机号不能为空");
-				$('.error-phone').show();
-				$('.phone').css({
-					'border':'1px solid red'
-			    });
-				return 
-			}
-			if( resphone !="" && checkPhone(resphone)){
-				$('.error-phone').hide();
-				$('.phone').css({
-					'border':'1px solid #ededed'
-			    });
-			    
-			}else{
-				$('.error-phone').text("您输入的手机号格式不正确");
-				$('.error-phone').show();
-				$('.phone').css({
-					'border':'1px solid red'
-			    });
-			    
-			}
-		});
-		/*新增用户验证密码*/
-		var checkPasswordFocus = $('.password').focus(function(){
-			$('.error-password').show();
-			$('.password').css({
-				'border':'1px solid #9bcce6'
-			});
-		});
-		var checkPasswordBlur = $('.password').blur(function(){
-			var respassword = $('.password').val();
-			console.log($('.password').val());
-			if(respassword==""){
-				$('.error-password').text("密码不能为空");
-				$('.error-password').show();
-				$('.password').css({
-					'border':'1px solid red'
-			    });
-				return 
-			}
-			if( respassword !="" && respassword.length>=8){
-				$('.error-password').hide();
-				$('.password').css({
-					'border':'1px solid #ededed'
-			    });
-			}else{
-				$('.error-password').text("请输入不少于8位数的密码");
-				$('.error-password').show();
-				$('.password').css({
-					'border':'1px solid red'
-			    });
-			}
-		});
-		/*随机密码生成*/
-		var refreshPassWord = $('.refresh').click(function(){
-			$('.password').val(getRandomInt(8))
-		});
-		
-		//移除时间时触发
-		moveDateTimer();
 	}
 	
 	/*运行主程序*/
@@ -1675,9 +1381,6 @@ define(['jquery','functions'],function($,_f){
 		
 		/*绑定事件*/
 		bindEven();
-		
-		/*监听面板调整*/
-		listPanel();
 	}
 	
 	return {
