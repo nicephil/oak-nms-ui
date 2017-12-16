@@ -1,15 +1,14 @@
  /*CSS Document */
 @import url('../../public/css/font-awesome.min.css');
 html,body{height:100%;width:100%;}
-@font-face {font-family: PingFang-regular; src:url(../../public/fonts/PingFang-regular.ttf) } 
-@font-face {font-family: Glyphicons Halflings; src:url(../../public/glyphicons-halflings-regular.ttf) } 
 body {
 	font-size: 14px;
 	color: #4f5358;
 	background-color: #fff;
 	display: block;
 	-webkit-font-smoothing: antialiased;
-	font-family: PingFang-regular,"Microsoft Yahei", "微软雅黑","Helvetica Neue", "Helvetica", "Lantinghei SC", "STXihei", "WenQuanYi Micro Hei", Arial, sans-serif;
+	font-family: '微软雅黑',verdana,arial,tahoma,helvetica,sans-serif;
+	
 }
 *{
 	padding: 0;
@@ -283,6 +282,11 @@ label{
 	background: url(../images/icon-task-down-arrow.png) no-repeat center center;
 }
 .topbar .task-end .shortcut .icon-task-country{cursor: pointer;}
+.app-icon-network{
+	background: url(../../app/images/task-icon-network.png) no-repeat center center;
+	height: 24px;
+	margin-top: -11px;
+}
 .user-menu{
 	position: absolute;
     top: 42px;
@@ -511,7 +515,7 @@ label{
 }
 /*覆盖分页*/
 .pagination-wrap{
-	margin:0px auto;border-top: 1px solid #e2e2e3;
+	margin:0px auto;
 }
 .pagination>li>a, .pagination>li>span{
  	color:#4f5358;
@@ -576,7 +580,16 @@ label{
 .table>thead:first-child>tr:first-child>th>span>i:hover{
 	cursor: pointer;
 }
-
+.pagination-load{
+	    background: url(../../public/images/refresh.png) no-repeat center center;
+	    width: 18px;
+    	height: 18px;
+}
+.pagination-load:hover{
+	    background: url(../../public/images/refresh-hover.png) no-repeat center center;
+	    width: 18px;
+    	height: 18px;
+}
 /* 通用 开始 */
 .small-close{ width: 10px; height: 10px; background: url(images/mask_close.png) no-repeat; margin-top: 15px; float:right; cursor: pointer;}
 .small-close:hover{ width: 10px; height: 10px; background: url(images/mask_close01.png) no-repeat; margin-top: 15px; float:right; cursor: pointer;}
@@ -588,5 +601,28 @@ select::-ms-expand {display: none;}/*清除ie的默认选择框样式,隐藏下�
 .padding-bottom30{ padding-bottom: 30px !important;}
 .box{ width: 100%; overflow: hidden;}
 /* 通用 结束 */
-
-
+.datagrid-mask {  
+  position: absolute;  
+  left: 0;  
+  top: 0;  
+  width: 100%;  
+  height: 100%;  
+  opacity: 0.4;  
+  filter: alpha(opacity=30);  
+  display: none;  
+} 
+.datagrid-mask-msg {  
+ 	top: 50%;
+    margin-top: -20px;
+    padding: 11px 14px 10px 47px;
+    width: auto;
+    height: 16px;
+    border-width: 1px;
+    border-style: solid;
+    display: none;
+    z-index: 1000;
+    border-radius: 3px;
+    font-size: 14px;
+    box-shadow: 0px 2px 7px #b3b3af;
+    border-color: #c8d2dc;
+}  

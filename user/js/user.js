@@ -34,9 +34,9 @@ define(['jquery','functions'],function($,_f){
         {field:'active',title:'',width:30,align:'left',formatter:
         	function(value,row,index){
         		if(value==1){
-        			return "<img src='user/images/icon-row-enable.png' />";
+        			//return "<img src='user/images/icon-row-enable.png' />";
         		}else{
-        			return "<img src='user/images/icon-row-disable.png' />"
+        			return "<img class='icon-row-disable' src='user/images/icon-row-disable.png' />"
         		}
         	}
         },
@@ -60,6 +60,7 @@ define(['jquery','functions'],function($,_f){
    var filterData = function(data){
    		data = JSON.stringify(data);
 		data = $.parseJSON(data.replace(/name/g,'text'));
+		data[0].text=  data[0].text=='default'?'默认':data[0].text;
 		return data;
    }
    
@@ -128,26 +129,54 @@ define(['jquery','functions'],function($,_f){
 				data = JSON.stringify(data);
 				data = $.parseJSON(data.replace(/name/g,'text'));
 				data = data.list[0];
+
+				data.children[0].text = data.children[0].text=='default'?'默认':data.children[0].text;
+
 				$(tree).tree({
 					data:[data],
 					loadFilter:function(data){
 						return data;
 					},
 					onLoadSuccess:function(node,data){
+						if($(this).tree('getSelected')==null){
+							$('.user-region-west .win-nav .nav-home-title').addClass('home-selected');
+						};
 						//设置滚动条高度
 						adjustTreeStyle($(this));
+						
 					},
 					onSelect:function(node){
+						//选中默认时  更多的 hover
+						if($(this).tree('getSelected').text=="默认"){
+							$('.btn-menu-more').next('ul.dropdown-menu').find('li').mouseenter(function(){
+								$(this).removeClass('li-hover');
+								$(this).addClass('li-normal');
+							});
+							//针对导出效果
+							$('.btn-menu-more').next('ul.dropdown-menu').find('li.btn-export-user').mouseenter(function(){
+								$(this).addClass('li-hover');
+							}).mouseleave(function(){
+								$(this).removeClass('li-hover');
+								$(this).addClass('li-normal');
+							});
+						}else{
+							$('.btn-menu-more').next('ul.dropdown-menu').find('li').mouseenter(function(){
+								$(this).addClass('li-hover');
+							}).mouseleave(function(){
+								$(this).removeClass('li-hover');
+							});
+						}
+						//移除树背景
+						$('.user-region-west .win-nav .nav-home-title').removeClass('home-selected');
 						var options = {
 							group_ids:node.id
 						}
 						loadTable(options);
+						
 					}
 				});
 			}
-			
 		});
-		
 	}
 	
 	/*获取用户组*/
@@ -157,7 +186,7 @@ define(['jquery','functions'],function($,_f){
 		var data = '';
 		_ajax(url,type,data,function(resp){
 			if(resp.error_code!=0){
-				messager(resp.error_message);
+				toast('提示消息',resp.error_message,'error');
 				return false;
 			}else{
 				func(resp);
@@ -176,6 +205,18 @@ define(['jquery','functions'],function($,_f){
 	/*选择树节点*/
 	var selectNode = function(node){
 		$(tree).tree(node.target);
+	}
+	
+	/*插入空信息*/
+	var insertNodata =  function(){
+		$(table).datagrid('getPanel').find('.datagrid-body').append($('<div class="nodata"><img src="public/images/nodata.png" /><div>没有可以显示的数据</div></div>'));
+		var height = $('.app-table').height();
+		$('.nodata').css({
+			'height':height-50+'px',
+			'line-height':height-50+'px'
+		});
+		$(table).datagrid('getPanel').find('.datagrid-header input').attr('disabled','disabled');
+		$('footer').addClass('none');
 	}
 	
 	/*加载表格数据*/
@@ -199,7 +240,7 @@ define(['jquery','functions'],function($,_f){
 			options.group_ids = gid;
 		}
 		
-		getUser(options,function(data){console.log(data);
+		getUser(options,function(data){
 			if(data.error_code==0){
 				$(table).datagrid({
 					data:data.list,
@@ -208,7 +249,7 @@ define(['jquery','functions'],function($,_f){
 					fitColumns:true,
 					scrollbarSize:0,
 					resizable:false,
-					striped:true,
+					striped:false,
 					onBeforeLoad:function(param){
 						
 					},
@@ -218,6 +259,13 @@ define(['jquery','functions'],function($,_f){
 						}
 						options.total = data.total;
 						onTableSuccess(data,options);
+						if(data.total==0){
+							insertNodata();
+						}else{
+							$('footer').removeClass('none');
+							$(table).datagrid('getPanel').find('.datagrid-header input').removeAttr('disabled');
+						}
+						
 					},
 					onSortColumn:function(sort, order){
 						var opt ={
@@ -251,7 +299,8 @@ define(['jquery','functions'],function($,_f){
 		}
 		loadPagination(optPage);
 		
-		
+		//去掉加载条
+		MaskUtil.unmask();
 	}
 	/*加载分页*/
 	var loadPagination = function(options){
@@ -356,7 +405,7 @@ define(['jquery','functions'],function($,_f){
 	
 	/*获取树节点*/
 	var findNode = function(groupId){
-		return $(tree).tree(groupId);
+		return $(tree).tree('find',groupId);
 	}
 		
 	/*获取默认或选中结点*/
@@ -446,10 +495,10 @@ define(['jquery','functions'],function($,_f){
 		  	});	
 		  	$(table).datagrid('refreshRow',index);
 		  	if(data.error_code==0){
-					messager('操作成功');
+					toast('提示消息','操作成功','success');
 				loadTable();
 			}else{
-				messager(data.error_message);
+				toast('提示消息',data.error_message,'error');
 			}
 		});
 	  }
@@ -470,20 +519,126 @@ define(['jquery','functions'],function($,_f){
 		//初始化时间格式
 		initDateTimer(['#user-timer','#user-update-timer','#user-batch-timer','#user-resetpassword-timer']);
 	}
-	
+	/*验证用户是否存在*/
+	var checkUserExist = function(name){
+		var flag = true;
+		var url = _IFA['user_exist'];
+		var type = 'POST';
+		var data = JSON.stringify({
+			'org_id':org_ids,
+			'name':name
+		});
+		_ajax(url,type,data,function(data){console.log(data);
+			if(data.error_code!=0){
+				toast('提示信息',data.error_message,'error');
+				flag = false;
+			}
+		});
+		return flag;
+	}
+	var isRepeat = function (arr) {
+	   var hash = {};
+	   for(var i in arr) {
+	       if(hash[arr[i]])
+	       {
+	           return true;
+	       }
+	       hash[arr[i]] = true;
+	    }
+	   return false;
+	}
+	//验证重复数据
+	var checkRepeatUser = function(){
+		var flag = true;
+		var emailArray = [];
+		var phoneArray = [];
+		$('.batch-inputBox').each(function(index,data){
+			var email = $(this).find('input[name="email"]');
+			var phone = $(this).find('input[name="phone"]');
+			emailArray.push(email);
+			phoneArray.push(phone);
+		});
+		
+		if(isRepeat(emailArray)||isRepeat(phoneArray)){
+			return true;
+		};
+		return false;
+	};
 	/*增加新的用户记录*/
 	var addUserInfo = function(classId){
+		//验证重复数据
+	   
+		var country = '<select class="country">';
+		country += '<option>+86</option>';
+		country += '<option>+1</option>';
+		country += '</select>';
+		
 		var html = '<div class="batch-inputBox">';
-		html += '<input type="text" name="email" class="batch-input01"/>';
-		html += '<input type="text" name="phone" class="batch-input02"/>';
-		html += '<div class="batch-delete batch-delete-selected"></div>';
+		html += '<input type="text" name="email" class="batch-input01 email"/>';
+		html += country;
+		html += '<input type="text" name="phone" class="right-input batch-input02 phone"/>';
+		if($('.batch-inputBox').length>0){
+			html += '<div class="batch-delete batch-delete-selected"></div>';
+		}else{
+			html += '<div class="batch-add batch-add-selected"></div>';
+		}
 		html += '</div>';
 	    var rehtml = $(html).appendTo(classId);
+	    
+	    $('.batch-add').unbind('click').bind('click',function(){
+	    	//标记
+	   		var flag = true;
+	    	 //点击事件
+	    	$('.batch-inputBox').each(function(index,data){
+	    		var email = $(this).find('input[name="email"]');
+	    		var phone = $(this).find('input[name="phone"]');
+	    		
+	    		//验证空值
+	    		if(email.val()==''&&phone.val()==''){
+	    			flag = false;
+	    			toast('提示信息','邮箱和手机不能全为空值！','warning');
+	    			email.focus();
+	    			return;
+	    		}
+	    		
+	    		//验证邮箱
+	    		if(email.val()!=''){
+	    			if(!checkEmail(email.val())){
+	    				flag = false;
+	    				toast('提示信息','邮箱格式错误！','error');
+	    				return;
+	    			};
+	    			//远端验证
+	    			if(!checkUserExist(email.val())){
+	    				flag = false;
+	    				return;
+	    			}
+	    		}
+	    		//验证电话
+	    		if(phone.val()!=''){
+	    			if(!checkPhone(phone.val())){
+	    				flag = false;
+	    				toast('提示信息','电话格式错误！','error');
+	    				phone.focus();
+	    				return;
+	    			};
+	    			//远端验证
+	    			if(!checkUserExist(phone.val())){
+	    				flag = false;
+	    				return;
+	    			}
+	    		}
+	    	});
+	    	if(flag==true){
+	    		addUserInfo('.user-list');
+	    	}
+	    });
+	    
 	    rehtml.find('.batch-delete').click(function(index){
 	    	if($('.user-list .batch-inputBox').length>1){
 	    		$(this).parent('.batch-inputBox').remove();
 	    	}else{
-	    		messager('至少存在一条记录');
+	    		toast('提示消息','至少存在一条记录','warning');
 	    		return false;
 	    	};
 	    });
@@ -496,15 +651,16 @@ define(['jquery','functions'],function($,_f){
 		var appRight = $('.app-right').layout('panel','center');
 		$(center).panel({
 			onResize:function(width,height){
-				var h = height-150;
-				$('.user-region-west .win-nav').css({
-					height:h+'px'
-				});
+				var h = height-125;
 				//控制表格
 				$('.app-table').css({
 					height:h-20+'px',
 					'overflow-y':'auto',
 					'overflow-x':'none'
+				});
+				
+				$('.user-region-west .win-nav .group-list').css({
+					height:h-10+'px'
 				});
 			}
 		});
@@ -529,7 +685,7 @@ define(['jquery','functions'],function($,_f){
 		});
 	}
 	/*更新form表单信息*/
-	var updateUserForm = function(){
+	var updateUserForm = function(data){
 		var checked = $(table).datagrid('getChecked');
 		var node = checked[0];
 		var group = findNode(node.group_id);
@@ -575,9 +731,32 @@ define(['jquery','functions'],function($,_f){
 				}
 			});
 		}else{
-			messager(data.error_message);
+			toast('提示消息',data.error_message,'error');
 		}
 	};
+	
+	/*屏蔽日期*/
+	var readonlyTimer = function(win,timerId){
+	  //屏蔽日期输入
+   	  $(win+' '+timerId).datetimebox('readonly',true);
+   	  //去掉默认事件
+   	  $(win+' .combo-arrow').click(function(e){
+   	  	 return false;
+   	  });
+   	  //去掉默认事件-从不过期
+   	  $(win+' input[name="select_expire"][value="0"]').click(function(){
+   	  		$(win+' '+timerId).datetimebox('readonly',true);
+   	  		$(win+' .combo-arrow').unbind().bind('click',function(e){
+   	  			return false;
+	   	  	});
+   	  });
+   	  //绑定事件
+   	  $(win+' input[name="select_expire"][value="1"]').click(function(){
+   	  		$('.combo-arrow').unbind().bind('click',function(){
+   	  			$(win+' '+timerId).datetimebox('readonly',false);
+   	  		});
+   	  });
+	}
 	
 	/*绑定事件*/
 	var bindEven = function(){
@@ -594,7 +773,6 @@ define(['jquery','functions'],function($,_f){
 			$('#app-user-layout').layout('panel','west').parent('.layout-panel').css({
 			    'border-right':'1px solid #e2e2e3'
 			});
-			
 		});
 		/*展开*/
 		var btnToExpand = $('.btn-to-expand img').click(function(){
@@ -604,7 +782,6 @@ define(['jquery','functions'],function($,_f){
 				width:246
 			});
 			$('#app-user-layout').layout('resize');
-			loadTree();
 		});
 		/*更多下拉列表*/
 		var btnMenuMore = $('.btn-menu-more').click(function(e){
@@ -681,16 +858,16 @@ define(['jquery','functions'],function($,_f){
 			};
 			
 			if(!result.name){
-				messager('用户组名称不能为空！');
+				toast('提示消息','用户组名称不能为空','warning');
 				return false;
 			}
 			var data = JSON.stringify(result);
 			_ajax(url,type,data,function(resp){console.log(resp);
 				if(resp.error_code!=0){
-					messager(resp.error_message);
+					toast('提示消息',resp.error_message,'success');
 					return false;
 				}else{
-					messager('操作成功');
+					toast('提示消息','操作成功','success');
 					$('#create-user-group').form('clear');
 					$('.win-create-group').window('close');
 					if(!$('.win-create-group').hasClass('save')){
@@ -711,10 +888,17 @@ define(['jquery','functions'],function($,_f){
 		
 		/*修改用户组*/
 		var btnUpdateGroup = $('.btn-update-group').click(function(){
+			var row = $(tree).tree('getSelected');
+			if(row != undefined){
+				if(row.text=='默认'){
+					//toast("提示消息","默认组不可修改","error");
+					return false;
+			   }
+			}
 			onOpenDelete('.win-create-group');
 			var node = $(tree).tree('getSelected');
 			if(node==null){
-				messager('请选择要修改的用户组');
+				toast('提示消息','请选择要修改的用户组','warning');
 				return false;
 			}
 			$('.win-create-group').window({
@@ -740,9 +924,16 @@ define(['jquery','functions'],function($,_f){
 		
 		/*删除用户组*/
 		var btnDeleteGroup = $('.btn-delete-group').click(function(){
+			var row = $(tree).tree('getSelected');
+			if(row != undefined){
+				if(row.text=='默认'){
+					toast("提示消息","默认组不可删除","error");
+					return false;
+			   }
+			}
 			var node = $(tree).tree('getSelected');
 			if(node==null){
-				messager('请选择要删除的用户组');
+				toast('提示消息','请选择要删除的用户组','warning');
 				return false;
 			}
 			_confirm('提示信息', '您确认要删除记录吗?', function(r){
@@ -750,10 +941,10 @@ define(['jquery','functions'],function($,_f){
 					var url_groups = _IFA['groups_delete']+node.id;
 					_ajax(url_groups,'DELETE','',function(data){
 						if(data.error_code==0){
-							messager('操作成功');
+							toast('提示消息','操作成功','success');
 							$(tree).tree('remove',node.target);
 						}else{
-							messager(data.error_message);
+							toast('提示消息',data.error_message,'error');
 						}
 					});
 				}
@@ -763,7 +954,7 @@ define(['jquery','functions'],function($,_f){
 		
 		/*左边栏创建工作组*/
 		var leftToolCreateUserGroup = $('.btn-add-group img').click(function(){
-			$('.btn-create-group').trigger('click');
+			$('.btn-create-group').click();
 		});
 		
 		/*逐条新增用户-保存*/
@@ -780,17 +971,29 @@ define(['jquery','functions'],function($,_f){
 			var url = _IFA['user_create'];
 			var type = 'POST';
 			var data = JSON.stringify(result);
-			
-			_ajax(url,type,data,function(data){
-				if(data.error_code==0){
-					messager('操作成功');
-					clearForm('#create-user');
-					$('.win-add-user').window('close');
-					loadTable();
+			if($('#create-user').find('span').hasClass('error') == false){
+				if($('#create-user input[name="email"]').val()=='' && $('#create-user input[name="phone"]').val()==''){
+					toast('提示消息','手机号和邮箱至少添一项','error');
+					return false;
 				}else{
-					messager(data.error_message);
+					_ajax(url,type,data,function(data){
+						if(data.error_code==0){
+							toast('提示消息','操作成功','success');
+							
+							clearForm('#create-user');
+							$('.win-add-user').window('close');
+							loadTable();
+						}else{
+							toast('提示消息',data.error_message,'error');
+						}
+					});
 				}
-			});
+				}else{
+				var errorMessage = $('#create-user').find('span.error').eq(0).text();
+				console.log(errorMessage)
+				toast('提示消息',errorMessage,'error');
+			}
+			
 		});
 		
 		/*逐条新增用户-保存&新增*/
@@ -813,21 +1016,62 @@ define(['jquery','functions'],function($,_f){
 				var type = 'PUT';
 				var data = JSON.stringify(result);
 			};
-			_ajax(url,type,data,function(data){
-				if(data.error_code==0){
-					messager('操作成功');
-					clearForm('#create-user');
-					loadTable();
+			if($('#create-user').find('span').hasClass('error') == false){
+				if($('#create-user input[name="email"]').val()=='' && $('#create-user input[name="phone"]').val()==''){
+					toast('提示消息','手机号和邮箱至少添一项','error');
+					return false;
 				}else{
-					messager(data.error_message);
+					_ajax(url,type,data,function(data){
+						if(data.error_code==0){
+							toast('提示消息','操作成功','success');
+							clearForm('#create-user');
+							loadTable();
+						}else{
+							toast('提示消息',data.error_message,'error');
+						}
+					});
 				}
-			});
+			}else{
+				var errorMessage = $('#create-user').find('span.error').eq(0).text();
+				console.log(errorMessage)
+				toast('提示消息',errorMessage,'error');
+			}
 		});
 		
 		/*逐条新增用户-取消*/
 		var btnConcelUser = $('.win-add-user .but-cancel').click(function(){
 			clearForm('#create-user');
 			closeWindow('.win-add-user');
+			$('.error-name,.error-email,.error-phone,.error-password').css({
+				'display':'none'
+			});
+			$('.name,.email,.password,.phone').css({
+				'border':'1px solid #ededed'
+			})
+			$('.select-box').val("+86")
+			$('.select-time-no').attr("checked",true)
+		});
+		/*逐条新增用户-叉号*/
+		var btnConcelUser = $('.win-add-user .panel-tool-close').click(function(){
+			clearForm('#create-user');
+			closeWindow('.win-add-user');
+			$('.error-name,.error-email,.error-phone,.error-password').css({
+				'display':'none'
+			});
+			$('.name,.email,.password,.phone').css({
+				'border':'1px solid #ededed'
+			})
+			$('.select-box').val("+86")
+		});
+		
+		//逐条增加-随机密码
+		var checkRefreshPassWord = $('.refresh').click(function(){
+			trueInput('.win-add-user .password');
+			
+		});
+		/*逐条增加-随机密码生成*/
+		var refreshPassWord = $('.refresh').click(function(){
+			$('.password').val(getRandomInt(8))
 		});
 		
 		/*逐条修改用户*/
@@ -846,12 +1090,12 @@ define(['jquery','functions'],function($,_f){
 			var data = JSON.stringify(result);
 			_ajax(url,type,data,function(data){
 				if(data.error_code==0){
-					messager('操作成功');
+					toast('提示消息','操作成功','success');
 					clearForm('#update-user');
 					$('.win-update-user').window('close');
 					loadTable();
 				}else{
-					messager(data.error_message);
+					toast('提示消息',data.error_message,'error');
 				}
 			});
 			
@@ -864,12 +1108,12 @@ define(['jquery','functions'],function($,_f){
 		});
 		
 		/*更新用户窗口*/
-		var btnEditUser = $('.btn-edit-user').click(function(){
+		var btnEditUser = $('.btn-edit-user').click(function(){			
 			onOpenDelete('.win-update-user');
 			var checked = getChecked();
 			var len = getJsonLen(checked);
 			if(len==0){
-				messager('请选择要编辑的用户');
+				toast('提示消息','请选择要编辑的用户','warning');
 				return false;
 			}else if(len==1){
 				$('.win-update-user').window({
@@ -892,7 +1136,8 @@ define(['jquery','functions'],function($,_f){
 							   data:subGroup,
 							   onLoadSuccess:function(node,data){
 									//更新表单
-									updateUserForm();
+									updateUserForm(data);
+									readonlyTimer('.win-update-user','#user-update-timer');
 							   }
 							});
 						});
@@ -919,6 +1164,8 @@ define(['jquery','functions'],function($,_f){
 						getGroups(function(data){
 							var subGroup = data.list[0].children;
 							subGroup = filterData(subGroup);
+							console.log(subGroup);
+							subGroup[0].text = subGroup[0].text=='default'?'默认':subGroup[0].text;
 							$('#select-batch-user').combotree({
 							   required: true,
 							   data:subGroup,
@@ -927,7 +1174,14 @@ define(['jquery','functions'],function($,_f){
 									var node = checked[0];
 									var group = findNode(node.group_id);
 									node.group_name = group.text;
-									$('#select-batch-user').combotree('setValue', { id: node.group_id, text:node.group_name});
+									if($('.nav-home-title').hasClass('home-selected')){
+										data[0].text = data[0].text=='default'?'默认':data[0].text;
+										$('#select-batch-user').combotree('setValue', { id: data[0].id, text:data[0].text});
+									}else{
+										$('#select-batch-user').combotree('setValue', { id: node.group_id, text:node.group_name});
+									};
+									readonlyTimer('.win-update-batch-user','#user-resetpassword-timer');
+								        clearInitUpdateForm();	
 							   }
 							});
 						});
@@ -939,6 +1193,8 @@ define(['jquery','functions'],function($,_f){
 						//加载数量
 						$('.win-update-batch-user .people').text(firstName);
 						$('.win-update-batch-user .amount').text(len);
+						
+						
 					},
 					onClose:function(){
 						closeDateTimer();
@@ -961,7 +1217,7 @@ define(['jquery','functions'],function($,_f){
 			index--;
 			
 			if(index<0){
-				messager('没有下一条记录了');
+				toast('提示消息','没有下一条记录了','info');
 			}else{
 				//清除选中的行
 				$(table).datagrid('clearChecked');
@@ -988,7 +1244,7 @@ define(['jquery','functions'],function($,_f){
 			index++;
 			
 			if(index>rows.length-1){
-				messager('没有下一条记录了');
+				toast('提示消息','没有下一条记录了','info');
 			}else{
 				//清除选中的行
 				$(table).datagrid('clearChecked');
@@ -1007,7 +1263,7 @@ define(['jquery','functions'],function($,_f){
 			var checked = getChecked();
 			
 			if(checked.length==0){
-				messager('请选择要删除的记录');
+				toast('提示消息','请选择要删除的记录','warning');
 				return ;
 			}else if(checked.length==1){
 				var url = _IFA['user_delete']+checked[0].id;
@@ -1026,10 +1282,10 @@ define(['jquery','functions'],function($,_f){
 				if (r){
 					_ajax(url,type,data,function(data){
 						if(data.error_code==0){
-							messager('操作成功');
+							toast('提示消息','操作成功','success');
 							loadTable();
 						}else{
-							messager(data.error_message);
+							toast('提示消息',data.error_message,'error');
 						}
 					});
 				}
@@ -1054,6 +1310,10 @@ define(['jquery','functions'],function($,_f){
             if(event.keyCode ==13){
                $('.btn-search-user').click();
             }
+        });
+        /*失焦检索*/
+        $('.input-search').on('input',function(){
+        	$('.btn-search-user').click();
         });
         
         /*导入用户提交*/
@@ -1128,9 +1388,11 @@ define(['jquery','functions'],function($,_f){
 	   });
 	   /*返回跟节点首页*/
 	  var goHome = $('.nav-home-title').click(function(){
+	  	 $('.user-region-west .win-nav .nav-home-title').addClass('home-selected');
 	  	 var root = getRoot(tree);
 	  	 selectNode(root);
 	  	 loadTable();
+	  	 
 	  });
 	 
 	  
@@ -1160,14 +1422,14 @@ define(['jquery','functions'],function($,_f){
 			_ajax(url,type,data,function(data){
 				console.log(data);
 				if(data.error_code==0){
-					messager('操作成功');
+					toast('提示消息','操作成功','success');
 					loadTable();
 				}else{
-					messager(data.error_message);
+					toast('提示消息',data.error_message,'error');
 				}
 			});
 	 	}else{
-	 		messager('请选择用户');
+	 		toast('提示消息','请选择用户','warning');
 	 		return false;
 	 	}
 	 });
@@ -1197,14 +1459,14 @@ define(['jquery','functions'],function($,_f){
 			_ajax(url,type,data,function(data){
 				console.log(data);
 				if(data.error_code==0){
-					messager('操作成功');
+					toast('提示消息','操作成功','success');
 					loadTable();
 				}else{
-					messager(data.error_message);
+					toast('提示消息',data.error_message,'error');
 				}
 			});
 	 	}else{
-	 		messager('请选择用户');
+	 		toast('提示消息','请选择用户','warning');
 	 		return false;
 	 	}
 	 });
@@ -1225,13 +1487,17 @@ define(['jquery','functions'],function($,_f){
 		var url = _IFA['user_create_bulk'];
 		var type = 'POST';
 		var data = JSON.stringify(result);
+	    if(!checkRepeatUser()){
+	    	toast('提示消息','数据重复','error');
+	    	return;
+	    }
 		_ajax(url,type,data,function(data){
 			if(data.error_code==0){
-				messager('操作成功');
+				toast('提示消息','操作成功','success');
 				loadTable();
 				closeWindow('.win-add-batch-user');					
 			}else{
-				messager(data.error_message);
+				toast('提示消息',data.error_message,'error');
 			}
 		});
 	});
@@ -1239,11 +1505,7 @@ define(['jquery','functions'],function($,_f){
 	var btnBatchUpdateUserExit = $('.win-update-batch-user .but-cancel').click(function(){
 		closeWindow('.win-update-batch-user');
 	});
-	/*批量修改用户-密码随机*/
-	var btnRadioRefresh = $('.select_reset_password').click(function(){
-		console.log(getRandomInt(8))
-		$('.input-text02').val(getRandomInt(8))
-	})
+	
 	/*批量修改用户-保存并退出*/
 	var btnBatchUpdateUserSave = $('.win-update-batch-user .but-conserve01').click(function(){
 		//获取数据
@@ -1253,22 +1515,36 @@ define(['jquery','functions'],function($,_f){
 		var selections = $(table).datagrid('getSelections');
 		$.each(selections, function(index,data) {
 			result.ids.push(data.id);
-		});
-		if(result.select_expire<=0){
-			result.expire_at = result.select_expire;
+		});	
+		
+		if(result.select_user_group!='on'){
+			delete result.group_id;
+		}
+		
+		if(result.select_expire_time=='on'){
+			if(result.select_expire<=0){
+				result.expire_at = result.select_expire;
+			}else{
+				result.expire_at = toTimeStamp(result.expire_at);
+			}	
 		}else{
-			result.expire_at = toTimeStamp(result.expire_at);
+			delete result.expire_at;
 		}
+		
 		//当密码为指定密码时，取value值
-		if(result.select_reset_password==1){
-			result.password = result.reset_password_value;
-			if(result.password.length<8 && result.password.length>0){
-				messager('密码不小于8位');
-				return false;
+		if(result.select_user_password=='on'){
+			if(result.select_reset_password==1){
+				result.password = result.reset_password_value;
+				if(result.password.length<8 && result.password.length>0){
+					toast('提示消息','密码不小于8位','warning');
+					return false;
+				}
 			}
-		}
-		if(result.select_reset_password==2){
-			result.random_password =1;
+			if(result.select_reset_password==2){
+				result.random_password =1;
+			}
+			delete result.password;
+			delete result.random_password;
 		}
 		delete result.reset_password_value;
 		delete result.select_expire;
@@ -1278,14 +1554,25 @@ define(['jquery','functions'],function($,_f){
 		var type = 'PUT';
 		var data = JSON.stringify(result);
 		
+		console.log($('#form-batch-update-user').find('span.error-update-password'));
+		//保存验证
+		if($('#form-batch-update-user').find('span.error-update-password').text() == ''){
+			var errorMessage = $('#form-batch-update-user').find('span.error-update-password').eq(0).text();
+			if(result.select_user_group!='on' && result.select_user_password!='on' && result.select_expire_time!='on'){
+				toast('提示消息','请选择更改项！','error');
+				return false
+			}
+		}else{
+			return false;
+		}
 		_ajax(url,type,data,function(data){
 			console.log(data);
 			if(data.error_code==0){
-				messager('操作成功');
+				toast('提示消息','操作成功','success');
 				loadTable();
 				closeWindow('.win-update-batch-user');
 			}else{
-				messager(data.error_message);
+				toast('提示消息',data.error_message,'error');
 			}
 		});
 	});
@@ -1298,14 +1585,14 @@ define(['jquery','functions'],function($,_f){
 		result.subject = '发送通知';
 		
 		if(result.notice_range==undefined){
-			messager('请选择通知范围');
+			toast('提示消息','请选择通知范围','warning');
 			return false;
 		}
 		if(result.content<1){
 			result.content = '欢迎使用Oakridge网络！您的wifi登录账号是#email#，您的初始密码是#password#。你可以在连接网络后，通过登录“http：//pwd.me”，来更改您的密码。';
 		}else{
 			if(result.content.indexOf('#email#')<0 || result.content.indexOf('#password#')<0){
-				messager('您的内容缺少#email#和#password#标识符！');
+				toast('提示消息','您的内容缺少#email#和#password#标识符！','warning');
 				return false;
 			}
 		}
@@ -1328,7 +1615,7 @@ define(['jquery','functions'],function($,_f){
 			}
 		}
 		if(result.notice_type==2){
-			messager('暂不支持短信方式');
+			toast('提示消息','暂不支持短信方式','warning');
 			return false;
 		}
 		var data = JSON.stringify(result);
@@ -1336,10 +1623,10 @@ define(['jquery','functions'],function($,_f){
 		//获取数据
 		_ajax(url,type,data,function(data){
 			if(data.error_code==0){
-				messager('发送成功');
+				toast('提示消息','操作成功','success');
 				closeWindow('.win-notice-user');
 			}else{
-				messager(data.error_message);
+				toast('提示消息',data.error_message,'error');
 			}
 		});
 	});
@@ -1349,6 +1636,15 @@ define(['jquery','functions'],function($,_f){
 	});
 	  /*打开创建组窗口*/
 		var btnCreateGroup = $('.btn-create-group').click(function(e){
+			//验证是否是默认组
+			var row = $(tree).tree('getSelected');
+			if(row!=null){
+				if(row.text=='默认'){
+					toast('提示信息','默认组不能创建组','error');
+					return false;
+				}	
+			}
+			
             onOpenDelete('.win-create-group');
 			$('.win-create-group').window({
 				width:650,
@@ -1372,6 +1668,13 @@ define(['jquery','functions'],function($,_f){
 		
 		/*打开导入用户窗口*/
 		var winInportUser = $('.btn-import-user').click(function(){
+			var row = $(tree).tree('getSelected');
+			if(row != undefined){
+				if(row.text=='默认'){
+					toast("提示消息","默认组不可导入","error");
+					return false;
+			   }
+			}
 			onOpenDelete('.win-import-user');
 			$('.win-import-user').window({
 				width:650,
@@ -1416,9 +1719,10 @@ define(['jquery','functions'],function($,_f){
 							$('#tree-export-user').tree({
 								data:[data],
 								checkbox:true,
-								lines:true,
+								lines:false,
 								onLoadSuccess:function(node,data){
-									$("#tree-export-user span[class^='tree-icon tree-file']").remove();
+									$('#tree-export-user>li>ul>li:first-child .tree-icon').addClass('tree-file-default');
+									//$("#tree-export-user span[class^='tree-icon tree-file']").remove();
 								}
 							});
 						}
@@ -1449,14 +1753,26 @@ define(['jquery','functions'],function($,_f){
 						$('#select-user-group').combotree({
 						   required: true,
 						   data:subGroup,
-						   onLoadSuccess:function(node,data){console.log(data);
+						   onLoadSuccess:function(node,data){
 						   	  //设置默认值
+
+
 						   	  $('.win-add-user #select-box-mobile').find("option[value='1']").prop("selected",true);
 						   	  $('.win-add-user #user-timer').datetimebox('setValue', getNowTimer());
+						   	  var group_list = $('.group-list').tree('getSelected');
+
+                               if(!group_list){
+			           group_list = {};
+                                   group_list.id = 1;
+							   }
+                               $('#select-user-group').combotree('setValue', group_list.id);
+								$('.select-time-no').prop('checked',true)
+
 						   }
 						});
 					});
 					$(this).removeClass('save');
+					readonlyTimer('.win-add-user','#user-timer');
 				},
 				onClose:function(){
 					clearForm('#create-user');
@@ -1487,11 +1803,13 @@ define(['jquery','functions'],function($,_f){
 						$('#select-batch-user-group').combotree({
 						   required: true,
 						   data:subGroup,
-						   onLoadSuccess:function(node,data){console.log(data);
+						   onLoadSuccess:function(node,data){
 						   	  //设置默认值
 						   	  $('#select-batch-user-group').combotree('setValue', { id: data[0].id, text:data[0].text}); 
 						   	  console.log(getNowTimer());
 						   	  $('#user-batch-timer').datetimebox('setValue', getNowTimer());
+						   	  
+						   	  readonlyTimer('.win-add-batch-user','#user-batch-timer');
 						   }
 						});
 					});
@@ -1539,129 +1857,227 @@ define(['jquery','functions'],function($,_f){
 			});		
 		});
 		
-		/*新增用户验证姓名*/
-		var checkNameFocus = $('.name').focus(function(){
-			$('.error-name').hide()
-			$('.name').css({
-				'border':'1px solid #ededed'
-			});
-		});
-		var checkNameBlur = $('.name').blur(function(){
-			var resName = $('.name').val();
-			if(resName==""){
-				$('.error-name').text("姓名不能为空");
-				$('.error-name').show();
-				$('.name').css({
-					'border':'1px solid red',
-			    });
-			
-			}
-		});
-		/*新增用户验证邮件*/
-		var checkEmailFocus = $('.email').focus(function(){
-			$('.error-email').show();
-			$('.email').css({
-				'border':'1px solid #9bcce6'
-			});
-			
-		});
-		var checkEmailBlur = $('.email').blur(function(){
-			var resEmail = $('.email').val();
-			if(resEmail==""){
-				$('.error-email').text("邮箱不能为空");
-				$('.error-email').show();
-				$('.email').css({
-					'border':'1px solid red'
-			    });
-			    	
-				return 
-			}
-			if( resEmail !="" && checkEmail(resEmail)){
-				$('.error-email').hide();
-				$('.email').css({
-					'border':'1px solid #ededed'
-			    });
-			}else{
-				$('.error-email').text("您输入的邮箱格式不正确");
-				$('.error-email').show();
-				$('.email').css({
-					'border':'1px solid red'
-			    });
-			}
-		});
-		/*新增用户验证手机号码*/
-		var checkPhoneFocus = $('.phone').focus(function(){
-			$('.error-phone').show();
-			$('.phone').css({
-				'border':'1px solid #9bcce6'
-			});
-			
-		});
-		var checkPhoneBlur = $('.phone').blur(function(){
-			var resphone = $('.phone').val();
-			if(resphone==""){
-				$('.error-phone').text("手机号不能为空");
-				$('.error-phone').show();
-				$('.phone').css({
-					'border':'1px solid red'
-			    });
-				return 
-			}
-			if( resphone !="" && checkPhone(resphone)){
-				$('.error-phone').hide();
-				$('.phone').css({
-					'border':'1px solid #ededed'
-			    });
-			    
-			}else{
-				$('.error-phone').text("您输入的手机号格式不正确");
-				$('.error-phone').show();
-				$('.phone').css({
-					'border':'1px solid red'
-			    });
-			    
-			}
-		});
-		/*新增用户验证密码*/
-		var checkPasswordFocus = $('.password').focus(function(){
-			$('.error-password').show();
-			$('.password').css({
-				'border':'1px solid #9bcce6'
-			});
-		});
-		var checkPasswordBlur = $('.password').blur(function(){
-			var respassword = $('.password').val();
-			console.log($('.password').val());
-			if(respassword==""){
-				$('.error-password').text("密码不能为空");
-				$('.error-password').show();
-				$('.password').css({
-					'border':'1px solid red'
-			    });
-				return 
-			}
-			if( respassword !="" && respassword.length>=8){
-				$('.error-password').hide();
-				$('.password').css({
-					'border':'1px solid #ededed'
-			    });
-			}else{
-				$('.error-password').text("请输入不少于8位数的密码");
-				$('.error-password').show();
-				$('.password').css({
-					'border':'1px solid red'
-			    });
-			}
-		});
-		/*随机密码生成*/
-		var refreshPassWord = $('.refresh').click(function(){
-			$('.password').val(getRandomInt(8))
-		});
-		
 		//移除时间时触发
 		moveDateTimer();
 	}
-	
+	/*初始化批量修改默认值*/
+	var clearInitUpdateForm = function(){
+		/*初始化checkbox*/
+		$('.ueser-grop').prop('checked',false);
+		$('.ueser-password').prop('checked',false);
+		$('.ueser-time').prop('checked',false);
+		$('.input-text02').val("");
+		$('.assign-password').prop('checked',true);
+		$('.never-time').prop('checked',true);
+		$('.error-update-password').hide();
+		//加载用户组
+		if($('.win-update-batch-user .ueser-grop').prop('checked')){
+			$('.user-grop-children #select-batch-user').combo('readonly',false);
+			console.log('选中用户组');
+		}else{
+			$('.user-grop-children #select-batch-user').combo('readonly');
+		};
+		//加载密码重置
+		if($('.ueser-password').prop('checked')){
+				$('.assign-password').removeAttr('disabled');
+				$('.select_reset_password').removeAttr('disabled');
+				$('.win-update-batch-user .input-text02').removeAttr('disabled');
+				console.log('选中密码')
+		}else{
+			$('.assign-password').attr('disabled','disabled');
+			console.log('未选中密码')
+			$('.select_reset_password').attr('disabled','disabled');
+			$('.win-update-batch-user .input-text02').attr('disabled','disabled');
+		};
+		//加载账户有效期
+		if($('.win-update-batch-user .ueser-time').prop('checked')){
+			$('.never-time').removeAttr('disabled');
+			$('.data-time-ipt').removeAttr('disabled');
+			console.log('选有效')
+		}else{
+			$('.never-time').attr('disabled','disabled');
+			$('.data-time-ipt').attr('disabled','disabled');
+			console.log('未选有效');
+		};
+	}
+	/*表单验证*/
+	var validateForm = function(){
+		/*新增用户验证姓名*/
+		var checkNameFocus = $('.win-add-user .name').focus(function(){
+			$('.win-add-user .error-name').hide()
+			$('.win-add-user .name').css({
+				'border':'1px solid #ededed'
+			});
+		}).blur(function(){
+			
+			var resName = $('.win-add-user .name').val();
+			if(resName==""){
+				errorInput('.win-add-user .name','姓名不能为空');
+				return false
+			};
+			if(resName != ""){
+				trueInput('.win-add-user .name');
+			};
+		});
+		/*逐条新增手机号输入*/
+		var onKeydownPhone = $('.win-add-user .phone').keydown(function(event){
+			verification('#select-box-mobile');
+		});
+		
+		/*新增用户验证邮件*/
+		var checkEmailFocus = $(document).on('focus','.email',function(){
+			$('.error-email').show();
+			$(this).css({
+				'border':'1px solid #9bcce6'
+			});
+			
+		}).on('blur','.email',function(){
+			var resEmail = $(this).val();
+			if(resEmail==""){
+			    errorInput('.win-add-user .email','邮箱不能为空');	
+				return false
+			}
+			if( resEmail !="" && checkEmail(resEmail)){
+			   trueInput('.win-add-user .email')
+			}else{
+				errorInput('.win-add-user .email','邮箱格式错误');	
+				return false
+			}
+		});
+		/*新增用户验证手机号码*/
+		var checkPhoneFocus = $(document).on('focus','.phone',function(){
+			$('.error-phone').show();
+			$(this).css({
+				'border':'1px solid #9bcce6'
+			});
+			
+		}).on('blur','.phone',function(){
+			var resphone = $(this).val();
+			if(resphone==""){
+			    errorInput('.win-add-user .phone','手机号不能为空');
+				return false
+			}
+			if( resphone !="" && checkPhone(resphone)){
+				trueInput('.win-add-user .phone',);
+			}else{
+			    errorInput('.win-add-user .phone','手机号格式不对');
+			    return false
+			}
+		});
+		/*新增用户验证密码*/
+		var checkPasswordFocus = $(document).on('focus','.password',function(){
+			$(this).css({
+				'border':'1px solid #9bcce6'
+			});
+		}).on('blur','.password',function(){
+			var respassword = $('.win-add-user .password').val();
+			if(respassword==""){
+			   errorInput('.win-add-user .password','密码不能为空');
+			   return false
+			}
+			if( respassword !="" && respassword.length>=8){
+			   trueInput('.win-add-user .password');
+			}else{
+			   errorInput('.win-add-user .password','密码长度不能少于8位');
+			   return false
+			}
+		});
+		/*批量修改用户-密码随机-输入框不可用*/
+		var btnRadioRefresh = $('.select_reset_password').click(function(){
+			$('.win-update-batch-user .input-text02').attr('disabled','disabled');
+			$('.win-update-batch-user .password').val("");
+			$('.win-update-batch-user .password').css({
+				'background':'none',
+				'border':'1px solid #ededed'
+			});
+			$('.error-update-password').hide();
+		});
+		
+		/*批量修改用户-指定密码-输入框可用*/
+		var btnAssignPassWord = $('.assign-password').click(function(){
+			$('.win-update-batch-user .input-text02').removeAttr('disabled');
+		});
+		
+		/*批量修改用户-复选框*/
+		var checkedBox = $('.win-update-batch-user .ueser-grop').click(function(){
+			if($('.ueser-grop').prop('checked')){
+				$('.user-grop-children #select-batch-user').combo('readonly', false);
+			}else{
+				$('.user-grop-children #select-batch-user').combo('readonly');
+			}
+		});
+		
+		/*批量修改用户-密码重置复选框*/
+		var checkBoxPassWord = $('.win-update-batch-user .ueser-password').click(function(){
+			if($('.ueser-password').prop('checked')){
+				$('.assign-password').removeAttr('disabled');
+				$('.select_reset_password').removeAttr('disabled');
+				$('.win-update-batch-user .input-text02').removeAttr('disabled');
+				$('.win-update-batch-user .password').focus();
+				
+			}else{
+				$('.assign-password').attr('disabled','disabled');
+				$('.select_reset_password').attr('disabled','disabled');
+				$('.win-update-batch-user .input-text02').attr('disabled','disabled');
+			}
+			$('.win-update-batch-user .password').css({
+				'border':'1px solid #eaebec',
+				'background':'none'
+			});
+			$('.error-update-password').text('');
+		});
+		
+		/*批量修改用户-账户有效时间复选框*/
+		var checkBoxTime = $('.win-update-batch-user .ueser-time').click(function(){
+			if($('.win-update-batch-user .ueser-time').prop('checked')){
+				$('.never-time').removeAttr('disabled');
+				$('.data-time-ipt').removeAttr('disabled');
+			}else{
+				$('.never-time').attr('disabled','disabled');
+				$('.data-time-ipt').attr('disabled','disabled');
+			}
+		});
+		
+		//批量修改密码验证
+		var checkPasswordFocus = $(document).on('focus','.win-update-batch-user .password',function(){
+			$(this).css({
+				'border':'1px solid #9bcce6',
+				'background':'none'
+			});
+			$('.error-update-password').text('');
+		}).on('blur','.win-update-batch-user .password',function(){
+			var respassword = $('.win-update-batch-user .password').val();
+			var _width = $(this).width() + 10;
+			if(respassword==""){
+			   $(this).css({
+				'border':'1px solid red',
+				'background':'url(./user/images/error-message.png) no-repeat',
+				'background-size':'12px 12px',
+				'background-position': _width+'px center'
+				});
+				$('.error-update-password').text('密码不能为空');
+				$('.error-update-password').show();
+			   return false
+			}
+			if( respassword !="" && respassword.length>=8){
+			    $(this).css({
+					'border':'1px solid #ededed',
+					'background':'none',
+				});
+				$('.error-update-password').hide()
+			}else{
+			    $(this).css({
+				'border':'1px solid red',
+				'background':'url(./user/images/error-message.png) no-repeat',
+				'background-size':'12px 12px',
+				'background-position': _width+'px center'
+				});
+				$('.error-update-password').text('密码格式错误');
+				$('.error-update-password').show();
+				return false
+			}
+		});
+	}
 	/*运行主程序*/
 	var run = function(){
 		/*初始化*/
@@ -1678,6 +2094,9 @@ define(['jquery','functions'],function($,_f){
 		
 		/*监听面板调整*/
 		listPanel();
+		
+		/*表单验证*/
+		validateForm();
 	}
 	
 	return {

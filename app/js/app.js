@@ -436,10 +436,14 @@ define(['jquery','global','functions','provide','zui'],function($,_g,_f,provide,
 		
 		//定义默认事件
 		var defaultRequiredConfig = {
+			loadingMessage:'',
 			inline: true,
 	        	cache: false,
 				onClose:function(){
 				removeListItem($(this).attr('w_id'));
+			},
+			onBeforeOpen:function(){
+				MaskUtil.mask($(this).panel('body'));
 			},
 			onOpen:function(){
 				var opts = $.data(this, 'panel').options;
@@ -490,6 +494,7 @@ define(['jquery','global','functions','provide','zui'],function($,_g,_f,provide,
             	}
             },onClose:function(){
             	$(this).window("destroy");
+            	$('li[l_id="' + $(this).attr('w_id') + '"]').remove();
             }
 		}
 		

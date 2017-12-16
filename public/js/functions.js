@@ -167,7 +167,13 @@ var _confirm = function(title, msg, fn){
         ok:"确定",
         cancel:"取消"
     });
-	$.messager.confirm(title,msg,fn);
+	$.messager.confirm({
+        width: 650,
+        height: 290,
+        title:title,
+		msg:msg,
+		fn:fn,
+	});
 }
 
 //弹窗提示
@@ -276,6 +282,8 @@ var isMac = function(val){
 //验证手机
 var checkPhone = function(phone){
 	var me = /^1[34578]\d{9}$/;
+	var reg = new RegExp("-","g");//g,表示全部替换。
+	var phone = phone.replace(reg,"");
     if (me.test(phone) == false || me.test(phone) == undefined) {
         return false;
     }
@@ -299,8 +307,74 @@ var isIp = function(strIP) {
     }
     return false;
 }
-/*
- * 名称:关闭当前多余的窗口
+//格式手机样式    phone为+86类名
+var verification = function(phone){
+	if($(phone).val() == "+86"){
+		$(phone).next().attr('maxlength','13');
+		if(event.keyCode==8){
+			return;
+		};
+		var val = '';
+		if($(phone).next().val().length==3||$(phone).next().val().length==8){
+			 val += $(phone).next().val();
+			 val+='-'
+			 $(phone).next().val(val);
+		}
+	}else if($(phone).val() == "+1"){
+		$(phone).next().attr('maxlength','12');
+		if(event.keyCode==8){
+			return;
+		}
+		var val = '';
+		if($(phone).next().val().length==3||$(phone).next().val().length==7){
+			 val += $(phone).next().val();
+			 val+='-'
+			 $(phone).next().val(val);
+		}
+	}
+}
+//验证提示错误样式问题   
+var errorInput = function(className ,message){
+	var iptWidth = $(className).width();
+	iptWidth = iptWidth - 20
+	console.log(iptWidth);
+	$(className).css({
+		'background':'url(./user/images/error-message.png) no-repeat',
+		'background-size':'12px 12px',
+		'border': '1px solid red',
+		'background-position': iptWidth +'px center',
+		'position':'relative'
+	});
+	/*$(className).parent('div').css({
+		'position':'relative'
+	})*/
+	console.log($(className).position().left);
+	console.log($(className).parent('div').position().top);
+	var objLeft = $(className).position().left;
+	var objTop = $(className).position().top + $(className).height() +2;
+	$(className).parent().find('span').remove();
+	$(className).parent('div').append(
+		'<span class="error">'+'</span>'
+	);
+	$(className).parent('div').find('span').css({
+		'font-size':'12px',
+		'position':'absolute',
+		'left':  objLeft +'px',
+		'top': objTop + 'px',
+		'color':'red'
+	});
+	$(className).parent('div').find('span').position().top
+	$(className).parent('div').find('span').text(message);
+}
+//验证提示正确样式问题   
+var trueInput = function(className){
+	$(className).css({
+		'border':'1px solid #ededed',
+		'background':'none'
+	});
+	$(className).parent().find('span').remove();
+}
+/* * 名称:关闭当前多余的窗口
  * @param
  * @return
  * */
@@ -312,3 +386,58 @@ var onOpenDelete = function (name) {
         $(name+':eq(1)').window('destroy');
     }
 };
+
+//插件提示框
+var toast = function(title,text,icon,afterHidden){
+	$.toast({
+	    text: text,
+	    heading: title, 
+	    icon: icon, 
+	    showHideTransition: 'slide',
+	    allowToastClose: true, 
+	    hideAfter: 3000, 
+	    stack: 5, 
+	    position: 'top-center', 
+	    textAlign: 'left',  
+	    loader: false,  
+	    loaderBg: '#9ec600',  
+	    beforeShow: function () {}, 
+	    afterShown: function () {}, 
+	    beforeHide: function () {}, 
+	    afterHidden: afterHidden  
+	});
+}
+
+//遮罩层
+var MaskUtil = (function(){   
+    //定义遮罩层
+    var maskWrap = $('<div class="datagrid-mask mymask"></div>');
+    //定义信息
+    var maskMsg = $('<div class="datagrid-mask-msg mymask">正在处理，请稍待...</div>');
+        
+    function init(ele){  
+        $(ele).after(maskWrap);
+        $(ele).after(maskMsg);
+        
+        //设置样式
+        $('.datagrid-mask').css({
+        	'height':$(ele).height()+'px',
+        	'top':'40px'
+        });
+        $('.datagrid-mask-msg').css({
+        	'left':'50%'
+        });
+    }    
+        
+    return {    
+        mask:function(ele){    
+            init(ele);    
+            maskWrap.show();    
+            maskMsg.show();    
+        },unmask:function(){    
+            maskWrap.hide();    
+            maskMsg.hide();    
+        }    
+    }    
+        
+}());  

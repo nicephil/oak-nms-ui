@@ -15,7 +15,7 @@ require.config({
 	paths:{
 		'jquery':'../public/js/jquery.min',
 		'zui':'../public/js/zui',
-		'user':'../user/js/user',
+		'network':'../network/js/network'
 	},
 	map:{
 		'*': {
@@ -24,7 +24,7 @@ require.config({
 	}
 });
 
-require(['jquery','zui','user','css!../user/css/user'],function($,zui,user){
+require(['jquery','zui','network'],function($,zui,network){
 	//入口程序
-    user.run();
+    network.run();
 });

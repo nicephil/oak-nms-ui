@@ -12,7 +12,6 @@
 	min-width:246px;
 	border-right:1px solid #e2e2e3;
 	height:100%;
-	background-color: #eff4fa;
 	box-sizing: border-box;
 }
 #app-user-layout .user-region-center{
@@ -70,7 +69,7 @@
 	cursor: pointer;
 }
 .user-region-west .win-nav .btn-group{
-	margin-left: 20px;
+	margin-left: 26px;
     position: relative;
     width: 70px;
     float: left;
@@ -195,6 +194,11 @@
 .win-content .btn-group a{
 	margin-left:0px;
 }
+.win-content .dropdown-menu li:hover{
+	cursor: pointer;
+	background: #eff4f5;
+	color: #6badd8;
+}
 .win-content .dropdown-menu li.last{
 	border-bottom: 0px solid #dee5ea;
 }
@@ -219,9 +223,41 @@
 
 /*-----xinghua-----*/
 .app-icon-user{
-	background: url(../images/icon-win-user.png) no-repeat center center;
+	background: url(../../app/images/task-icon-user.png) no-repeat center center;
+	height: 24px;
 	margin-top: -11px;
 }
+
+.nodata{
+	text-align: center;
+    height: 200px;
+    line-height: 200px;
+}
+.nodata img{
+	width: 50px;
+    margin-top: 2px;
+    position: relative;
+    margin-left: -90px;
+}
+.nodata div{
+	display: inline-block;
+    position: absolute;
+    top: 25px;
+    padding-left: 10px;
+}
+
+input:focus{
+	border-color: #40a9ff !important;
+    outline: 0;
+    -webkit-box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+    box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+.home-selected{
+	background-color: #e3eaf2 !important;
+}
+img.icon-row-disable{width:16px;vertical-align: middle;}
+
 /* 用户-新增用户 */
 .user-box{ width:650px;background:#ffffff; border-radius:4px; position: absolute; left: 50%; margin: 0px -325px; z-index:10;}
 .user-box .title{ padding:0 20px; height:40px; border-radius: 10px 10px 0 0; background: #f0f4f8; text-align: center; line-height: 40px; font-size: 20px; color: #4f5358;border-bottom: 1px solid #e6eaee;}
@@ -291,18 +327,36 @@
 .cont-box02 .file-prompt{width: 180px;position: absolute;word-break: break-all;overflow: hidden;height: 30px;}
 
 /* 用户-批量新增用户 */
-.batch-box{padding: 14px; height: 290px; overflow:hidden;border:  1px solid #ededed; border-radius: 4px; margin-top: 16px;}
-.batch-box .batch-batch{ width: 100%; border-bottom: 1px dashed #edf0f3; padding-bottom: 12px;}
+.batch-box{padding: 14px; overflow:auto;border:  1px solid #ededed; border-radius: 4px; margin-top: 16px;height:280px;}
+.batch-box .batch-batch{ width: 100%; padding-bottom: 12px;}
 .batch-box .batch-batch .batch-word{ width: 42%; float: left; margin-right: 8%; margin-bottom: 10px;}
 .batch-box .batch-batch .batch-inputBox{ width: 100%; overflow: hidden; margin-bottom: 14px;}
 .batch-box .batch-batch .batch-inputBox .batch-input01{ width: 42%; height: 30px; background: #fafbfd; margin-right:8%; border: 1px solid #eaebec; border-radius: 4px; float: left;}
-.batch-box .batch-batch .batch-inputBox .batch-input02{ width: 42%; height: 30px; background: #fafbfd; border: 1px solid #eaebec; border-radius: 4px;float: left;}
+.batch-box .batch-batch .batch-inputBox .batch-input02{ width: 34%; height: 30px; background: #fafbfd; border: 1px solid #eaebec; border-radius: 4px;float: left;}
 .batch-box .batch-batch .batch-inputBox .batch-delete{ width: 24px; height: 24px; cursor: pointer;float:right; margin-top:3px; background: url(../images/mask-delete-noselected.png) no-repeat;}
 .batch-box .batch-batch .batch-inputBox .batch-delete-selected:hover{background: url(../images/mask-delete-selected.png) no-repeat;}
-.batch-box .batch-add{ width: 24px; height: 24px; cursor: pointer;float:right; margin-top: 30px; background: url(../images/mask-add-noselected.png) no-repeat;}
+.batch-box .batch-add{ width: 24px; height: 24px; cursor: pointer;float:right; margin-top: 3px; background: url(../images/mask-add-noselected.png) no-repeat;}
 .batch-box .batch-add-selected:hover{ background: url(../images/mask-add-selected.png) no-repeat;}
-.batch-box .user-list{height: 185px;overflow: auto;}
-
+.batch-box .user-list{overflow: auto;}
+.batch-box .batch-batch .batch-inputBox .country{
+	height: 32px;
+    background: #fafbfd;
+    border: 1px solid #eaebec;
+    border-radius: 4px;
+    float: left;
+    border-right: 0px;
+    border-bottom-right-radius: 0px;
+    border-top-right-radius: 0px;
+    border-right: 1px solid #e2e2e3;
+}
+.batch-box .batch-batch .batch-inputBox .right-input{
+	margin-left: 5px;
+    border-bottom-left-radius: 0px;
+    border-top-left-radius: 0px;
+}
+.batch-box .batch-batch .batch-inputBox .err{
+	border-color:#ff7600 !important;
+}
 /* 用户-批量修改用户 */
 .cont-box02 .setup-contbox01{ width: 100%; overflow: hidden; padding-bottom: 30px;}
 .setup-contbox01 .top-box{ padding-left: 40px; background: url(../images/mask-choice-noselected01.png) no-repeat left center;}
@@ -342,6 +396,12 @@
 .choice-group .group-cont{ width: 100%；}
 .choice-group .group-cont li{list-style: none; margin-left: 26px; padding-left: 26px; background: url(../images/mask-choice-noselected01.png) no-repeat left center; margin-top: 10px;}
 .choice-group .group-cont .group-selected{ background: url(../images/mask-choice-selected01.png) no-repeat left center;}
+#tree-export-user{
+	height: 260px;
+    overflow: auto;
+    padding-bottom: 10px;
+}
+
 /*-----/xinghua-----*/
 
 /*bootstrap*/
@@ -458,7 +518,7 @@
 }
 footer{
 	position: absolute;
-	bottom: 2px;
+	bottom: 0px;
 	width:100%;
 	height:70px;
 	line-height:70px;
@@ -486,13 +546,12 @@ footer{
 }
 .pagination-page-list{
 	width: 85px;
-	height: 34px;
 	font-size: 14px;
 	box-sizing: border-box;
+	margin-top: 14px;
 }
 .pagination-link{
 	width: 34px;
-	height: 34px;
 	border: 1px solid #ddd;
 	border-radius: 0px;
 	box-sizing: border-box;
@@ -510,18 +569,14 @@ footer{
 	background: #ddd;
 }
 .pagination  td:nth-child(5) span{
-	height: 34px;
 	
 }
 .pagination .pagination-num{
 	width: 50px;
-	height: 34px;
 	box-sizing: border-box;
 	border-radius: 4px;
 }
 .pagination-info{
-	height: 34px;
-    line-height: 34px;
     font-size: 14px;
 }
 .pagination span{
@@ -530,7 +585,6 @@ footer{
 .l-btn-left .l-btn-empty{
 	margin:0px;
 	width:40px;
-	height: 34px;
 	border:1px solid #ddd;
 	box-sizing: border-box;
 }
@@ -579,7 +633,7 @@ footer{
 }
 .pagination  td:nth-last-child(2){
 	position: absolute;
-    right: 45px;
+    right: 40px;
     top: 14px;
 }
 .pagination  td:nth-last-child(3){
@@ -628,7 +682,6 @@ footer{
 }
 .datagrid-btable tr td{
 	border-right: none;
-	border-bottom: none;
 }
 .datagrid-htable tr{
 	background: #f0f4f8;
@@ -644,6 +697,7 @@ footer{
 .datagrid-htable  tr td .datagrid-cell{
 	border-left: 1px solid #dadde1;
 }
+
 /*表格样式--------cwj*/
 
 /*逐条新增用户--------cwj*/
@@ -700,9 +754,6 @@ footer{
 .user-box .cont-box .cont-cont .validate-phone{
 	margin-top: 10px!important;
 }
-/*.user-box .cont-box .cont-cont .validate-email{
-	margin-top: 25px!important;
-}*/
 .user-box .cont-box .cont-cont .validate-password{
 	margin-top: 25px!important;
 }
@@ -710,24 +761,16 @@ footer{
 	border: 1px solid #ededed;
 }
 .user-box .cont-box .cont-cont .validate-name .name{
-	/*background: url(../images/error-message.png) no-repeat;
-	background-position:455px 3px;*/
 	text-indent: 10px;
 	
 }
 .user-box .cont-box .cont-cont .validate-email .email{
-	/*background: url(../images/error-message.png) no-repeat;
-	background-position:455px 3px;*/
 	text-indent: 10px;
 }
 .user-box .cont-box .cont-cont .validate-phone .phone{
-	/*background: url(../images/error-message.png) no-repeat;
-	background-position:368px 3px;*/
 	text-indent: 10px;
 }
 .user-box .cont-box .cont-cont .validate-password .password{
-	/*background: url(../images/error-message.png) no-repeat;
-	background-position:368px 3px;*/
 	width: 440px;
 	text-indent: 10px;
 }
@@ -811,3 +854,129 @@ footer{
 .setup-box .setup-contbox .selected01{
 	background: none;
 }
+/*统一显示文字输入和左侧是有空隙的*/
+.batch-box .batch-batch .batch-inputBox .batch-input01{
+	text-indent:10px;
+}
+.batch-box .batch-batch .batch-inputBox .batch-input02{
+	text-indent: 10px;
+}	
+.cont-box03 .add-box .add-input{
+	text-indent: 10px;
+}
+.add-textarea{
+	text-indent: 10px;
+}
+.notice-cont .notice-contBox .notice-textarea{
+	text-indent: 10px;
+}
+
+
+/*导入用户input和文字间距*/
+.win-import-user .update-cover{
+	margin-left: 3px;
+}
+.win-import-user .update-ignore{
+	margin-left: 3px;
+}
+/*批量修改input和文字间距*/
+.win-update-batch-user .batch-password{
+	margin-left: 3px;
+}
+.win-update-batch-user .random-password{
+	margin-left: 3px;
+}
+.win-update-batch-user .never-outdated{
+	margin-left: 3px;
+}
+/*通知input和文字间距*/
+.win-notice-user .notification-email{
+	margin-left: 3px;
+}
+.win-notice-user .notification-note{
+	margin-left: 3px;
+}
+/*批量修改check*/
+.setup-contbox01 .selected01{
+	background: none;
+}
+.setup-contbox01 .top-box{
+	background: none;
+}
+.win-update-batch-user .ueser-grop,.win-update-batch-user .ueser-password,.win-update-batch-user .ueser-time{
+	float: left;
+}
+/*逐条新增-用户组*/
+.win-add-user .uesr-grop-choice .textbox{
+	width: 484px!important;
+	border-color:#ededed;
+}
+.win-add-user .cont-cont .input-box .choice-add{
+	margin-left: 56px;
+}
+/*批量新增-用户组*/
+.win-add-batch-user .user-grop-div .textbox{
+	width: 484px!important;
+}
+.win-add-batch-user .cont-cont .input-box .choice-one{
+	margin-left: 58px;
+}
+.win-add-batch-user .user-footer{
+	margin-top:7px;
+}
+/*逐条修改-用户组*/
+.win-update-user .update-uesr-grop .textbox{
+	width: 484px!important;
+}
+.win-update-user .input-boxBox02 .upadte-date-time{
+	margin-left: 55px;
+}
+/*批量修改-用户组*/
+.win-update-batch-user .update-batch-user-grop .textbox{
+	width: 500px!important;
+}
+.win-update-batch-user .bottom-box .upadte-batch-date-time{
+	margin-left: 118px!important;
+}
+.win-update-batch-user .bottom-box .updata-batck-password-radom{
+	float: left;
+	margin-left: 60px;
+}
+.win-update-batch-user .user-footer{
+	margin-top:7px;
+}
+/*批量修改-密码框*/
+.error-update-password{
+	position: absolute;
+    left: 180px;
+    top: 264px;
+	font-size: 12px;
+	color: red;
+}
+.win-update-batch-user .update-password-div{
+	height: 97px;
+}
+.win-update-batch-user .update-time-div{
+	margin-top: 0px;
+}
+/*用户通知*/
+.notice-cont .notice-contBox .notice-choice01{
+	margin-left: 10px;
+}
+
+/*li-normal样式*/
+.li-normal{
+	height: 30px;
+	line-height: 30px;
+	text-align: center;
+	border-bottom: 1px solid #dee5ea;
+}
+/*li-hover样式*/
+.li-hover{
+	cursor: pointer;
+    background: #eff4f5;
+    color: #6badd8;
+}
+
+
+

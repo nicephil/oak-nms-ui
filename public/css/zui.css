@@ -18,7 +18,7 @@
 }
 .panel-title {
   /*background: url('../images/blank.gif') no-repeat;*/
- background:#eef5fa;
+ background:linear-gradient(to bottom,#2b88dc 8%,transparent 3%,transparent 23%);
  text-align: center;
 }
 .panel-header-noborder {
@@ -39,14 +39,14 @@
   border-bottom-width: 0;
 }
 .panel-with-icon {
-  padding-left: 18px;
+  /*padding-left: 18px;*/
 }
 .panel-icon,
 .panel-tool {
   position: absolute;
   top: 50%;
   margin-top: -8px;
-  height: 16px;
+  height: 20px;
   overflow: hidden;
 }
 .panel-icon {
@@ -60,11 +60,11 @@
 }
 .panel-tool a {
   display: inline-block;
-  width: 16px;
-  height: 16px;
-  opacity: 0.6;
+  width: 20px;
+  height: 20px;
+  opacity: 1;
   filter: alpha(opacity=60);
-  margin: 0 0 0 2px;
+  margin: 0 0 0 6px;
   vertical-align: top;
 }
 .panel-tool a:hover {
@@ -93,16 +93,16 @@
   background: url('../images/loading.gif') no-repeat 10px 10px;
 }
 .panel-tool-close {
-  background: url('../images/panel_tools.png') no-repeat -16px 0px;
+  background: url('../images/panel_tools.png') no-repeat -34px -11px;
 }
 .panel-tool-min {
-  background: url('../images/panel_tools.png') no-repeat 0px 0px;
+  background: url('../images/panel_tools.png') no-repeat -10px -9px;
 }
 .panel-tool-max {
-  background: url('../images/panel_tools.png') no-repeat 0px -16px;
+  background: url('../images/panel_tools.png') no-repeat -64px -10px;
 }
 .panel-tool-restore {
-  background: url('../images/panel_tools.png') no-repeat -16px -16px;
+  background: url('../images/panel_tools.png') no-repeat -9px -37px;
 }
 .panel-tool-collapse {
   background: url('../images/panel_tools.png') no-repeat -32px 0;
@@ -123,9 +123,9 @@
   font-size: 14px;
 }
 .panel-title {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: bold;
-  color: #5e626b;
+  color: #2b88dc;
   height: 37px;
   line-height: 37px;
 }
@@ -356,7 +356,10 @@
   border-style: solid;
 }
 .window .window-header {
-  background: transparent;
+  /*background: transparent;*/
+  /*background: #eef5fa;*/
+/*  background: linear-gradient(to bottom,#d7eaf3 0%,#d0e5f5 33%,#fcfffe 96%);
+*/  background: linear-gradient(#d8ecfb,#ffffff);
   padding: 0px 0px 0px 0px;
 }
 .window .window-body {
@@ -381,7 +384,7 @@
   right: 15px;
 }
 .window .window-header .panel-with-icon {
-  padding-left: 18px;
+  /*padding-left: 18px;*/
 }
 .window-proxy {
   position: absolute;
@@ -546,11 +549,14 @@
   text-align: right;
 }
 .dialog-button .l-btn {
-  margin-left: 5px;
+  margin-left: 10px;
+}
+.dialog-button .l-btn:nth-child(2) {
+  margin-right: 28px;
 }
 .dialog-toolbar,
 .dialog-button {
-  background: #fafafa;
+  background: #eef5fa;
   border-width: 1px;
   border-style: solid;
 }
@@ -558,7 +564,7 @@
   border-color: #ddd #ddd #eee #ddd;
 }
 .dialog-button {
-  border-color: #eee #ddd #ddd #ddd;
+  border-color: #ededed;
 }
 .window-thinborder .dialog-toolbar {
   border-left: transparent;
@@ -2767,15 +2773,15 @@
   border-width: 0 0 0 1px;
 }
 .messager-body {
-  padding: 10px 10px 30px 10px;
+  padding: 50px;
   overflow: auto;
 }
 .messager-button {
-  text-align: center;
+  text-align: right;
   padding: 5px;
 }
 .messager-button .l-btn {
-  width: 70px;
+  width: 72px;
 }
 .messager-icon {
   float: left;
@@ -2790,7 +2796,8 @@
   background: url('../images/messager_icons.png') no-repeat scroll 0 0;
 }
 .messager-question {
-  background: url('../images/messager_icons.png') no-repeat scroll -32px 0;
+  background: url('../images/error.png') no-repeat scroll;
+  background-size: 99%;
 }
 .messager-warning {
   background: url('../images/messager_icons.png') no-repeat scroll -96px 0;
@@ -2824,10 +2831,10 @@
   padding: 0;
 }
 .tree-node {
-  height: 48px;
+  height: 40px;
   white-space: nowrap;
   cursor: pointer;
-  --line-height: 48px;
+  --line-height: 40px;
 }
 .tree-hit {
   cursor: pointer;
@@ -2885,23 +2892,23 @@
   /*background: url('../images/tree_icons.png') no-repeat -208px 0;*/
   background: url('../images/icon-group.png') no-repeat center center;
   width:30px;
-  height: 48px;
+  height: 40px;
 }
 .tree-folder-open {
   /*background: url('../images/tree_icons.png') no-repeat -224px 0;*/
   background: url('../images/icon-group.png') no-repeat center center;
   width:30px;
-  height: 48px;
+  height: 40px;
 }
 .tree-file {
   background: url('../images/icon-group.png') no-repeat center center;
   width:30px;
-  height: 48px;
+  height: 40px;
 }
 .tree-file-default {
   background: url('../images/icon-group-default.png') no-repeat center center;
   width:30px;
-  height: 48px;
+  height: 40px;
 }
 .tree-loading {
   background: url('../images/loading.gif') no-repeat center center;
@@ -2922,8 +2929,8 @@
   vertical-align: top;
   white-space: nowrap;
   padding: 0 2px;
-  height: 48px;
-  line-height: 48px;
+  height: 40px;
+  line-height: 40px;
 }
 .tree-node-proxy {
   font-size: 12px;
@@ -3173,6 +3180,12 @@
 .l-btn {
   box-shadow: 0 1px 2px rgba(0,0,0,0.2), 0 1px 1px rgba(0,0,0,0.05);
 }
+
+.messager-button .l-btn:nth-child(1){
+  background-color: #5599c4;
+  color: #fff;
+}
+
 .l-btn:active {
   box-shadow: 0 6px 17px 0 rgba(235,235,235,0.3);
 }

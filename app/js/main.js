@@ -11,10 +11,12 @@
 require.config({
 	baseUrl:'./js',
 	shim: {
-        'zui':['jquery']
+        'zui':['jquery'],
+        'toast':['jquery']
     },
 	paths:{
 		'jquery':'../public/js/jquery.min',
+		'toast':'../public/plug/toast/jquery.toast',
 		'zui':'../public/js/zui',
 		'app':'../app/js/app',
 		'global':'../public/config/global',
@@ -24,6 +26,6 @@ require.config({
 });
 
 //加载应用模块
-require(['jquery','app'],function($,app){
+require(['jquery','toast','app'],function($,toast,app){
 	app.desktop.run();
 });

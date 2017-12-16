@@ -6,7 +6,7 @@
 	"icon" : "app/images/app-user.png",
 	"taskIcon" : "app/images/task-icon-user.png",
 	"headIcon":"app-icon-user",
-	"height":"650",
+	"height":"630",
 	"width":"1000"
 },{
 	"id" : "2",
@@ -15,7 +15,7 @@
 	"href":"network/index.html",
 	"icon" : "app/images/app-network.png",
 	"taskIcon" : "app/images/task-icon-network.png",
-	"headIcon":"app-icon-user",
+	"headIcon":"app-icon-network",
 	"height":"650",
 	"width":"1000"
 }

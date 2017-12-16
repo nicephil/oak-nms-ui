@@ -12,7 +12,6 @@
  	<!--左侧布局-->
  	<div data-options="region:'west',border:false" class="user-region-west">
  		<div class="easyui-layout app-left" fit="true" class="transparent">
-			<div data-options="region:'north',border:false" class="w-top transparent"></div>
 			<div data-options="region:'east',border:false" class="w-sep transparent"></div>
 			<div data-options="region:'south',border:false" class="transparent"></div>
 			<div data-options="region:'center',border:false" class="transparent over-hide ncenter">
@@ -56,7 +55,6 @@
  	<!--右侧布局-->
 	<div data-options="region:'center',border:false" class="user-region-center">
 		<div class="easyui-layout app-right"  fit="true">
-			<div data-options="region:'north',border:false" class="w-top transparent"></div>
 			<div data-options="region:'west',border:false" class="w-sep transparent"></div>
 			<div data-options="region:'east',border:false" class="w-sep transparent"></div>
 			<div data-options="region:'center',border:false" class="transparent" style="position:relative;overflow:hidden;">
@@ -153,8 +151,14 @@
 									<label>重复数据处理</label>
 								</div>
 								<div class="bottom-box import-user-data">
-									<label><input type="radio" value="1" checked="checked" name="override" />覆盖</label>
-									<label><input type="radio" value="0" name="override" />忽略</label>
+									<label>
+										<input type="radio" value="1" checked="checked" name="override"/>
+										<span class="update-cover" >覆盖</span>
+									</label>
+									<label>
+										<input type="radio" value="0" name="override" />
+										<span class="update-ignore">忽略</span>
+									</label>
 								</div>
 							</div>
 						</div>
@@ -198,7 +202,7 @@
 						<div class="input-box validate-name">
 							<div class="input-left">姓名：</div>
 							<input type="text" name="first_name" class="input-text input-selected indent5 name"/><!-- input-selected为点击选中的样式 -->
-							<span class="error-name"><!--获取焦点，准备输入文字--></span>
+							<!--<span class="error-name"></span>-->
 						</div>
 						<div class="input-box validate-email"  style="height:54px">
 							<div class="input-boxBox">
@@ -216,7 +220,7 @@
 									<option value="+86" selected="selected">+86</option>
 									<option value="+1">+1</option>
 								</select>
-								<input type="text" name="phone" class="input-text01 indent5 phone"/>
+								<input type="text" name="phone" class="input-text01 indent5 phone" maxlength="13" />
 								<span class="error-phone"><!--获取焦点，准备输入文字--></span>
 							</div>
 						</div>
@@ -232,7 +236,7 @@
 
 					<div class="cont-title margin-top10">设置</div>
 					<div class="cont-cont">
-						<div class="input-box margin-top30">
+						<div class="input-box margin-top30 uesr-grop-choice">
 							<div class="input-left">用户组：</div>
 							<input id="select-user-group" name="group_id" value="">
 						</div>
@@ -244,7 +248,7 @@
 										<span class="select-time-no-text">从不过期 </span>
 									</label>
 								</div>
-								<div class="choice choice-noselected">
+								<div class="choice choice-noselected choice-add">
 									<input name="select_expire" class="select-radio" type="radio" value="1" />
 									<span class="time-box-time">过期时间</span>
 									<div class="select-div">
@@ -313,7 +317,7 @@
 
 					<div class="cont-title margin-top10">设置</div>
 					<div class="cont-cont">
-						<div class="input-box margin-top30">
+						<div class="input-box margin-top30 update-uesr-grop">
 							<div class="input-left">用户组：</div>
 							<input id="select-update-user-group" name="group_id" value="">
 						</div>
@@ -325,7 +329,7 @@
 										<span class="select-time-no-text">从不过期 </span>
 									</label>
 								</div>
-								<div class="choice choice-noselected">
+								<div class="choice choice-noselected upadte-date-time">
 									<input name="select_expire" class="select-radio" type="radio" value="1" />
 									<span class="time-box-time">过期时间</span>
 									<div class="select-div">
@@ -358,7 +362,7 @@
     	<div class="user-box">
 			<form method="post" action="" id="create-user-batch">
 				<div class="cont-box">
-					<div class="cont-box02">
+					<div class="cont-box02" style="height:328px">
 						<div class="batch-box">
 							<div class="batch-batch">
 								<div class="box">
@@ -366,25 +370,14 @@
 									<div class="batch-word">手机：</div>
 								</div>
 								<div class="user-list">
-									<div class="batch-inputBox">
-										<input type="text" name="email" class="batch-input01"/>
-										<input type="text" name="phone" class="batch-input02"/>
-										<div class="batch-delete batch-delete-selected"></div>
-									</div>
-									<div class="batch-inputBox">
-										<input type="text" name="email" class="batch-input01"/>
-										<input type="text" name="phone" class="batch-input02"/>
-										<div class="batch-delete batch-delete-selected"></div>
-									</div>
 								</div>
 							</div>
-							<div class="batch-add batch-add-selected"></div>
 						</div>
 					</div>
 
 					<div class="cont-title margin-top10">设置</div>
 					<div class="cont-cont">
-						<div class="input-box margin-top30">
+						<div class="input-box margin-top30 user-grop-div">
 							<div class="input-left">用户组：</div>
 							<input id="select-batch-user-group" name="group_id" value="">
 						</div>
@@ -394,7 +387,7 @@
 								<div class="choice choice-selected">
 									<label><input name="select_expire" checked="checked" type="radio" value="0" />从不过期 </label>
 								</div>
-								<div class="choice choice-noselected">
+								<div class="choice choice-noselected choice-one">
 									<input name="select_expire" class="select-radio" type="radio" value="1" />
 									<span class="time-box-time">过期时间</span>
 									<div class="select-div">
@@ -427,35 +420,49 @@
 					</div>
 					<div class="setup-contbox01">
 
-						<div class="input-boxBox margin-top25">
+						<div class="input-boxBox margin-top25 update-batch-user-grop">
+							<input type="checkbox" name="select_user_group" class="ueser-grop" /> 
 							<div class="top-box selected01">用户组：</div><!-- selected01为选中样式-->
-							<div class="bottom-box">
+							<div class="bottom-box user-grop-children">
 							<input id="select-batch-user" name="group_id" value="">
 							</div>
 						</div>
 
-						<div class="input-boxBox margin-top25">
+						<div class="input-boxBox margin-top25 update-password-div">
+							<input type="checkbox" name="select_user_password" class="ueser-password"  /> 
 							<div class="top-box">密码重置：</div>
-							<div class="bottom-box">
+							<div class="bottom-box ueser-password-children">
 								<div class="choice01 choice-selected01">
-									<label><input type="radio" value="1" checked="checked" name="select_reset_password"  />指定密码</label>
+									<label>
+										<input type="radio" value="1" checked="checked" name="select_reset_password" class="assign-password " />
+										<span class="batch-password" >指定密码</span>
+									</label>
 								</div>
-								<input type="text" name="reset_password_value" class="input-text02"/>
-								<div class="choice01 choice-noselected01" style="float: right;">
-									<label><input type="radio" value="2" name="select_reset_password" class="select_reset_password" />随机密码</label>
+								<input type="text" name="reset_password_value" class="input-text02 password"/>
+								
+								<div class="choice01 choice-noselected01 updata-batck-password-radom" style="float: right;">
+									<label>
+										<input type="radio" value="2" name="select_reset_password" class="select_reset_password" />
+										<span class="random-password" >随机密码</span>
+									</label>
 								</div>
+								<span class="error-update-password"></span>
 							</div>
 						</div>
-							<div class="input-boxBox margin-top25">
+							<div class="input-boxBox margin-top25 update-time-div">
+								<input type="checkbox" name="select_expire_time" class="ueser-time"  /> 
 								<div class="top-box">账户有效时间：</div>
 								<div class="bottom-box">
 									<div class="choice01 choice-selected01">
-										<label><input name="select_expire" checked="checked" type="radio" value="0" />从不过期 </label>
+										<label>
+											<input name="select_expire" checked="checked" type="radio" value="0" class="never-time"/>
+											<span class="never-outdated" >从不过期</span>
+										</label>
 									</div>
-									<div class="choice01 choice-noselected01" style="margin-left: 34px;">
-										<input name="select_expire" class="select-radio" type="radio" value="1" />
+									<div class="choice01 choice-noselected01 upadte-batch-date-time" style="margin-left: 34px;">
+										<input name="select_expire" class="select-radio data-time-ipt" type="radio" value="1" />
 										<span class="time-box-time">过期时间</span>
-											<div class="select-div">
+											<div class="select-div data-time user-time-div update-dataTime">
 												<div class="select-date"></div>
 												<input id="user-resetpassword-timer" type="text" style="width:178px" name="expire_at">
 											</div>
@@ -476,7 +483,7 @@
     
     <!--用户通知-->
     <div id="win-notice-user" class="win-notice-user none">
-    	<div class="user-box">
+    	<div class="user-box user-box-add">
 			<form method="post" action="" id="form-notice-user">
 				<div class="cont-box03">
 					<div class="notice-tilte">您可以通过邮件或者短信来通知用户的上网账户信息</div>
@@ -499,10 +506,15 @@
 							<p class="notice-cont-title">选择通知方式</p>
 							<div class="box">
 								<div class="notice-choice01">
-									<label><input type="radio" checked="checked" value="1" name="notice_type"  />邮件 </label>
+									<label>
+										<input type="radio" checked="checked" value="1" name="notice_type"  />
+										<span class="notification-email">邮件</span>
+									</label>
 								</div>
 								<div class="notice-choice02 ">
-									<label><input type="radio" value="2" name="notice_type" />短信</label>	
+									<label><input type="radio" value="2" name="notice_type" />
+										<span class="notification-note">短信</span>
+									</label>	
 								</div>
 							</div>
 						</div>
