@@ -1,6 +1,5 @@
 /*input样式*/
 input:type["text"]{
-	
 	width: 100%;
 	height: 40px;
 	box-sizing: border-box;
@@ -30,3 +29,437 @@ input:type["text"]:focus{
     -webkit-box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
     box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
 }
+input[type="text" i]:disabled{
+	background-color: rgba(216, 218, 220, 0.2);
+}
+
+.nodata{
+	text-align: center;
+    height: 200px;
+    line-height: 200px;
+}
+.nodata img{
+	width: 50px;
+    margin-top: 2px;
+    position: relative;
+    margin-left: -90px;
+}
+.nodata div{
+	display: inline-block;
+    position: absolute;
+    top: 25px;
+    padding-left: 10px;
+}
+
+input[type='text']:focus{
+	border-color: #40a9ff !important;
+    outline: none;
+    -webkit-box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+    box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+input[type='radio']:hover{
+	cursor: pointer;
+}
+.normal-input{
+	height: 28px;
+    border: 1px solid #eaebec;
+    border-radius: 4px;
+    text-indent: 10px;
+}
+.normal-div{
+	height:30px;
+}
+
+/*通用radio样式*/
+.radio-wrap{
+	position: relative;
+	height: 30px;
+	line-height:30px;
+}
+.radio-wrap .normal-radio{
+	width: 20px;
+    height: 20px;
+    background-image: url(../images/icon-radio.png);
+    background-position: 0 -22px;
+    position: absolute;
+    display: inline-block;
+    top:3px;
+}
+.radio-checked{
+	width: 20px;
+    height: 20px;
+	background-image:url(../images/icon-radio.png);
+	background-position: 0 -88px;
+	position: absolute;
+    display: inline-block;
+    top:3px;
+}
+.radio-wrap .radio-label{
+	position: absolute;
+    margin-left: 25px;
+    display: inline-block;
+}
+.radio-wrap .normal-radio input,.radio-wrap .radio-checked input{
+	width: 20px;
+    height: 20px;
+    position: absolute;
+    display: inline-block;
+    margin-left: 1px;
+    margin-top: 1px;
+    opacity: 0;
+}
+/*/通用radio样式*/
+
+/*通用checkbox样式*/
+.checkbox-wrap{
+	position: relative;
+	height: 30px;
+	line-height:30px;
+}
+.normal-checkbox{
+	background-image:url(../images/checkbox.png);
+  	background-position: 0 0px;
+  	width: 22px;
+    height: 22px;
+    position: absolute;
+    display: inline-block;
+    top:3px;
+}
+.checkbox-wrap .checkbox-checked{
+	width: 22px;
+    height: 22px;
+	background-image:url(../images/checkbox.png);
+	background-position: 0 -66px;
+	position: absolute;
+    display: inline-block;
+    top:3px;
+}
+.checkbox-wrap .checkbox-label{
+	position: absolute;
+    margin-left: 25px;
+    display: inline-block;
+}
+.checkbox-wrap .normal-checkbox input,.checkbox-wrap .checkbox-checked input{
+	width: 20px;
+    height: 20px;
+    position: absolute;
+    display: inline-block;
+    margin-left: 1px;
+    margin-top: 1px;
+    opacity: 0;
+}
+/*/通用checkbox样式*/
+
+
+
+/*li-normal样式*/
+.li-normal{
+	height: 30px;
+	line-height: 30px;
+	text-align: center;
+	border-bottom: 1px solid #dee5ea;
+}
+/*li-hover样式*/
+.li-hover{
+	cursor: pointer;
+    background: #eff4f5;
+    color: #6badd8;
+}
+/*批量修改复选框选中类*/
+.checkbox-checked{
+	background-image:url(../images/checkbox.png);
+	background-position: 0 -66px;
+}
+.checkbox-unchecked{
+	background-image:url(../images/checkbox.png);
+  	background-position: 0 -22px;
+}
+/*批量修改	input:radio 选中类-复选框选中*/
+.checkRadio-checked{
+	background-image:url(../images/icon-radio.png);
+	background-position: 0 -88px;
+}
+.checkRadio-unchecked{
+	background-image:url(../images/icon-radio.png);
+	background-position: 0 -22px;
+}
+/*批量修改	input:radio 选中类-复选框没选*/
+.checkBox-checkRadio-checked{
+	background-image:url(../images/icon-radio.png);
+	background-position: 0 -112px;
+}
+.checkBox-checkRadio-unchecked{
+	background-image:url(../images/icon-radio.png);
+	background-position: 0 -46px;
+}
+.home-selected{
+	background-color: #0086E5;
+	color: #fff;
+	border-radius: 4px;
+}
+img.icon-row-disable{width:16px;vertical-align: middle;}
+.btn {
+    display: inline-block;
+    font-size: 14px;
+    font-weight: normal;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border-radius: 4px;
+    width: 68px;
+    height: 28px;
+    line-height: 28px;
+    background-color: #f3f5f9;
+    border: 1px solid #c8d2dc;
+    color:#4f5358;
+    text-decoration:none;
+}
+.btn:hover{
+	-webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
+    box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
+}
+.btn-default{
+	color: #333;
+    background-color: #fff;
+    border-color: #f3f5f9;
+    height: 34px;
+    width: auto;
+    padding: 0px 10px;
+}
+.open{
+	-webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
+    box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
+}
+.dropdown-menu{
+	position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    float: left;
+    min-width: 160px;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    font-size: 14px;
+    text-align: left;
+    list-style: none;
+    background-color: #fff;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0, 0, 0, .15);
+    border-radius: 4px;
+    -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+}
+.caret {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    margin-left: 2px;
+    vertical-align: middle;
+    border-top: 4px dashed;
+    border-top: 4px solid \9;
+    border-right: 4px solid transparent;
+    border-left: 4px solid transparent;
+}
+.sm-header .panel-title{
+	font-weight:normal;
+}
+
+/*表格样式--------cwj*/
+.datagrid .panel-body{
+	border-left: none;
+    border-right: none;
+    border-bottom: none;
+}
+.datagrid-htable tr td{
+	border-top:1px solid #EBF0F5;
+}
+.datagrid-htable tr td:nth-child(1){
+	border-right: none;
+}
+.datagrid-htable tr td:nth-child(1) div{
+	margin-left:10px;
+}
+.datagrid-htable td:nth-last-child(1){
+	border-right: none;
+}
+
+.datagrid-btable tr td{
+	border-right: none;
+}
+.datagrid-btable td:nth-child(1) div{
+	margin-left:10px;
+}
+
+/*checkbox树结构*/
+.checkbox-tree{
+	position: relative;
+	padding-left: 30px !important;
+	overflow: auto;
+}
+.checkbox-tree .tree-checkbox0 {
+  background-image: url(../images/checkbox.png);
+  background-position: 0 0px;
+  position: absolute;
+  left: 0px;
+  margin-top:7px;
+  width: 22px;
+  height: 22px;
+}
+.checkbox-tree .tree-checkbox1 {
+  background-image: url(../images/checkbox.png);
+  background-position: 0 -66px;
+  position: absolute;
+  left: 0px;
+  margin-top:7px;
+  width: 22px;
+  height: 22px;
+}
+.checkbox-tree .tree-checkbox2 {
+  background-image: url(../images/checkbox.png);
+  background-position: 0 0px;
+  position: absolute;
+  left: 0px;
+  margin-top:7px;
+  width: 22px;
+  height: 22px;
+}
+.checkbox-tree .tree-node-selected{
+	background: none;
+    border-radius: 0px;
+    color: #404040;
+}
+.checkbox-tree .tree-expanded{
+	--background: url(../images/tree_arrow.png) no-repeat -20px 0;
+}
+.checkbox-tree .tree-node-hover{
+	background: none;
+    border-radius: 0px;
+    color: #404040;
+}
+/*/checkbox树结构*/
+/*修改*/
+.datagrid-header .datagrid-cell span{
+	font-size: 14px;
+}
+.datagrid-header td:nth-child(1){
+	width:40px;
+	min-width:40px;
+}
+.datagrid-btable tr td:nth-child(1){
+	width:40px;
+}
+.datagrid-header td:nth-child(2){
+	border-left:1px solid #ddd;
+	border-right:0px;
+}
+.datagrid-btable tr td:nth-child(2){
+	padding-left:20px;
+}
+.datagrid-btable tr td:nth-child(2) div{
+	margin-top:-1px;
+}
+
+/*自定义树*/
+.net-tree{position: relative;}
+.net-tree .group-list .tree-folder{
+	width:1px;
+}
+.net-tree .group-list .tree-expanded{
+	width: 12px;
+}
+.net-tree .group-list .tree-title{
+	margin-left:0px;
+}
+.net-tree .group-list .tree-file{
+	background: url(../images/wireless-icon.png) no-repeat center center;
+    width: 16px;
+    height: 18px;
+    margin-top:8px;
+   	background-size: 18px;
+}
+/*屏蔽缺省网络*/
+.net-tree .group-list>li:first-child > div:first-child span.tree-file{
+	width:0px;
+}
+.net-tree .group-list .disabled-network {
+    background: url(../images/wireless-disabled-icon.png) no-repeat center center;
+    width: 16px;
+    height: 18px;
+    margin-top: 8px;
+    background-size: 18px;
+}
+
+/*checkbox tree样式*/
+.tree-checkbox0 {
+  background: url('../images/tree_icons.png') no-repeat -208px -18px;
+}
+.tree-checkbox1 {
+  background: url('../images/tree_icons.png') no-repeat -224px -18px;
+}
+.tree-checkbox2 {
+  background: url('../images/tree_icons.png') no-repeat -240px -18px;
+}
+
+/*按钮修正样式*/
+.btn-prl{
+	padding:0px 7px;
+}
+.btn-frm12{
+	float: right;margin-top:12px;
+}
+.btn-ml10{
+	margin-left:10px;
+}
+.btn-fl{
+	float:left;
+}
+.btn-fr{
+	float:right;
+}
+.btn-mt12{
+	margin-top:12px;
+}
+.btn-ml10{
+	margin-left:10px;
+}
+/*toast插件*/
+.jq-toast-wrap { display: block; position: fixed; width: 250px;  pointer-events: none !important; margin: 0; padding: 0; letter-spacing: normal; z-index: 99999999 !important; }
+.jq-toast-wrap * { margin: 0; padding: 0; }
+
+.jq-toast-wrap.bottom-left { bottom: 20px; left: 20px; }
+.jq-toast-wrap.bottom-right { bottom: 20px; right: 40px; }
+.jq-toast-wrap.top-left { top: 20px; left: 20px; }
+.jq-toast-wrap.top-right { top: 20px; right: 40px; }
+
+.jq-toast-single { display: block; width: 100%; padding: 10px; margin: 0px 0px 5px; border-radius: 4px; font-size: 12px; font-family: arial, sans-serif; line-height: 17px; position: relative;  pointer-events: all !important; background-color: #444444; color: white; }
+
+.jq-toast-single h2 { font-family: arial, sans-serif; font-size: 14px; margin: 0px 0px 7px; background: none; color: inherit; line-height: inherit; letter-spacing: normal; }
+.jq-toast-single a { color: #eee; text-decoration: none; font-weight: bold; border-bottom: 1px solid white; padding-bottom: 3px; font-size: 12px; }
+
+.jq-toast-single ul { margin: 0px 0px 0px 15px; background: none; padding:0px; }
+.jq-toast-single ul li { list-style-type: disc !important; line-height: 17px; background: none; margin: 0; padding: 0; letter-spacing: normal; }
+
+.close-jq-toast-single { position: absolute; top: 3px; right: 7px; font-size: 14px; cursor: pointer; }
+
+.jq-toast-loader { display: block; position: absolute; top: -2px; height: 5px; width: 0%; left: 0; border-radius: 5px; background: red; }
+.jq-toast-loaded { width: 100%; }
+.jq-has-icon { padding: 10px 10px 10px 50px; background-repeat: no-repeat; background-position: 10px; }
+.jq-icon-info { background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGwSURBVEhLtZa9SgNBEMc9sUxxRcoUKSzSWIhXpFMhhYWFhaBg4yPYiWCXZxBLERsLRS3EQkEfwCKdjWJAwSKCgoKCcudv4O5YLrt7EzgXhiU3/4+b2ckmwVjJSpKkQ6wAi4gwhT+z3wRBcEz0yjSseUTrcRyfsHsXmD0AmbHOC9Ii8VImnuXBPglHpQ5wwSVM7sNnTG7Za4JwDdCjxyAiH3nyA2mtaTJufiDZ5dCaqlItILh1NHatfN5skvjx9Z38m69CgzuXmZgVrPIGE763Jx9qKsRozWYw6xOHdER+nn2KkO+Bb+UV5CBN6WC6QtBgbRVozrahAbmm6HtUsgtPC19tFdxXZYBOfkbmFJ1VaHA1VAHjd0pp70oTZzvR+EVrx2Ygfdsq6eu55BHYR8hlcki+n+kERUFG8BrA0BwjeAv2M8WLQBtcy+SD6fNsmnB3AlBLrgTtVW1c2QN4bVWLATaIS60J2Du5y1TiJgjSBvFVZgTmwCU+dAZFoPxGEEs8nyHC9Bwe2GvEJv2WXZb0vjdyFT4Cxk3e/kIqlOGoVLwwPevpYHT+00T+hWwXDf4AJAOUqWcDhbwAAAAASUVORK5CYII='); background-color: #31708f; color: #d9edf7; border-color: #bce8f1; }
+.jq-icon-warning { background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGYSURBVEhL5ZSvTsNQFMbXZGICMYGYmJhAQIJAICYQPAACiSDB8AiICQQJT4CqQEwgJvYASAQCiZiYmJhAIBATCARJy+9rTsldd8sKu1M0+dLb057v6/lbq/2rK0mS/TRNj9cWNAKPYIJII7gIxCcQ51cvqID+GIEX8ASG4B1bK5gIZFeQfoJdEXOfgX4QAQg7kH2A65yQ87lyxb27sggkAzAuFhbbg1K2kgCkB1bVwyIR9m2L7PRPIhDUIXgGtyKw575yz3lTNs6X4JXnjV+LKM/m3MydnTbtOKIjtz6VhCBq4vSm3ncdrD2lk0VgUXSVKjVDJXJzijW1RQdsU7F77He8u68koNZTz8Oz5yGa6J3H3lZ0xYgXBK2QymlWWA+RWnYhskLBv2vmE+hBMCtbA7KX5drWyRT/2JsqZ2IvfB9Y4bWDNMFbJRFmC9E74SoS0CqulwjkC0+5bpcV1CZ8NMej4pjy0U+doDQsGyo1hzVJttIjhQ7GnBtRFN1UarUlH8F3xict+HY07rEzoUGPlWcjRFRr4/gChZgc3ZL2d8oAAAAASUVORK5CYII='); background-color: #ea8936; color: #fcf8e3; border-color: #faebcc; }
+.jq-icon-error { background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAHOSURBVEhLrZa/SgNBEMZzh0WKCClSCKaIYOED+AAKeQQLG8HWztLCImBrYadgIdY+gIKNYkBFSwu7CAoqCgkkoGBI/E28PdbLZmeDLgzZzcx83/zZ2SSXC1j9fr+I1Hq93g2yxH4iwM1vkoBWAdxCmpzTxfkN2RcyZNaHFIkSo10+8kgxkXIURV5HGxTmFuc75B2RfQkpxHG8aAgaAFa0tAHqYFfQ7Iwe2yhODk8+J4C7yAoRTWI3w/4klGRgR4lO7Rpn9+gvMyWp+uxFh8+H+ARlgN1nJuJuQAYvNkEnwGFck18Er4q3egEc/oO+mhLdKgRyhdNFiacC0rlOCbhNVz4H9FnAYgDBvU3QIioZlJFLJtsoHYRDfiZoUyIxqCtRpVlANq0EU4dApjrtgezPFad5S19Wgjkc0hNVnuF4HjVA6C7QrSIbylB+oZe3aHgBsqlNqKYH48jXyJKMuAbiyVJ8KzaB3eRc0pg9VwQ4niFryI68qiOi3AbjwdsfnAtk0bCjTLJKr6mrD9g8iq/S/B81hguOMlQTnVyG40wAcjnmgsCNESDrjme7wfftP4P7SP4N3CJZdvzoNyGq2c/HWOXJGsvVg+RA/k2MC/wN6I2YA2Pt8GkAAAAASUVORK5CYII='); background-color: #a94442; color: #f2dede; border-color: #ebccd1; }
+.jq-icon-success { background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADsSURBVEhLY2AYBfQMgf///3P8+/evAIgvA/FsIF+BavYDDWMBGroaSMMBiE8VC7AZDrIFaMFnii3AZTjUgsUUWUDA8OdAH6iQbQEhw4HyGsPEcKBXBIC4ARhex4G4BsjmweU1soIFaGg/WtoFZRIZdEvIMhxkCCjXIVsATV6gFGACs4Rsw0EGgIIH3QJYJgHSARQZDrWAB+jawzgs+Q2UO49D7jnRSRGoEFRILcdmEMWGI0cm0JJ2QpYA1RDvcmzJEWhABhD/pqrL0S0CWuABKgnRki9lLseS7g2AlqwHWQSKH4oKLrILpRGhEQCw2LiRUIa4lwAAAABJRU5ErkJggg=='); color: #dff0d8; background-color: #3c763d; border-color: #d6e9c6; }
+/*/toast插件*/
+
+/*disable样式*/
+.disable-default{ background: #ddd;}
+.disable-default:hover{ background: #ddd;}

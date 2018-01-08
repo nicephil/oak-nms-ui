@@ -1,3 +1,8 @@
+.app-icon-user{
+	background: url(../images/task-icon-user.png) no-repeat center center;
+	height: 24px;
+	margin-top: -11px;
+}
 /*用户布局*/
 #app-user-layout{
 	padding:0px;
@@ -26,7 +31,7 @@
 .user-region-west .win-nav .left-menu{
 	width: 100%;
 	height:30px;
-	margin-top:20px;
+	margin-top:10px;
 }
 
 .user-region-west .win-nav .left-menu .btn{
@@ -46,6 +51,15 @@
 .user-region-west .win-nav .dropdown-menu li.last{
 	border-bottom: 0px solid #dfe3e9;
 }
+/*disable样式*/
+.user-region-west .win-nav .dropdown-menu li.disable-default{
+	background: #ddd;
+}
+.user-region-west .win-nav .dropdown-menu li.disable-default:hover{
+	background: #ddd;
+	color:#4f5358;
+}
+
 .user-region-west .win-nav .dropdown-menu{
 	min-width: 70px;
 	padding:0px;
@@ -69,7 +83,7 @@
 	cursor: pointer;
 }
 .user-region-west .win-nav .btn-group{
-	margin-left: 26px;
+	margin-left: 15px;
     position: relative;
     width: 70px;
     float: left;
@@ -78,14 +92,17 @@
 
 .user-region-west .win-nav .nav-home-title{
 	margin-top:19px;
-	text-indent: 30px;
+	text-indent: 12px;
 	height:30px;
 	line-height:30px;
 	font-size:16px;
-	background: url(../images/icon-home.png) no-repeat 1px center; 
 }
 .user-region-west .win-nav .nav-home-title:hover{
 	cursor: pointer;
+}
+.user-region-west .win-nav .nav-home-title .head-title-img{
+	margin-top: 3px;
+	float: left;
 }
 .user-region-west .win-nav .nav-segment{
 	width:100%;
@@ -120,17 +137,8 @@
 	text-decoration: none;
 }
 
-.user-region-west .win-nav-small{
-	display: none;
-	width: 40px;
-	margin-top:24px;
-}
-
-.user-region-west .win-nav-small li{
-	height:60px;
-}
-
-.win-content{
+/*内容*/
+.user-region-center .win-content{
 	margin:0px;
 	padding:0px;
 	vertical-align: top;
@@ -138,23 +146,22 @@
 	height:100%;
 	width:100%;
 }
-.win-content .right-menu{
+.user-region-center .win-content .right-menu{
 	width:auto;
-	height:70px;
+	height:50px;
 	position: relative;
+	padding-top: 10px;
 }
-.win-content .right-menu .btn-group{
+.user-region-center .win-content .right-menu .btn-group{
 	width:70px;
 	height:30px;
 	float:left;
-	margin-top:20px;
 	position: relative;
 }
-.win-content .right-menu .btn-edit{
-	margin-top:20px;
+.user-region-center .win-content .right-menu .btn-edit{
 	float:left;
 }
-.win-content .input-search{
+.user-region-center .win-content .input-search{
 	width:300px;
 	height:28px;
 	line-height:28px;
@@ -162,54 +169,51 @@
 	right:0px;
 	border: 1px solid #e2e2e3;
 	border-radius: 5px;
-	background-color: #f0f4f8; 
 	text-indent: 26px;
-	margin-top:20px;
 }
-.win-content .icon-magnifier{
+.user-region-center .win-content .icon-magnifier{
 	height:30px;
 	width:26px;
 	display: inline-block;
 	position: absolute;
 	right: 274px;
-	top:21px;
 	background: url(../images/icon-magnifier.png) no-repeat 4px center; 
 }
-.win-content .icon-magnifier:hover{
+.user-region-center .win-content .icon-magnifier:hover{
 	cursor: pointer;
 }
 
-.win-content .dropdown-menu{
+.user-region-center .win-content .dropdown-menu{
 	min-width: 70px;
 	padding:0px;
 	margin-left: 0px;
 	border:1px solid #e2e2e3;
 }
-.win-content .dropdown-menu li{
+.user-region-center .win-content .dropdown-menu li{
 	height: 30px;
 	line-height: 30px;
 	text-align: center;
 	border-bottom: 1px solid #dee5ea;
 }
-.win-content .btn-group a{
+.user-region-center .win-content .btn-group a{
 	margin-left:0px;
 }
-.win-content .dropdown-menu li:hover{
+.user-region-center .win-content .dropdown-menu li:hover{
 	cursor: pointer;
 	background: #eff4f5;
 	color: #6badd8;
 }
-.win-content .dropdown-menu li.last{
+.user-region-center .win-content .dropdown-menu li.last{
 	border-bottom: 0px solid #dee5ea;
 }
-.win-content .dropdown-menu li.last:hvoer{
+.user-region-center .win-content .dropdown-menu li.last:hvoer{
 	border-bottom: 0px solid #dee5ea;
 }
-.win-content .app-page{
+.user-region-center .win-content .app-page{
     position: relative;
     height: 70px;
 }
-.win-content .app-page .pagination{
+.user-region-center .win-content .app-page .pagination{
 	display: inline-block;
     padding-left: 0;
     border-radius: 4px;
@@ -217,46 +221,9 @@
     margin-top:19px;
 }
 
-.win-content .app-page .pagination>li{
+.user-region-center .win-content .app-page .pagination>li{
 	display: inline;
 }
-
-/*-----xinghua-----*/
-.app-icon-user{
-	background: url(../../app/images/task-icon-user.png) no-repeat center center;
-	height: 24px;
-	margin-top: -11px;
-}
-
-.nodata{
-	text-align: center;
-    height: 200px;
-    line-height: 200px;
-}
-.nodata img{
-	width: 50px;
-    margin-top: 2px;
-    position: relative;
-    margin-left: -90px;
-}
-.nodata div{
-	display: inline-block;
-    position: absolute;
-    top: 25px;
-    padding-left: 10px;
-}
-
-input:focus{
-	border-color: #40a9ff !important;
-    outline: 0;
-    -webkit-box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
-    box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
-}
-
-.home-selected{
-	background-color: #e3eaf2 !important;
-}
-img.icon-row-disable{width:16px;vertical-align: middle;}
 
 /* 用户-新增用户 */
 .user-box{ width:650px;background:#ffffff; border-radius:4px; position: absolute; left: 50%; margin: 0px -325px; z-index:10;}
@@ -272,7 +239,7 @@ img.icon-row-disable{width:16px;vertical-align: middle;}
 .cont-cont .input-box .input-selected{border: 1px solid #9bcce6;}
 .cont-cont .input-box .input-boxBox .input-error{border: 1px solid #eca8a5;}
 .cont-cont .input-box .error-prompt{ padding-left: 82px; margin:4px 0 0 0; background: url(../images/user-error.png) no-repeat 60px center; color: #de6d6d;}
-.cont-cont .input-box .input-boxBox01 .select-box{ width:68px; height: 30px;border: 1px solid #ededed; border-radius: 4px;appearance:none;/*将默认的select选择框样式清除*/-moz-appearance:none;-webkit-appearance:none; float: left; margin-right: 20px; background:url(../images/mask-select.png); background-color: #fafbfd; background-repeat: no-repeat; background-position: 48px center;}
+.cont-cont .input-box .input-boxBox01 .select-box{ width:68px; height: 30px;border: 1px solid #ededed; border-radius: 4px;appearance:none;text-indent:10px;/*将默认的select选择框样式清除*/-moz-appearance:none;-webkit-appearance:none; float: left; margin-right: 20px; background:url(../images/mask-select.png); background-color: #fafbfd; background-repeat: no-repeat; background-position: 48px center;}
 .cont-cont .input-box .input-boxBox01{ width: 488px; height: 30px; overflow: hidden; float: left;}
 .cont-cont .input-box .input-boxBox02{ width: 450px; height: 30px; overflow: hidden; float: left;}
 .cont-cont .input-box .refresh{ width: 24px; height: 30px; margin-left:30px; background: url(../images/mask-refresh.png) no-repeat center center; float: left; cursor: pointer;}
@@ -282,17 +249,17 @@ img.icon-row-disable{width:16px;vertical-align: middle;}
 .select-div .select-date{ width: 20px; height: 20px; background: url(../images/mask-date.png) no-repeat; float: left;margin: 4px 10px;}
 .select-div .select-time{ height: 30px; line-height: 30px; display: none; border:none;outline:none;float: left; padding-right: 20px; background: url(../images/mask-select01.png) no-repeat right center; margin-right: 10px;}
 .user-footer{padding: 0 50px; height: 55px; overflow: hidden;border-top: 1px solid #ededed; background:#f0f4f8; border-radius: 0 0 4px 4px; }
-.user-footer .but-cancel{font-size: 16px;display: inline-block; padding: 0 28px; height: 30px; border: 1px solid #ced0da; border-radius: 4px; background: url(../images/but-gray-noselected.png); line-height: 28px; cursor: pointer;margin-top: 12px;}
+.user-footer .but-cancel{font-size: 14px;display: inline-block; padding: 0 28px; height: 30px; border: 1px solid #ced0da; border-radius: 4px; background: url(../images/but-gray-noselected.png); line-height: 28px; cursor: pointer;margin-top: 12px;}
 .user-footer .cancel-hover:hover{ background: url(../images/but-gray-selected.png); }
-.user-footer .but-update{font-size: 16px; margin-left: 20px;color: #fff; display: inline-block; padding: 0 14px; height: 30px; border: 1px solid #85c8a7; border-radius: 4px; background: url(../images/but-green-noselected.png); line-height: 28px; cursor: pointer; margin-top: 12px;}
+.user-footer .but-update{font-size: 14px; margin-left: 20px;color: #fff; display: inline-block; padding: 0 14px; height: 30px; border: 1px solid #85c8a7; border-radius: 4px; background: url(../images/but-green-noselected.png); line-height: 28px; cursor: pointer; margin-top: 12px;}
 .user-footer .update-hover:hover{background: url(../images/but-green-selected.png);}
-.user-footer .but-conserve{font-size: 16px;margin-left: 20px;  color: #fff; display: inline-block; padding: 0 28px; height: 30px; border: 1px solid #5497c1; border-radius: 4px; background: url(../images/but-blue-noselected.png); line-height: 28px; cursor: pointer;margin-top: 12px;}
+.user-footer .but-conserve{font-size: 14px;margin-left: 20px;  color: #fff; display: inline-block; padding: 0 28px; height: 30px; border: 1px solid #5497c1; border-radius: 4px; background: url(../images/but-blue-noselected.png); line-height: 28px; cursor: pointer;margin-top: 12px;}
 .user-footer .conserve-hover:hover{background: url(../images/but-blue-selected.png);}
-.user-footer .but-conserve01{font-size: 16px;margin-left: 20px;  color: #fff; display: inline-block; padding: 0 14px; height: 30px; border: 1px solid #5497c1; border-radius: 4px; background: url(../images/but-blue-noselected.png); line-height: 28px; cursor: pointer;margin-top: 12px;}
+.user-footer .but-conserve01{font-size: 14px;margin-left: 20px;  color: #fff; display: inline-block; padding: 0 14px; height: 30px; border: 1px solid #5497c1; border-radius: 4px; background: url(../images/but-blue-noselected.png); line-height: 28px; cursor: pointer;margin-top: 12px;}
 .user-footer .conserve01-hover:hover{background: url(../images/but-blue-selected.png);}
 .select-radio{margin-top: 10px;display: block;float: left;margin-right: 5px;}
 
-.user-footer .button{font-size: 16px;display: inline-block; padding: 0 28px; height: 30px; border: 1px solid #ced0da; border-radius: 4px; background: url(../images/but-gray-noselected.png); line-height: 28px; cursor: pointer;margin-top: 12px;}
+.user-footer .button{font-size: 14px;display: inline-block; padding: 0 28px; height: 30px; border: 1px solid #ced0da; border-radius: 4px; background: url(../images/but-gray-noselected.png); line-height: 28px; cursor: pointer;margin-top: 12px;}
 .user-footer .button:hover{ background: url(../images/but-gray-selected.png); }
 .user-footer .btn-next{margin-left:20px;}
 .user-footer .btn-pre{padding:0px 20px;	padding:0px 20px}
@@ -364,7 +331,7 @@ img.icon-row-disable{width:16px;vertical-align: middle;}
 .setup-contbox01 .bottom-box{ padding-left: 40px; overflow: hidden; margin-top: 16px;}
 .setup-contbox01 .bottom-box .select-box02{ width:510px; height: 30px;border: 1px solid #eaebec; border-radius: 4px;appearance:none;/*将默认的select选择框样式清除*/-moz-appearance:none;-webkit-appearance:none; float: left; background-color: #fafbfd; background-image:url(../images/mask-select.png); background-repeat: no-repeat; background-position: 490px center;}
 .setup-contbox01 .bottom-box .choice01{ display: inline-block; height: 30px; line-height: 30px; float: left;}
-.setup-contbox01 .bottom-box .input-text02{ width: 240px; height: 30px; background: #fafbfd; margin-left: 14px; border: 1px solid #eaebec; border-radius: 4px; padding: 0 16px; float: left;}
+.setup-contbox01 .bottom-box .input-text02{ width: 240px; height: 30px;  margin-left: 14px; border: 1px solid #eaebec; border-radius: 4px; padding: 0 16px; float: left;}
 
 /* 用户-删除用户 */
 .cont-box04{padding: 0 50px; height: 162px; overflow: hidden;}
@@ -375,8 +342,8 @@ img.icon-row-disable{width:16px;vertical-align: middle;}
 .cont-box03{padding: 0 50px; overflow: hidden;}
 .cont-box03 .add-box{ width: 100%;  margin-top:22px;}
 .cont-box03 .add-box .add-title{ margin: 0 0 16px 0;}
-.cont-box03 .add-box .add-input{ width: 100%; height: 30px; background: #fafbfd;border: 1px solid #eaebec; border-radius: 4px;text-indent:5px;}
-.cont-box03 .add-box .add-textarea{width: 98%; height: 90px; background: #fafbfd; border: 1px solid #eaebec; border-radius: 4px; margin-bottom: 16px; padding: 5px; overflow: auto;}
+.cont-box03 .add-box .add-input{ width: 100%; height: 30px; border: 1px solid #eaebec; border-radius: 4px;text-indent:5px;}
+.cont-box03 .add-box .add-textarea{width: 98%; height: 90px; border: 1px solid #eaebec; border-radius: 4px; margin-bottom: 16px; padding: 5px; overflow: auto;}
 
 /* 用户-通知 */
 .notice-tilte{ width: 100%; padding: 20px 0; border-bottom: 1px dashed #e6eaee;}
@@ -386,7 +353,7 @@ img.icon-row-disable{width:16px;vertical-align: middle;}
 .notice-cont .notice-contBox .notice-choice01{ float: left;width:auto;margin-right: 10px;}
 .notice-cont .notice-contBox .notice-choice02{ float: left;width:auto;margin-right: 10px;}
 .notice-cont .notice-contBox .notice-choice03{ float: left;width:auto;margin-right: 10px;}
-.notice-cont .notice-contBox .notice-textarea{ width: 97%; height: 96px; background: #fafbfd; border: 1px solid #ededed; border-radius: 4px; padding: 5px; margin-top: 10px;}
+.notice-cont .notice-contBox .notice-textarea{ width: 97%; height: 96px;  border: 1px solid #ededed; border-radius: 4px; padding: 5px; margin-top: 10px;}
 
 
 /* 用户-用户导出 */
@@ -405,123 +372,15 @@ img.icon-row-disable{width:16px;vertical-align: middle;}
 /*-----/xinghua-----*/
 
 /*bootstrap*/
-
-.btn {
-    display: inline-block;
-    font-size: 14px;
-    font-weight: normal;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: middle;
-    -ms-touch-action: manipulation;
-    touch-action: manipulation;
-    cursor: pointer;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    background-image: none;
-    border-radius: 4px;
-    width: 68px;
-    height: 28px;
-    line-height: 28px;
-    background-color: #f3f5f9;
-    border: 1px solid #c8d2dc;
-    color:#4f5358;
-    text-decoration:none;
-}
-
-.btn:hover{
-	-webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
-    box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
-}
-
-.btn-default{
-	color: #333;
-    background-color: #fff;
-    border-color: #f3f5f9;
-    height: 34px;
-    width: auto;
-    padding: 0px 10px;
-}
-.open{
-	/*当按钮按下时效果*/
-	-webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
-    box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
-}
-.dropdown-menu{
-	position: absolute;
-    top: 100%;
-    left: 0;
-    z-index: 1000;
-    float: left;
-    min-width: 160px;
-    padding: 5px 0;
-    margin: 2px 0 0;
-    font-size: 14px;
-    text-align: left;
-    list-style: none;
-    background-color: #fff;
-    -webkit-background-clip: padding-box;
-    background-clip: padding-box;
-    border: 1px solid #ccc;
-    border: 1px solid rgba(0, 0, 0, .15);
-    border-radius: 4px;
-    -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
-}
-.dropdown-menu-left{
-	position: absolute;
-    left: -16px;
-    width: 54px;
-    text-align: center;
-    border-color: #e2e2e3;
-    z-index: 1000;
-    float: left;
-    margin: 2px 0 0;
-    font-size: 14px;
-    list-style: none;
-    background-color: #fff;
-    -webkit-background-clip: padding-box;
-    background-clip: padding-box;
-    border: 1px solid #ccc;
-    border: 1px solid rgba(0, 0, 0, .15);
-    border-radius: 4px;
-    -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
-}
-.dropdown-menu-left li.btn-import-user,.dropdown-menu-left li.btn-export-user{
-	height: 30px;
-    line-height: 30px;
-    text-align: center;
-    border-bottom: 1px solid #dee5ea;
-}
-.dropdown-menu-left li:hover{
-	cursor: pointer;
-    background: #eff4f5;
-    color: #6badd8;
-}
-.caret {
-    display: inline-block;
-    width: 0;
-    height: 0;
-    margin-left: 2px;
-    vertical-align: middle;
-    border-top: 4px dashed;
-    border-top: 4px solid \9;
-    border-right: 4px solid transparent;
-    border-left: 4px solid transparent;
-}
-.sm-header .panel-title{
-	font-weight:normal;
-	font-size: 18px;
-}
 footer{
 	position: absolute;
 	bottom: 0px;
 	width:100%;
-	height:70px;
-	line-height:70px;
+	height: 40px;
+	line-height: 40px;
+	border-top:1px solid #e2e2e3;
+	border-bottom:1px solid #e2e2e3;
+	bottom:10px;
 }
 
 .select-div .textbox>.textbox-text{
@@ -539,166 +398,6 @@ footer{
 	margin-left:-41px;
 	margin-top:3px;
 }
-/*分页样式--------cwj*/
-.pagination .pagination-num{
-	text-align: center;
-	margin-left: 8px;
-}
-.pagination-page-list{
-	width: 85px;
-	font-size: 14px;
-	box-sizing: border-box;
-	margin-top: 14px;
-}
-.pagination-link{
-	width: 34px;
-	border: 1px solid #ddd;
-	border-radius: 0px;
-	box-sizing: border-box;
-	background: #fff;
-}
-.pagination-link .l-btn-text{
-	font-size: 14px;
-	line-height: 30px;
-}
-.l-btn-plain, .l-btn-disabled, .l-btn-disabled:active, .textbox-button{
-	border-radius: 0px!important;
-	
-}
-.l-btn-plain-selected, .l-btn-plain-selected:hover{
-	background: #ddd;
-}
-.pagination  td:nth-child(5) span{
-	
-}
-.pagination .pagination-num{
-	width: 50px;
-	box-sizing: border-box;
-	border-radius: 4px;
-}
-.pagination-info{
-    font-size: 14px;
-}
-.pagination span{
-	font-size: 14px;
-}
-.l-btn-left .l-btn-empty{
-	margin:0px;
-	width:40px;
-	border:1px solid #ddd;
-	box-sizing: border-box;
-}
-.l-btn-icon-left .l-btn-icon{
-	left: 8px;
-}
-.l-btn-plain{
-	padding: 0px;
-}
-.pagination  td:nth-last-child(1) a .l-btn-left:hover{
-	border: 0px;
-	
-}
-.pagination  td:nth-child(0) a .l-btn-left:hover{
-	border: 0px!important;
-	box-sizing: border-box;
-}
-.l-btn-icon{
-	margin-left: 4px;
-}
-.l-btn-plain, .l-btn-disabled, .l-btn-disabled:hover{
-	box-sizing: border-box;
-}
-.l-btn-disabled, .l-btn-disabled:hover{
-	border: 0px;
-}
-.l-btn-disabled:hover{
-	background: #ddd;
-}
-.pagination span:nth-last-child(0){
-	border: 0px;
-}
-.pagination  td:nth-last-child(1) .l-btn-left .l-btn-empty{
-	border: 0px;
-}
-.pagination  td:nth-last-child(1) .l-btn-plain:hover{
-	background: #fff;
-	border: 0px;
-}
-.pagination-page-list{
-	border-radius: 4px;
-}
-.pagination  td:nth-last-child(1){
-	position: absolute;
-      right: 0px;
-}
-.pagination  td:nth-last-child(2){
-	position: absolute;
-    right: 40px;
-    top: 14px;
-}
-.pagination  td:nth-last-child(3){
-	position: absolute;
-    right: 55px;
-}
-.pagination  td:nth-child(6){
-	margin-left: 10px;
-}
-.pagination  td:nth-child(7) span{
-	margin-left: 8px;
-}
-.pagination  td:nth-child(1) span span:nth-child(1):hover{
-	border: 0px!important;
-}
-.pagination  td:nth-child(1) span span:nth-child(1){
-	-webkit-border-top-left-radius: 4px;
-	-webkit-border-bottom-left-radius: 4px;
-}
-.pagination  td:nth-child(3) span span:nth-child(1){
-	-webkit-border-top-right-radius: 4px;
-	-webkit-border-bottom-right-radius: 4px;
-}
-.l-btn:hover{
-	border: 0px!important;
-}
-/*分页样式*/
-
-/*表格样式--------cwj*/
-.datagrid .panel-body{
-	border-left: none;
-    border-right: none;
-    border-bottom: none;
-}
-.datagrid-htable td:nth-last-child(1){
-	border-right: none;
-}
-.datagrid-btable tr td:nth-last-child(1){
-	border-right: none;
-}
-.datagrid-header-row td:nth-child(1){
-	border-right: none;
-}
-.datagrid-btable tr td:nth-child(1){
-	border-right: none;
-}
-.datagrid-btable tr td{
-	border-right: none;
-}
-.datagrid-htable tr{
-	background: #f0f4f8;
-}
-.datagrid-htable tr td{
-	border: none;
-}
-
-.datagrid-header .datagrid-cell span{
-	font-size: 15px;
-	color: #000000;
-}
-.datagrid-htable  tr td .datagrid-cell{
-	border-left: 1px solid #dadde1;
-}
-
-/*表格样式--------cwj*/
 
 /*逐条新增用户--------cwj*/
 .error-name{
@@ -746,7 +445,6 @@ footer{
 	background: url(../images/error-message.png) no-repeat 0px 2px;
 	background-size: 12px 12px;
 	text-indent: 14px;
-    
 }
 .user-box .cont-box .cont-cont .validate-email{
 	margin-top: 25px!important;
@@ -777,37 +475,11 @@ footer{
 .cont-cont .input-box .refresh{
 	margin-left: 19px;
 }
-/*滚动条高度设置----cwj*/
-.app-table-out{
-	width: 100%;
-}
 
-/*滚动条样式----cwj*/
-.app-table::-webkit-scrollbar {/*滚动条整体样式*/
-    width: 4px;     /*高宽分别对应横竖滚动条的尺寸*/
-    height: 4px;
-}
-.app-table::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
-    border-radius: 5px;
-    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
-    background: rgba(0,0,0,0.2);
-}
-.app-table::-webkit-scrollbar-track {/*滚动条里面轨道*/
-    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
-    border-radius: 0;
-    background: rgba(0,0,0,0.1);
-}
-/*修改*/
-.datagrid-header .datagrid-cell span{
-	font-size: 14px;
-}
 /*逐条修改*/
-.textbox {
-	width: 484px;
-}
 .time-box-time{
 	position: relative;
-    left: 2px;
+    left: 1px;
     top: -10px;
 }
 .cont-cont .input-box .choice{
@@ -822,29 +494,12 @@ footer{
 .select-radio{
 	margin-top: 8px;
 }
-/*分页修改*/
-footer{
-	height: 54px;
-	line-height: 54px;
-}
-.l-btn-left .l-btn-empty{
-	width: 37px;
-	height: 30px;
-}
-.pagination-link{
-	height: 30px;
-	width: 37px;
-}
-.pagination-info{
-	height: 54px;
-    line-height: 54px;
-}
-.pagination-page-list,.pagination .pagination-num{
-	height: 30px;
-}
+
 /*左侧点击选中颜色*/
 .tree-node-selected{
-	background: #e3eaf2;
+	background: #0086E5;
+	border-radius: 4px;
+	color: #fff;
 }
 /*用户组导入*/
 .setup-box .setup-contbox .top-box{
@@ -912,14 +567,14 @@ footer{
 	border-color:#ededed;
 }
 .win-add-user .cont-cont .input-box .choice-add{
-	margin-left: 56px;
+	margin-left: 51px;
 }
 /*批量新增-用户组*/
 .win-add-batch-user .user-grop-div .textbox{
 	width: 484px!important;
 }
 .win-add-batch-user .cont-cont .input-box .choice-one{
-	margin-left: 58px;
+	margin-left: 51px;
 }
 .win-add-batch-user .user-footer{
 	margin-top:7px;
@@ -964,19 +619,78 @@ footer{
 	margin-left: 10px;
 }
 
-/*li-normal样式*/
-.li-normal{
-	height: 30px;
-	line-height: 30px;
-	text-align: center;
-	border-bottom: 1px solid #dee5ea;
+/*用户导出页面的三角图标及排版样式*/
+.win-export-user .tree-title{
+	margin-left: -45px;
 }
-/*li-hover样式*/
-.li-hover{
-	cursor: pointer;
-    background: #eff4f5;
-    color: #6badd8;
+/*批量修改复选款勾选样式*/
+.win-update-batch-user .select_user_group,.win-update-batch-user .select_user_password,.win-update-batch-user .select-user-time{
+	padding: 0;
+    width: 22px;
+    height: 22px;
+    font-size: 1px;
+    text-align: center;
+    overflow: hidden;
+    float: left;
 }
-
-
-
+.win-update-batch-user .select_user_group input,.win-update-batch-user .select_user_password input , .win-update-batch-user .select-user-time input{
+	margin: 0;
+    padding: 0;
+    width: 22px;
+    height: 22px;
+    opacity: 0;
+}
+/*批量修改input:radio样式*/
+.win-update-batch-user .never-time-box,.win-update-batch-user .data-time-ipt-box,.win-update-batch-user .assign-password-box,.win-update-batch-user .select-reset-password-box{
+	padding: 0;
+    width: 20px;
+    height: 20px;
+    font-size: 1px;
+    text-align: center;
+    overflow: hidden;
+    float: left;
+    margin-top: 6px;
+}
+.win-update-batch-user .never-time-box input,.win-update-batch-user .data-time-ipt-box  input,.win-update-batch-user .assign-password-box  input,.win-update-batch-user .select-reset-password-box  input{
+	margin: 0;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    opacity: 0;
+}
+/*逐条修改input-radio样式*/
+.win-add-user .select-time-no-box,.win-add-user .select-radio-box{
+	padding: 0;
+    width: 20px;
+    height: 20px;
+    font-size: 1px;
+    text-align: center;
+    overflow: hidden;
+    float: left;
+    margin-top: 4px;
+}
+.win-add-user .select-time-no-box input,.win-add-user .select-radio-box input{
+	margin: 0;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    opacity: 0;
+}
+/*逐条修改input-radio样式*/
+.win-add-batch-user .never-radio-box,.win-add-batch-user .select-radio-box{
+	padding: 0;
+    width: 20px;
+    height: 20px;
+    font-size: 1px;
+    text-align: center;
+    overflow: hidden;
+    float: left;
+    margin-top: 4px;
+}
+.win-add-batch-user .never-radio-box input,.win-add-batch-user .select-radio-box input{
+	margin: 0;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    opacity: 0;
+}

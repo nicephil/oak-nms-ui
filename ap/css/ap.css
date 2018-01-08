@@ -1,0 +1,1392 @@
+.app-icon-ap{
+	background: url(..//images/task-icon-ap.png) no-repeat center center;
+	height: 24px;
+	margin-top: -11px;
+}
+/*AP布局*/
+#app-ap-layout{
+	padding:0px;
+	margin:0px;
+	height:100%;
+	width:100%;
+	border: 0px;
+}
+
+#app-ap-layout .ap-region-west{
+	width:246px;
+	min-width:246px;
+	border-right:1px solid #e2e2e3;
+	height:100%;
+	box-sizing: border-box;
+}
+#app-ap-layout .ap-region-center{
+}
+/*/AP布局*/
+
+/*左侧布局*/
+#app-ap-layout .ap-region-west .win-nav{
+    width: 208px;
+    min-width: 208px;
+    border-bottom-left-radius: 5px;
+}
+#app-ap-layout .ap-region-west .win-nav .left-menu{
+	width: 100%;
+	height:30px;
+	margin-top:10px;
+}
+
+#app-ap-layout .ap-region-west .win-nav .left-menu .btn{
+	float: left;
+}
+
+#app-ap-layout .ap-region-west .win-nav .dropdown-menu li{
+	height: 30px;
+	line-height: 30px;
+	text-align: center;
+	border-bottom: 1px solid #dee5ea;
+}
+#app-ap-layout .ap-region-west .win-nav .dropdown-menu li.li-hover{
+	background-color: #eff4f5;
+	color:#6badd8; 
+}
+#app-ap-layout .ap-region-west .win-nav .dropdown-menu li.last{
+	border-bottom: 0px solid #dfe3e9;
+}
+#app-ap-layout .ap-region-west .win-nav .dropdown-menu{
+	min-width: 70px;
+	padding:0px;
+	border-color:#e2e2e3;
+	margin-top: 3px
+}
+#app-ap-layout .ap-region-west .win-nav .btn-group{
+	margin-left: 15px;
+    position: relative;
+    width: 70px;
+    float: left;
+}
+
+
+#app-ap-layout .ap-region-west .win-nav .nav-home-title{
+	margin-top:19px;
+	text-indent: 12px;
+	height:30px;
+	line-height:30px;
+	font-size:16px;
+}
+#app-ap-layout .ap-region-west .win-nav .nav-home-title:hover{
+	cursor: pointer;
+}
+#app-ap-layout .ap-region-west .win-nav .nav-home-title .head-title-img{
+	margin-top: 3px;
+	float: left;
+}
+#app-ap-layout .ap-region-west .win-nav .nav-segment{
+	width:100%;
+	height: 1px;
+	background: #dadee2;
+	margin-top:19px;
+	margin-bottom: 7px;
+}
+#app-ap-layout .ap-region-west .win-nav .group-list{
+	height:100%;
+}
+#app-ap-layout .ap-region-west .win-nav .group-list li i{
+	margin-left:11px;
+	width:25px;
+	height: 48px;
+	display: inline-block;
+	float: left;
+	background: url(../public/images/icon-group.png) no-repeat 0px center; 
+}
+#app-ap-layout .ap-region-west .win-nav .group-list li.li-default{
+	background-color:#e9edf2 ;
+}
+#app-ap-layout .ap-region-west .win-nav .group-list li i.icon-default{
+	background: url(../images/icon-group-default.png) no-repeat 0px center; 
+}
+#app-ap-layout .ap-region-west .win-nav .group-list li a{
+	height: 48px;
+	line-height: 48px;
+	text-indent: 14px;
+	display: inline-block;
+	color:#4f5358;
+	text-decoration: none;
+}
+/*/左侧布局*/
+
+
+/*右侧布局*/
+#app-ap-layout .ap-region-center .win-content{
+	margin:0px;
+	padding:0px;
+	vertical-align: top;
+	position: relative;
+	height:100%;
+	width:100%;
+}
+#app-ap-layout .ap-region-center .win-content .right-menu{
+	width:auto;
+	height:50px;
+	position: relative;
+	padding-top: 10px;
+}
+#app-ap-layout .ap-region-center .win-content .right-menu .btn-group{
+	width:70px;
+	height:30px;
+	float:left;
+	position: relative;
+}
+#app-ap-layout .ap-region-center .win-content .right-menu .btn-edit{
+	float:left;
+}
+#app-ap-layout .ap-region-center .win-content .input-search{
+	width:300px;
+	height:28px;
+	line-height:28px;
+	position: absolute;
+	right:0px;
+	border: 1px solid #e2e2e3;
+	border-radius: 5px;
+	text-indent: 26px;
+}
+#app-ap-layout .ap-region-center .win-content .icon-magnifier{
+	height:30px;
+	width:26px;
+	display: inline-block;
+	position: absolute;
+	right: 274px;
+	background: url(../../public/images/icon-magnifier.png) no-repeat 4px center; 
+}
+#app-ap-layout .ap-region-center .win-content .icon-magnifier:hover{
+	cursor: pointer;
+}
+
+#app-ap-layout .ap-region-center .win-content .dropdown-menu{
+	min-width: 70px;
+	padding:0px;
+	margin-left: 0px;
+	border:1px solid #e2e2e3;
+}
+#app-ap-layout .ap-region-center .win-content .dropdown-menu li{
+	height: 30px;
+	line-height: 30px;
+	text-align: center;
+	border-bottom: 1px solid #dee5ea;
+}
+#app-ap-layout .ap-region-center .win-content .btn-group a{
+	margin-left:0px;
+}
+#app-ap-layout .ap-region-center .win-content .dropdown-menu li:hover{
+	cursor: pointer;
+	background: #eff4f5;
+	color: #6badd8;
+}
+#app-ap-layout .ap-region-center .win-content .dropdown-menu li.last{
+	border-bottom: 0px solid #dee5ea;
+}
+#app-ap-layout .ap-region-center .win-content .dropdown-menu li.last:hvoer{
+	border-bottom: 0px solid #dee5ea;
+}
+#app-ap-layout .ap-region-center .win-content .app-page{
+    position: relative;
+    height: 70px;
+}
+#app-ap-layout .ap-region-center .win-content .app-page .pagination{
+	display: inline-block;
+    padding-left: 0;
+    border-radius: 4px;
+    position: absolute;
+    margin-top:19px;
+}
+
+#app-ap-layout .ap-region-center .win-content .app-page .pagination>li{
+	display: inline;
+}
+/*左侧图标*/
+#app-ap-layout .ap-region-west .ap-tab .ap-tab-left{
+	height: 50px;
+	width: 122px;
+	float: left;
+	background: #eff4fa;
+}
+#app-ap-layout .ap-region-west .ap-tab .ap-tab-right{
+	height: 50px;
+	width: 122px;
+	float: left;
+	background: #fff;
+	border-left: 1px solid #eff4fa;
+}
+#app-ap-layout .ap-region-west .ap-tab .ap-tab-left .ap-tab-left-icon{
+	width: 16px;
+	height: 20px;
+	float: left;
+	background: url(../images/left-blue.png) no-repeat;
+	margin-left: 53px;
+    margin-top: 14px;
+}
+#app-ap-layout .ap-region-west .ap-tab .ap-tab-right .ap-tab-right-icon{
+	width: 20px;
+	height: 20px;
+	float: left;
+	background: url(../images/right-gray.png) no-repeat;
+	margin-left: 53px;
+    margin-top: 14px;
+}
+
+/*右侧布局*/
+
+/*创建群组*/
+ .win-ap-group .cont-box03 .add-box .add-title{
+	margin: 0 0 11px 0;
+}
+ .win-ap-group .user-footer{
+	margin-top: 18px;
+}
+ .win-ap-group .textbox{
+	width: 100%;
+	height: 30px;
+}
+/*创建群组----下一步样式*/
+.cont-box02{
+	padding: 0 50px;
+}
+.win-ap-next-group .cont-box02-left,.win-ap-next-group .cont-box02-right{
+	width: 260px;
+	float: left;
+	border: 1px solid #dfe2e5;
+	box-sizing: border-box;
+	position: relative;
+}
+.win-ap-next-group .cont-box02-right{
+	margin-left: 29px;
+}
+hr{
+	margin-top: 10px;
+	background: #dfe2e5;
+}
+.win-ap-next-group .cont-box02-left>div,.win-ap-next-group .cont-box02-right>div{
+	width: 100%;
+	height: 30px;
+	margin-top: 10px;
+}
+.win-ap-next-group .cont-box02-left>div>span,.win-ap-next-group .cont-box02-right>div>span{
+	width: 75px;
+	height: 30px;
+	font-size: 14px;
+	text-align: right;
+	margin-left: 10px;
+	float: left;
+	line-height: 30px;
+}
+.win-ap-next-group .cont-box02-left>div>select,.win-ap-next-group .cont-box02-right>div>select{
+	height: 30px;
+	float: left;
+	margin-left: 10px;
+	width: 150px;
+}
+
+.win-ap-next-group .left-terminal-select{
+	height: 30px;
+	float: left;
+	margin-left: 10px;
+	width: 150px;
+}
+.win-ap-next-group .cont-box02-left>div:last-child,.win-ap-next-group .cont-box02-right>div:last-child{
+	margin-bottom: 10px;
+}
+.win-ap-next-group .side{
+	margin-top: 30px;
+	margin-bottom: 50px;
+}
+.win-ap-next-group .small-box-left{
+	width: 50px;
+	height: 20px;
+	border: 1px solid #dfe2e5;
+	float: left;
+	position: absolute;
+	left: 63px;
+    top: 50px;
+	z-index: 10000;
+	background: #fff;
+	text-align: center;
+	font-size: 14px;
+	line-height: 20px;
+}
+.win-ap-next-group .small-box-right{
+	width: 50px;
+	height: 20px;
+	border: 1px solid #dfe2e5;
+	float: left;
+	position: absolute;
+	left: 354px;
+    top: 50px;
+	z-index: 10000;
+	background: #fff;
+	text-align: center;
+	font-size: 14px;
+	line-height: 20px;
+}
+.win-ap-next-group .character{
+	margin-top: 10px;
+	margin-bottom: 22px;
+}
+.win-ap-next-group #left-terminal-select,.win-ap-next-group #right-terminal-select{
+	height: 26px;
+	float: left;
+	margin-left: 10px;
+	width: 146px;
+}
+.win-ap-next-group input:focus{
+	border-color: none!important;
+	box-shadow: none;
+}
+/*编辑群组*/
+.update-ap-group .cont-box03 .add-box .add-title{
+	margin: 0 0 11px 0;
+}
+.update-ap-group .user-footer{
+	margin-top: 18px;
+}
+.update-ap-group .textbox{
+	width: 100%;
+	height: 30px;
+}
+/*创建群组----下一步样式*/
+.cont-box02{
+	padding: 0 50px;
+}
+.update-ap-next-group .cont-box02-left,.update-ap-next-group .cont-box02-right{
+	width: 260px;
+	float: left;
+	border: 1px solid #dfe2e5;
+	box-sizing: border-box;
+	position: relative;
+}
+.update-ap-next-group .cont-box02-right{
+	margin-left: 29px;
+}
+hr{
+	margin-top: 10px;
+	background: #dfe2e5;
+}
+.update-ap-next-group .cont-box02-left>div,.update-ap-next-group .cont-box02-right>div{
+	width: 100%;
+	height: 30px;
+	margin-top: 10px;
+}
+.update-ap-next-group .cont-box02-left>div>span,.update-ap-next-group .cont-box02-right>div>span{
+	width: 75px;
+	height: 30px;
+	font-size: 14px;
+	text-align: right;
+	margin-left: 10px;
+	float: left;
+	line-height: 30px;
+}
+.update-ap-next-group .cont-box02-left>div>select,.update-ap-next-group .cont-box02-right>div>select{
+	height: 30px;
+	float: left;
+	margin-left: 10px;
+	width: 150px;
+}
+
+.update-ap-next-group .left-terminal-select{
+	height: 30px;
+	float: left;
+	margin-left: 10px;
+	width: 150px;
+}
+.update-ap-next-group .cont-box02-left>div:last-child,.update-ap-next-group .cont-box02-right>div:last-child{
+	margin-bottom: 10px;
+}
+.update-ap-next-group .side{
+	margin-top: 30px;
+}
+.update-ap-next-group .small-box-left{
+	width: 50px;
+	height: 20px;
+	border: 1px solid #dfe2e5;
+	float: left;
+	position: absolute;
+	left: 63px;
+    top: 50px;
+	z-index: 10000;
+	background: #fff;
+	text-align: center;
+	font-size: 14px;
+	line-height: 20px;
+}
+.update-ap-next-group .small-box-right{
+	width: 50px;
+	height: 20px;
+	border: 1px solid #dfe2e5;
+	float: left;
+	position: absolute;
+	left: 354px;
+    top: 50px;
+	z-index: 10000;
+	background: #fff;
+	text-align: center;
+	font-size: 14px;
+	line-height: 20px;
+}
+.update-ap-next-group .character{
+	margin-top: 10px;
+	margin-bottom: 22px;
+}
+.update-ap-next-group #left-terminal-select,.update-ap-next-group #right-terminal-select{
+	height: 26px;
+	float: left;
+	margin-left: 10px;
+	width: 146px;
+}
+.update-ap-next-group input:focus{
+	border-color: none!important;
+	box-shadow: none;
+}
+
+/*添加设备样式*/
+.ap-add-batch-equipment .cont-box04{
+	padding: 0 37px;
+    overflow: hidden;
+    height: 80px;
+}
+.ap-add-batch-equipment .cont-box04 .add-box-group{
+	width: 100%;
+    margin-top: 22px;
+    float: left;
+}
+.ap-add-batch-equipment .add-title-group{
+	margin: 0 0 20px 0;
+	float: left;
+}
+.ap-add-batch-equipment #select-add-ap-group{
+	margin-left: 20px;
+	float: right;
+}
+.ap-add-batch-equipment .batch-word-address{
+	width: 199px;
+	height: 38px;
+	line-height: 38px;
+	text-align: center;
+	float: left;
+	background: #fafbfd;
+}
+.ap-add-batch-equipment .batch-word-name{
+	width: 150px;
+	height: 38px;
+	line-height: 38px;
+	text-align: center;
+	float: left;
+	background: #fafbfd;
+}
+.ap-add-batch-equipment .batch-word-location{
+	width: 150px;
+	height: 38px;
+	line-height: 38px;
+	text-align: center;
+	float: left;
+	background: #fafbfd;
+}
+.ap-add-batch-equipment .batch-word-img{
+	width: 75px;
+	height: 38px;
+	line-height: 38px;
+	text-align: center;
+	float: left;
+	background: #fafbfd;
+}
+.ap-add-batch-equipment .cont-box02{
+	padding: 0px 37px;
+}
+.ap-add-batch-equipment .batch-box{
+	padding: 0px;
+}
+/*动态创建input样式*/
+.ap-add-batch-equipment .batch-box .batch-batch .batch-inputBox .batch-input01{
+	width: 199px;
+    height: 30px;
+    background: #fafbfd;
+    border: 1px solid #eaebec;
+    border-radius: 0;
+    float: left;
+    box-sizing: border-box;
+    margin-right: 0px;
+}
+.ap-add-batch-equipment .batch-box .batch-batch .batch-inputBox .right-input{
+	border-bottom-left-radius: 0px;
+    border-top-left-radius: 0px;
+    margin-left: 0px;
+    box-sizing: border-box;
+    width: 150px;
+    height: 30px;
+    background: #fafbfd;
+    border: 1px solid #eaebec;
+    border-radius: 0;
+    float: left;
+}
+.ap-add-batch-equipment .batch-box .batch-add{
+	float: left;
+    margin-left: 20px;
+}
+.ap-add-batch-equipment .batch-box .batch-batch .batch-inputBox .batch-delete{
+	float: left;
+    margin-left: 20px;
+}
+
+
+/*配置无线接入点样式*/
+
+
+.ip-box{
+	width: 100%;
+	height: 100%;
+}
+.ip-box-head{
+	width: 850px;
+	height: 50px;
+	border-top:1px solid #7A7A7A ;
+}
+.ip-head-div{
+	width: 95%;
+	height: 100%;
+	margin: 0 auto;
+	border-bottom: 1px solid #7A7A7A;
+}
+.ip-head-div span{
+	font-size: 14px;
+	line-height: 50px;
+
+}
+.ip-head-title{
+	margin-left: 20px;
+}
+.ip-head-img{
+	width: 40px;
+	height: 30px;
+	float: right;
+
+	margin-top: 10px;
+	background-image: url("../images/app-ap.png");
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+}
+.ip-head-img img{
+	width:100%;
+	height:30px;
+
+}
+
+.ip-content-box{
+	width: 95%;
+	height: 480px;
+	border-bottom: 1px solid #7A7A7A;
+	margin: 0 auto;
+}
+.ip-content-left-div{
+	width: 30%;
+	height: 100%;
+	border-right: 4px solid #CCCCCC;
+	float: left;
+}
+
+.ip-left-div-title{
+	width: 95%;
+	height: 40px;
+	border-bottom: 1px solid #7A7A7A;
+
+}
+.ip-left-div-title span{
+	line-height: 40px;
+}
+
+.ip-content-right-div{
+	float: right;
+	height: 100%;
+	width: 67%;
+
+}
+.ip-left-mac{
+	display: inline-block;
+	float: right;
+	font-size: 16px;
+	color: #000000;
+	margin-right: 80px;
+}
+
+.ip-left-ul{
+	width: 95%;
+	max-height: 421px;
+
+	overflow-y: auto;
+	overflow-x: auto;
+	margin-top:10px ;
+}
+.ip-left-ul li{
+	height: 30px;
+}
+.ip-left-ul input[type="checkbox"]{
+	float: left;
+	vertical-align: middle;
+	margin-top: 3px;
+
+
+}
+.ip-left-li-first{
+	width: 79px;
+	float: left;
+	margin-left: 3px;
+}
+
+
+.ip-left-li-last{
+
+
+}
+.ip-right-title{
+	font-size: 16px;
+	color: #000000;
+}
+.ip-right-info{
+	margin-top: 10px;
+	height: 150px;
+}
+.ip-info-left{
+	width: 50%;
+	height: 150px;
+
+	float: left;
+}
+.ip-info-right {
+	width: 50%;
+	height: 150px;
+
+	float: right;
+}
+.ip-input{
+	height:20px;
+	width: 130px;
+	text-indent: 10px;
+}
+.ip-info-div{
+	margin: 5px;
+	float: right;
+	font-size: 14px;
+	font-weight: bold;
+	margin-right: 55px;
+}
+.ip-right-sp{
+
+}
+.ip-info-div-1{
+	margin: 5px;
+	float: right;
+	font-size: 14px;
+	font-weight: bold;
+	margin-right: 12px;
+}
+.ip-info-border{
+	border: 1px solid #7A7A7A;
+	position: relative;
+}
+.ip-small-box-left{
+	width: 50px;
+	height: 20px;
+	border: 1px solid #dfe2e5;
+	float: left;
+	position: absolute;
+	left: 10px;
+	top: -10px;
+	z-index: 10000;
+	background: #fff;
+	text-align: center;
+	font-size: 14px;
+	line-height: 20px;
+}
+.ip-content2{
+	width:100%;
+	max-height: 480px;
+	overflow-y: auto;
+	overflow-x:hidden ;
+}
+.ip-content-2-table thead tr td{
+	width: 158px;
+	height: 30px;
+
+	text-align: center;
+	line-height: 30px;
+	font-size: 14px;
+
+}
+.ip-content-2-table tbody tr td{
+
+	width: 158px;
+	height: 30px;
+
+	text-align: center;
+	line-height: 30px;
+
+}
+
+
+.ip-content2-tr{
+
+	height: 30px;
+
+	text-align: center;
+	line-height: 30px;
+
+}
+.ip-content2-head-title{
+	width:100%;
+	height: 40px;
+	border-bottom: 1px solid #7A7A7A;
+}
+.ip-content-head-title-table{
+	width: 158px;
+	height: 40px;
+
+	text-align: center;
+	line-height: 40px;
+	font-size: 14px;
+	float: left;
+	margin: 0 auto;
+}
+.ip-content-2-table input{
+	width: 100px;
+	height: 20px;
+	padding: 3px;
+}
+
+.ip-content-2-table select:first-child{
+	width: 50px;
+	height: 30px;
+}
+
+.ip-content-2-table select:last-child{
+
+	height: 30px;
+}
+.ip-content-2-table tr{
+	margin-top: 5px;
+	display: table;
+}
+/*AP设备更多下的迁移*/
+#tree-export-ap{
+	height: 260px;
+    overflow: auto;
+    padding-bottom: 10px;
+}
+/*AP右侧箭头*/
+#app-ap-layout .right-cion{
+	width: 15px;
+	height: 20px;
+	float: left;
+	position: absolute;
+	background: url(../images/right-icon.png) no-repeat;
+	z-index: 10000;
+	top: 45%;
+}
+/*AP详情设置*/
+#app-ap-particulars-layout{
+	padding:0px;
+	margin:0px;
+	height:100%;
+	width:100%;
+	border: 0px;
+}
+
+#app-ap-particulars-layout .ap-region-west{
+	width:246px;
+	min-width:246px;
+	border-right:1px solid #e2e2e3;
+	height:100%;
+	box-sizing: border-box;
+}
+#app-ap-particulars-layout .ap-region-center{
+}
+
+/*AP详情设置---左侧样式*/
+
+#app-ap-particulars-layout .return-index{
+	width: 12px;
+	height: 16px;
+	float: left;
+	background: url(../images/left-icon.png) no-repeat;
+	margin-top: 6px;
+}
+#app-ap-particulars-layout .return-text{
+	width: 175px;
+	height: 16px;
+	float: left;
+	font-size: 14px;
+	line-height: 16px;
+	color: #5ea8d6;
+	margin-top: 6px;
+	margin-left: 10px;
+}
+#app-ap-particulars-layout .ap-region-west .win-nav .left-menu{
+	width: 100%;
+	height:30px;
+	margin-top:10px;
+}
+#app-ap-particulars-layout .ap-region-west .win-nav .nav-home-title{
+	margin-top:19px;
+	text-indent: 12px;
+	height:30px;
+	line-height:30px;
+	font-size:16px;
+}
+/*左侧数据样式*/
+#app-ap-particulars-layout .left-div{
+	width: 100%;
+	height: 410px;
+	/*background: #f0f;*/
+	float: left;
+	overflow: auto;
+	
+	
+	margin-top: 10px;
+}
+#app-ap-particulars-layout .left-div-top{
+	width: 100%;
+	height: 40px;
+	float: left;
+	border-top:1px solid #e2e2e4;
+	border-bottom:1px solid #e2e2e4;
+	
+}
+#app-ap-particulars-layout .left-div-top .status{
+	width: 40%;
+	height: 40px;
+	float: left;
+	background: #f0f3f8;
+	line-height: 40px;
+	text-align: center;
+	border-right: 1px solid #e2e2e4;
+	box-sizing: border-box;
+}
+#app-ap-particulars-layout .left-div-top .wireless{
+	width: 60%;
+	height: 40px;
+	float: left;
+	background: #f0f3f8;
+	line-height: 40px;
+	text-align: center;
+}
+#app-ap-particulars-layout .left-div-top .status .status-icon{
+	width: 16px;
+	height: 14px;
+	float: left;
+	background: url(../images/right-status.png) no-repeat;
+	margin-left: 10px;
+	margin-top: 14px;
+	/*background: #f0f;*/
+}
+#app-ap-particulars-layout .left-div-top .status .status-text{
+	float: left;
+	margin-left: 27px;
+}
+#app-ap-particulars-layout .left-div-top .wireless .wireless-text{
+	float: left;
+	margin-left: 27px;
+}
+#app-ap-particulars-layout .left-div-top .wireless .wireless-icon{
+	width: 16px;
+	height: 14px;
+	float: left;
+	background: url(../images/right-status.png) no-repeat;
+	margin-left: 10px;
+	margin-top: 14px;
+}
+#app-ap-particulars-layout .group-list-particulars{
+	width: 100%;
+	height: 330px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+#app-ap-particulars-layout .group-list-particulars li{
+	width:100%;
+	height: 35px;
+	float: left;
+}
+#app-ap-particulars-layout .li-left-connected{
+	width: 40%;
+	height: 35px;
+	float: left;
+	line-height: 35px;
+	text-align: center;
+}
+#app-ap-particulars-layout .li-left-mac{
+	width: 60%;
+	height: 35px;
+	float: left;
+	line-height: 35px;
+	text-align: center;
+}
+#app-ap-particulars-layout .bottom-number{
+	width: 180px;
+	height: 49px;
+	float: left;
+	/*background: #f0f;*/
+	box-sizing: border-box;
+	text-align: right;
+	line-height: 49px;
+}
+#app-ap-particulars-layout .refresh-right{
+	width: 1px; 
+	height: 20px;
+	background:#6b6f77 ;
+	float: left;
+	margin-right: 10px;
+	margin-top: 15px;
+	margin-left: 20px;
+}
+#app-ap-particulars-layout .refresh-icon{
+	width: 18px;
+	height: 18px;
+	float: right;
+	margin-right: 10px;
+	margin-top: 16px;
+	background: url(../images/icon-refresh.png) no-repeat;
+	
+}
+/*AP详情右侧*/
+/*选项卡样式*/
+.tabs li.tabs-selected a.tabs-inner{
+	border-bottom: 4px solid #5ea8d6;
+}
+.tabs{
+	border-color: transparent;
+}
+.win-content .tabs-container{
+	margin-top: 20px;
+}
+#ap-tabs .tabs-wrap{
+	height: 40px;
+}
+#ap-tabs .tabs li.tabs-selected a.tabs-inner{
+	width: 83px;
+    height: 35px;
+}
+.tabs li a.tabs-inner{
+	width: 83px;
+    height: 35px!important;
+    border-width:0px ;
+    background: none;
+}
+.tabs-header{
+	border-width:0px ;
+}
+.tabs-header{
+	background: none;
+}
+.tabs-panels{
+	border-width: 0px;
+}
+.tabs li{
+	margin: 0 25px -1px 0;
+}
+.tabs-selected{
+	background: none;
+}
+/*选项卡样式*/
+/*选项卡----总览样式*/
+#ap-tabs .scan{
+	font-size: 14px;
+}
+/*总览-----设备样式*/
+#ap-tabs .scan .equipment{
+	width: 100%;
+	height: 25px;
+	float: left;
+	border-bottom: 1px solid #E2E2E3; 
+}
+#ap-tabs .scan .equipment .equipment-title{
+	width: 100px;
+	height: 20px;
+	line-height: 20px;
+	float: left;
+	font-size: 14px;
+	font-weight: 500;
+}
+#ap-tabs .scan .equipment-box{
+	width: 100%;
+	height: 100px;
+	float: left;
+	margin-top: 10px;
+	/*background: #f0f;*/
+} 
+/*设备左侧样式-----显示*/
+#ap-tabs .left-equipment,#ap-tabs .right-equipment{
+	width: 300px;
+	height: 100px;
+	float: left;
+	margin-left: 10px;
+}
+#ap-tabs .right-equipment{
+	margin-left: 30px;
+}
+#ap-tabs .left-equipment>div{
+	width: 300px;
+	height: 20px;
+	float: left;
+}
+#ap-tabs .right-equipment>div{
+	width: 300px;
+	height: 20px;
+	float: left;
+}
+#ap-tabs .left-equipment .ap-name,#ap-tabs .left-equipment .ap-ip,#ap-tabs .left-equipment .ap-serial,#ap-tabs .left-equipment .ap-provider,#ap-tabs .left-equipment .ap-cpu{
+	width: 100px;
+	height: 20px;
+	float: left;
+	line-height: 20px;
+	text-align: right;
+}
+#ap-tabs .left-equipment #ap-input,#ap-tabs .left-equipment .ap-ip-label,#ap-tabs .left-equipment .ap-serial-label,#ap-tabs .left-equipment .ap-provider-label,#ap-tabs .left-equipment .ap-cpu-label{
+	width: 180px;
+	height: 20px;
+	float: left;
+	margin-left: 10px;
+	box-sizing: border-box;
+	line-height: 20px;
+	
+}
+/*设备右侧样式-------显示*/
+#ap-tabs .right-equipment .ap-location,#ap-tabs .right-equipment .ap-mac,#ap-tabs .right-equipment .ap-prodect,#ap-tabs .right-equipment .ap-version,#ap-tabs .right-equipment .ap-internal{
+	width: 100px;
+	height: 20px;
+	float: left;
+	line-height: 20px;
+	text-align: right;
+
+}
+#ap-tabs .right-equipment #ap-location-label,#ap-tabs .right-equipment .ap-mac-label,#ap-tabs .right-equipment .ap-prodect-label,#ap-tabs .right-equipment .ap-version-label,#ap-tabs .right-equipment .ap-internal-label{
+	width: 180px;
+	height: 20px;
+	float: left;
+	margin-left: 10px;
+	box-sizing: border-box;
+	
+}
+/*总览---射频*/
+#ap-tabs .scan .frequency{
+	width: 100%;
+	height: 25px;
+	float: left;
+	border-bottom: 1px solid #E2E2E3; 
+	margin-top: 10px;
+}
+#ap-tabs .scan .frequency .frequency-title{
+	width: 100px;
+	height: 20px;
+	line-height: 20px;
+	float: left;
+	font-size: 14px;
+	font-weight: 500;
+}
+/*列表样式*/
+#ap-tabs .cont-box02{
+	padding: 0 1px;
+	padding-top: 20px;
+}
+#ap-tabs .cont-box02-left,#ap-tabs .cont-box02-right{
+	width: 300px;
+	float: left;
+	border: 1px solid #dfe2e5;
+	box-sizing: border-box;
+	position: relative;
+}
+#ap-tabs .cont-box02-right{
+	margin-left: 29px;
+}
+
+#ap-tabs .cont-box02-left>div,#ap-tabs .cont-box02-right>div{
+	width: 100%;
+	height: 30px;
+	margin-top: 10px;
+}
+#ap-tabs .cont-box02-left>div>span,#ap-tabs .cont-box02-right>div>span{
+	width: 100px;
+	height: 20px;
+	font-size: 14px;
+	text-align: right;
+	margin-left: 10px;
+	float: left;
+	line-height: 20px;
+}
+#ap-tabs .cont-box02-left>div>select,#ap-tabs .cont-box02-right>div>select{
+	height: 20px;
+	float: left;
+	margin-left: 10px;
+	width: 150px;
+}
+
+#ap-tabs #left-terminal-select,#ap-tabs #right-terminal-select{
+	height: 20px;
+	float: left;
+	margin-left: 10px;
+	width: 150px;
+}
+#ap-tabs .cont-box02-left>div:last-child, #ap-tabs .cont-box02-right>div:last-child{
+	margin-bottom: 10px;
+}
+#ap-tabs .small-box-left{
+	width: 50px;
+	height: 20px;
+	border: 1px solid #dfe2e5;
+	float: left;
+	position: absolute;
+	left: 39px;
+    top: 265px;
+	z-index: 10000;
+	background: #fff;
+	text-align: center;
+	font-size: 14px;
+	line-height: 20px;
+}
+#ap-tabs .small-box-right{
+	width: 50px;
+	height: 20px;
+	border: 1px solid #dfe2e5;
+	float: left;
+	position: absolute;
+	left: 368px;
+    top: 265px;
+	z-index: 10000;
+	background: #fff;
+	text-align: center;
+	font-size: 14px;
+	line-height: 20px;
+}
+/*总览---设备修改图片*/
+#ap-tabs .equipment-icon{
+	width: 20px;
+	height: 20px;
+	float: right;
+	background: url(../images/equipment-save.png) no-repeat;
+}
+/*总览---射频修改图片*/
+#ap-tabs .frequency-icon{
+	width: 20px;
+	height: 20px;
+	float: right;
+	background: url(../images/equipment-save.png) no-repeat;
+}
+/*总览---设备保存图片*/
+#ap-tabs .equipment-compile{
+	width: 20px;
+	height: 20px;
+	float: right;
+	background: url(../images/ap-compile.png) no-repeat;
+}
+/*总览---射频保存图片*/
+#ap-tabs .frequency-compile{
+	width: 20px;
+	height: 20px;
+	float: right;
+	background: url(../images/ap-compile.png) no-repeat;
+}
+/*设备input边框*/
+#ap-input{
+	border: none;
+}
+#ap-location-label{
+	border: none;
+}
+/*选项卡下所有input样式*/
+#ap-tabs input{
+	font-size: 14px;
+	line-height: 20px;
+}
+/*设备修改样式*/
+#ap-tabs .left-equipment-none,#ap-tabs .right-equipment-none{
+	width: 300px;
+	height: 100px;
+	float: left;
+	margin-left: 10px;
+}
+#ap-tabs .scan .equipment{
+	width: 100%;
+	height: 25px;
+	float: left;
+	border-bottom: 1px solid #E2E2E3; 
+}
+#ap-tabs .scan .equipment .equipment-title{
+	width: 100px;
+	height: 20px;
+	line-height: 20px;
+	float: left;
+	font-size: 14px;
+	font-weight: 500;
+}
+#ap-tabs .scan .equipment-box-none{
+	width: 100%;
+	height: 100px;
+	float: left;
+	margin-top: 10px;
+	/*background: #f0f;*/
+} 
+/*设备左侧样式 -----隐藏*/
+#ap-tabs .left-equipment-none,#ap-tabs .right-equipment-none{
+	width: 300px;
+	height: 100px;
+	float: left;
+	margin-left: 10px;
+}
+#ap-tabs .right-equipment-none{
+	margin-left: 30px;
+}
+#ap-tabs .left-equipment-none>div{
+	width: 300px;
+	height: 20px;
+	float: left;
+	margin-top: 5px;
+}
+#ap-tabs .right-equipment-none>div{
+	width: 300px;
+	height: 20px;
+	float: left;
+	margin-top: 5px;
+}
+#ap-tabs .left-equipment-none .ap-name,#ap-tabs .left-equipment-none .ap-dhcp,#ap-tabs .left-equipment-none .ap-mark,#ap-tabs .left-equipment-none .ap-dns1{
+	width: 100px;
+	height: 20px;
+	float: left;
+	line-height: 20px;
+	text-align: right;
+}
+#ap-tabs .left-equipment-none #ap-input-none,#ap-tabs .left-equipment-none .ap-dhcp-label,#ap-tabs .left-equipment-none .ap-mark-label,#ap-tabs .left-equipment-none #ap-dns1-label{
+	width: 180px;
+	height: 20px;
+	float: left;
+	margin-left: 10px;
+	box-sizing: border-box;
+	line-height: 20px;
+	
+}
+
+/*设备右侧样式-----隐藏*/
+#ap-tabs .right-equipment-none .ap-location-none,#ap-tabs .right-equipment-none .ap-ip-none,#ap-tabs .right-equipment-none .ap-gateway,#ap-tabs .right-equipment-none .ap-dns2{
+	width: 100px;
+	height: 20px;
+	float: left;
+	line-height: 20px;
+	text-align: right;
+
+}
+#ap-tabs .right-equipment-none #ap-location-label-none,#ap-tabs .right-equipment-none .ap-ip-label-none,#ap-tabs .right-equipment-none .ap-gateway-label,#ap-tabs .right-equipment-none #ap-dns2-label{
+	width: 180px;
+	height: 20px;
+	float: left;
+	margin-left: 10px;
+	box-sizing: border-box;
+}
+
+/*射频显示样式*/
+#ap-tabs .ap-show .cont-box02-left>div,#ap-tabs .ap-show .cont-box02-right>div{
+	height: 20px;
+}
+#ap-tabs .ap-show .cont-box02-left>div>span:nth-child(2),#ap-tabs .ap-show .cont-box02-right>div>span:nth-child(2){
+	width: 165px;
+	height: 20px;
+	float: left;
+	margin-left: 10px;
+	line-height: 20px;
+	/*background: #f0f;*/
+}
+/*左侧列表添加类*/
+.list-select{
+	background: #f0f3f8;
+}
+/*ap详情---日志样式--footer*/
+#ap-tabs .window .panel-footer{
+	border: none;
+	position: initial;
+	top: initial;
+}
+#ap-tabs .app-table{
+	padding: 10px;
+}
+/*ap详情---信道分析---按钮（扫描分析）*/
+#ap-tabs .analyze{
+	margin-top: 10px;
+}
+/*ap详情---信道分析---文字显示*/
+#ap-tabs .channel-text{
+	font-size: 14px;
+	width: 100%;
+	height: 20px;
+	line-height: 20px;
+}
+#ap-tabs .result-analyze{
+	font-size: 14px;
+	width: 100%;
+	height: 21px;
+	line-height: 20px;
+	margin-top: 10px;
+}
+#ap-tabs .result-analyze-icon{
+	width: 22px;
+	height: 21px;
+	float: left;
+	background: url(../images/loading-details.gif) ;
+}
+#ap-tabs .result-analyze-icon{
+	float: left;
+}
+
+/*ap*/
+.ap-all-traffic,.ap-wireless-clients{
+	height:195px;
+}
+/*ap详情--流量--底部样式*/
+.ap-footer-tools{
+	height:41px;position: relative;line-height: 40px;border-top:1px solid #ddd;margin:0px 18px;box-sizing:border-box;
+}
+.ap-footer-tools .btn-network-fresh{
+	cursor: pointer;
+	width:40px;position: absolute;right: 0px;
+	height: 40px;
+	background: url(../../public/images/refresh.png) no-repeat center center;
+}
+.ap-footer-tools .btn-network-fresh:hover{
+	cursor: pointer;
+	width:40px;position: absolute;right: 0px;
+	height: 40px;
+	background: url(../../public/images/refresh-hover.png) no-repeat center center;
+}
+/*ap详情----左侧树样式*/
+.error-status{
+	width: 20px;
+	height: 20px;
+	float: left;
+	margin-left: 30px;
+    margin-top: 7px;
+	background: url(../images/icon-status.png) 0px 60px;
+}
+.add-status{
+	width: 20px;
+	height: 20px;
+	float: left;
+	margin-left: 30px;
+    margin-top: 7px;
+	background: url(../images/icon-status.png) 0px 160px;
+}
+.normal-status{
+	width: 20px;
+	height: 20px;
+	float: left;
+	margin-left: 30px;
+    margin-top: 7px;
+	background: url(../images/icon-status.png) 0px 120px;
+}
+.interrupt-status{
+	width: 20px;
+	height: 20px;
+	float: left;
+	margin-left: 30px;
+    margin-top: 7px;
+	background: url(../images/icon-status.png) 0px 0px;
+}

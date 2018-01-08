@@ -28,7 +28,8 @@ define(['jquery','functions','zui'],function($,_f,zui){
 		{'key':'.icon-task-user','value':'用户中心'},
 		{'key':'.icon-task-country','value':'切换国家'},
 		{'key':'.app-user-tip','value':'用户管理'},
-		{'key':'.app-network-tip','value':'网络管理'}
+		{'key':'.app-network-tip','value':'网络管理'},
+		{'key':'.app-ap-tip','value':'AP管理'}
 	];
 	var run = function(){
 		$.each(tips,function(index,data){

@@ -288,7 +288,6 @@ define(['jquery','global','functions','provide','zui'],function($,_g,_f,provide,
             var uuid = UUID();
             appItem.attr("app_id", uuid); 
             loadApp(app,uuid);
-            console.log(app);
             appItem.css({
                 left: left,
                 top: top
@@ -407,6 +406,56 @@ define(['jquery','global','functions','provide','zui'],function($,_g,_f,provide,
 	var initStartMenu = function(){
 		log('初始化开始菜单');
 	}
+	//切换窗口效果
+	var switchWindow = function(uuid){
+		//打开新窗口把所有的窗口灰掉
+		$("div[w_id^='UUID']").prev('.window-header').css({
+			'background':'linear-gradient(#e6ebf0,#ffffff)',
+			'opacity': '0.6',
+			'border-top':'3px solid #8C96A0'
+		});
+		$("div[w_id^='UUID']").prev('.window-header').find('.panel-title').css({
+			'color':'#8C96A0',
+			'font-weight':'bold'
+		});
+		
+		//当前窗口
+		$("div[w_id="+uuid+"]").prev('.window-header').css({
+			'background':'linear-gradient(#d8ecfb,#ffffff)',
+			'border-top':'3px solid #0086E5',
+			'opacity': '1'
+		});
+		$("div[w_id="+uuid+"]").prev('.window-header').find('.panel-title').css({
+			'color':'#0086E5',
+			'font-weight':'bold'
+		});
+	}
+	//绑定窗口点击事件
+	var bindClickWindowTitle = function(uuid){
+		$("div[w_id="+uuid+"]").panel('header').click(function(){
+			//打开新窗口把所有的窗口灰掉
+			$("div[w_id^='UUID']").prev('.window-header').css({
+				'background':'linear-gradient(#e6ebf0,#ffffff)',
+				'opacity': '0.6',
+				'border-top':'3px solid #8C96A0'
+			});
+			$("div[w_id^='UUID']").prev('.window-header').find('.panel-title').css({
+				'color':'#8C96A0',
+				'font-weight':'bold'
+			});
+			
+			//当前窗口
+			$("div[w_id="+uuid+"]").prev('.window-header').css({
+				'background':'linear-gradient(#d8ecfb,#ffffff)',
+				'border-top':'3px solid #0086E5',
+				'opacity': '1'
+			});
+			$("div[w_id="+uuid+"]").prev('.window-header').find('.panel-title').css({
+				'color':'#0086E5',
+				'font-weight':'bold'
+			});
+		});
+	}
 	//打开app
 	var openApp = function(options){
 		log('打开app');
@@ -428,6 +477,7 @@ define(['jquery','global','functions','provide','zui'],function($,_g,_f,provide,
             thisAppWindow.window('open');
             thisAppWindow.window('refresh');
             return ;
+           //thisAppWindow.window('close');
 
         }
 		
@@ -451,8 +501,12 @@ define(['jquery','global','functions','provide','zui'],function($,_g,_f,provide,
 				//追加任务栏图标
 				appendToList($(this).attr('w_id'), appOpt.taskIcon);
 				
-				//打开窗口后居中
-				//$(this).window('center');
+				//切换窗口效果
+				switchWindow(uuid);
+				
+				//绑定当前title切换
+				bindClickWindowTitle(uuid);
+				
 			},
 			onMinimize: function() {
                 if ($(this).prev('.window-header').find('.panel-tool-restore').length == 1) {
@@ -464,6 +518,7 @@ define(['jquery','global','functions','provide','zui'],function($,_g,_f,provide,
                 
                 //当发生缩小事件时，清除任务栏状态
                 $('li[l_id="' + $(this).attr('w_id') + '"]').removeClass('selected');
+                
             },
             onMove:function(left,top){
             	var opts = $.data(this, 'panel').options;
@@ -475,6 +530,12 @@ define(['jquery','global','functions','provide','zui'],function($,_g,_f,provide,
                 }else if(opts.maximized) {
                     $(this).window("restore");
                 }
+                
+                //切换窗口效果
+				switchWindow(uuid);
+				
+				//绑定当前title切换
+				bindClickWindowTitle(uuid);
             },
             onMaximize:function(){
             	target.layout('panel', 'center').parent('.layout-panel').css('top','40px');
@@ -573,13 +634,13 @@ define(['jquery','global','functions','provide','zui'],function($,_g,_f,provide,
 	        //初始化接口信息
 	        var url = _IFA['permittedorganization'];
            _ajax(url,'get','',function(resp){
-           		target.data('org',resp);console.log(resp);
-           },function(error){
-           	    if(error.readyState<4){
+           	    if(resp.readyState!=undefined && resp.readyState<4){
            	    	_alert('获取bussiness信息失败,请登录云端系统！','error');
            	    	window.open(" http://clouddev.oakridge.vip/nms/authority");
            	    	return false;
-           	    };
+           	    }else{
+	           		target.data('org',resp);
+           	    }
            });
 		},
 		//主函数

@@ -16,16 +16,26 @@ function log(msg){
 	}
 }
 //验证手机号
-var checkPhone = function(phone){
-	var me = /^1[34578]\d{9}$/;
-    if (me.test(phone) == false || me.test(phone) == undefined) {
-        return false;
-    }
+
+var checkPhone = function(phone,area){
+	switch(area){
+		case '86':
+            var me = /^1[34578]\d{9}$/;
+            if (me.test(phone) == false || me.test(phone) == undefined) {
+                return false;
+            }
+			break;
+		case '1':
+            var matchStr = /^(((1(\s|))|)\([1-9]{3}\)(\s|-|)[1-9]{3}(\s|-|)[1-9]{4})$/;
+            var matchStr2 = /^(((1(\s)|)|)[1-9]{3}(\s|-|)[1-9]{3}(\s|-|)[1-9]{4})$/;
+            return (phone.match(matchStr) != null||phone.match(matchStr2)!=null);
+			break;
+	}
     return true;
 	}
 //验证邮箱
 var checkEmail = function(email){
-	var me = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/ ;
+	var me = /^\w[-\w.+]*@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/ ;
 	if (me.test(email) == false || me.test(email) == undefined) {
         return false;
     }
@@ -70,6 +80,7 @@ var getFormValue = function(formId,flag){
     if(flag!=undefined){
     	var email = [];
     	var phone = [];
+    	var country = [];
     	var list = [];
     	
     	$.each(t,function(index,data){
@@ -79,11 +90,15 @@ var getFormValue = function(formId,flag){
     		if(data.name=='phone'){
     			phone.push(data.value);
     		}
+    		if(data.name=='country_code'){
+    			country.push(data.value);
+    		}
     		
     	});
-    	$.each(email,function(index,data){console.log(email[index]);
+    	$.each(email,function(index,data){
     		list.push({
     			email:email[index],
+    			country_code:country[index],
     			phone:phone[index]
     		});
     	});
@@ -95,10 +110,53 @@ var getFormValue = function(formId,flag){
     	jsonResult.list = list;
     	delete jsonResult.email;
     	delete jsonResult.phone;
+    	delete jsonResult.country_code;
     }
     return jsonResult;
 }
-
+var getApFormValue = function(formId,flag){
+	var jsonResult = {};
+    var t = $(formId).serializeArray();
+    if(flag!=undefined){
+    	var mac = [];
+    	var device_name = [];
+    	var location = [];
+    	var list = [];
+    	
+    	$.each(t,function(index,data){
+    		if(data.name=='mac_address'){
+    			mac.push(data.value);
+    		}
+    		if(data.name=='ap_name'){
+    			device_name.push(data.value);
+    		}
+    		if(data.name=='ap_location'){
+    			location.push(data.value);
+    		}
+    		
+    	});
+    	$.each(mac,function(index,data){
+    		list.push({
+    			mac:mac[index],
+    			device_name:device_name[index],
+    			location:location[index]
+    		});
+    	});
+    }
+	
+    /*$.each(t, function() {
+      jsonResult[this.name] = this.value;
+      
+    });*/
+    
+    if(flag!=undefined){
+    	jsonResult.list = list;
+    	delete jsonResult.mac;
+    	delete jsonResult.device_name;
+    	delete jsonResult.location;
+    }
+    return jsonResult;
+}
 //返回入口信息
 var getOrg = function(org){
 	if(org!=undefined){
@@ -112,7 +170,7 @@ var getOrg = function(org){
 }
 
 //自定义ajax
-var _ajax = function(url,type,data,func,error){
+var _ajax = function(url,type,data,func,callBack){
 	$.ajax({
 	    url: url,
 	    type:type,
@@ -134,7 +192,7 @@ var _ajax = function(url,type,data,func,error){
 	        console.log(XMLHttpRequest);
 	        console.log(textStatus);
 	        console.log(errorThrown);
-	        error(XMLHttpRequest);
+	        func(XMLHttpRequest);
 	    }
     });
 }
@@ -198,10 +256,32 @@ var _alert = function(msg,title,icon,fn){
 	});
 }
 
-//提示信息
-var tooltip = function(msg){
+/*获取JSON元素个数-一维数组*/
+var getJsonLen = function(json){
+	var len = 0;
+	for(var i in json){
+		len++;
+	}
+	return len;
 }
-
+/*序列化json*/
+var serializeJson = function(json){
+	var result = '';
+	var len = getJsonLen(json);
+	if(len>0){
+		var i = 0;
+		$.each(json, function(index,data) {
+			result +=index;
+			result +='=';
+			result +=data;
+			i++;
+			if(i<len){
+				result +='&';
+			}
+		});
+	}
+	return result;
+}
 //获取file文件名
 var getFileName = function(id){
 	var file = $(id).val();
@@ -266,70 +346,31 @@ var getRandomInt = function(n){
 	rnd+=Math.floor(Math.random()*10);   
 	return rnd;   
 } 
-//验证mac地址
-var isMac = function(val){
-	if(val=='' || val==undefined){
-		return true;
-	}
-	var mac_rule = /[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}/;
-    if(!mac_rule.test(val))
-    {
-        return false;
-    }else{
-    	return true;
-    }
-}
-//验证手机
-var checkPhone = function(phone){
-	var me = /^1[34578]\d{9}$/;
-	var reg = new RegExp("-","g");//g,表示全部替换。
-	var phone = phone.replace(reg,"");
-    if (me.test(phone) == false || me.test(phone) == undefined) {
-        return false;
-    }
-    return true;
-}
-//验证邮箱
-var checkEmail = function(email){
-	var me = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/ ;
-	if (me.test(email) == false || me.test(email) == undefined) {
-        return false;
-    }
-    return true;
-}
-//验证IP
-var isIp = function(strIP) {
-    if (!strIP) return false;
-    var re=/^(\d+)\.(\d+)\.(\d+)\.(\d+)$/g //匹配IP地址的正则表达式
-    if(re.test(strIP))
-    {
-    if( RegExp.$1 <256 && RegExp.$2<256 && RegExp.$3<256 && RegExp.$4<256) return true;
-    }
-    return false;
-}
+
 //格式手机样式    phone为+86类名
 var verification = function(phone){
-	if($(phone).val() == "+86"){
-		$(phone).next().attr('maxlength','13');
+	if(phone.val() == "86"){
+
+		phone.next().attr('maxlength','13');
 		if(event.keyCode==8){
 			return;
 		};
 		var val = '';
-		if($(phone).next().val().length==3||$(phone).next().val().length==8){
-			 val += $(phone).next().val();
+		if(phone.next().val().length==3 || phone.next().val().length==8){
+			 val += phone.next().val();
 			 val+='-'
-			 $(phone).next().val(val);
+			 phone.next().val(val);
 		}
-	}else if($(phone).val() == "+1"){
-		$(phone).next().attr('maxlength','12');
+	}else if(phone.val() == "1"){
+		phone.next().attr('maxlength','12');
 		if(event.keyCode==8){
 			return;
 		}
 		var val = '';
-		if($(phone).next().val().length==3||$(phone).next().val().length==7){
-			 val += $(phone).next().val();
+		if(phone.next().val().length==3 || phone.next().val().length==7){
+			 val += phone.next().val();
 			 val+='-'
-			 $(phone).next().val(val);
+			 phone.next().val(val);
 		}
 	}
 }
@@ -408,6 +449,102 @@ var toast = function(title,text,icon,afterHidden){
 	});
 }
 
+//转换网络树结构
+var getNetworkList = function(data,networkName){
+	var type = [
+		'VLAN Untagged',
+		'VLAN',
+		'GRE'
+	];
+	var root = {}
+	var treeArr = [];
+	root.id = 0;
+	root.text = networkName;
+	root.children = [];
+	//判断vlan是否为全为一状态
+	var vlan = true;
+	$.each(data.list,function(index,val){
+		if(val.vlan!=1){
+			return vlan = false;
+		}
+	});
+	var vlan_untagged = {};
+		vlan_untagged.id = type[0];
+		vlan_untagged.text = type[0];
+		vlan_untagged.children = [];
+	var vlan_n = [];
+	var vlan_gre = {};
+		vlan_gre.id = type[2];
+		vlan_gre.text = type[2];
+		vlan_gre.children = [];
+	//解析数据
+	$.each(data.list,function(index,val){
+		val.text = val.ssid_name;
+		delete val.ssid_name;
+		if(val.type==0){
+			//vlan全为1的情况
+			if(vlan==true){
+				root.children.push(val);
+			}else{
+				if(val.vlan==1){
+					vlan_untagged.children.push(val);
+				}else{
+					vlan_n.push(val);
+				}
+			}
+		}else if(val.type==1){
+			vlan_gre.children.push(val);
+		}
+	});
+	if(!$.isEmptyObject(vlan_untagged)){
+		if(vlan_untagged.children.length){
+			root.children.push(vlan_untagged);
+		}
+	}
+	if(vlan_n.length>0){
+		var map = {},
+		dest = [];
+		for(var i = 0; i < vlan_n.length; i++){
+		    var ai = vlan_n[i];
+		    if(!map[ai.vlan]){
+		        dest.push({
+		            id: type[1]+ai.vlan,
+		            text: type[1]+ai.vlan,
+		            children: [ai]
+		        });
+		        map[ai.vlan] = ai.vlan;
+		    }else{
+		        for(var j = 0; j < dest.length; j++){
+		            var dj = dest[j];
+		            if(dj.id == type[1]+ai.vlan){
+		                dest[j].children.push(ai);
+		                break;
+		            }
+		        }
+		    }
+		}
+		$.merge(root.children,dest);
+	}
+	if(!$.isEmptyObject(vlan_gre)){
+		if(vlan_gre.children.length){
+			root.children.push(vlan_gre);
+		}
+	}
+	return root;
+}
+
+//获取站点信息
+var getSite = function(){
+	var target = $('#page');
+	var site = target.data('org');
+	if(site!=undefined){
+		if(site.error_code==0){
+			var node = site.org_nodes;
+			return node[0];
+		}
+	}
+	return site;
+}
 //遮罩层
 var MaskUtil = (function(){   
     //定义遮罩层
@@ -440,4 +577,4 @@ var MaskUtil = (function(){
         }    
     }    
         
-}());  
+}());

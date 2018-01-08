@@ -7,8 +7,6 @@
  * @Copyright        	峥嵘时代
 /*========================================================*/
 
-console.log('加载配置信息');
-
 //桌面应用加载状态
 var loaded = false;
 
@@ -64,6 +62,8 @@ var _IFA = new Array();
 //入口信息
 _IFA['permittedorganization'] = _HOST+'authority/permittedorganization';
 
+/*---------------------------用户接口--------------------------*/
+
 //获取用户组--get
 _IFA['groups_list'] = _HOST+'users/local/groups?org_ids=';
 
@@ -114,5 +114,138 @@ _IFA['user_export_result'] = _HOST+'users/local/export/result';
 
 //邮件通知
 _IFA['user_notify_email'] = _HOST+'users/local/notify/email';
+
+/*---------------------------网络接口--------------------------*/
+
+//创建SSID-POST
+_IFA['network_create_ssids'] = _HOST+'config/network/ssids';
+
+//获取SSID列表-GET
+_IFA['network_list_ssids'] = _HOST+'config/network/ssids';
+
+//获取SSID详情-GET
+_IFA['network_detail_ssids'] = _HOST+'config/network/ssids/';
+
+//启用状态
+_IFA['network_status_ssids'] = _HOST+'config/network/ssids/';
+
+//更新SSID-PUT
+_IFA['network_update_ssids'] = _HOST+'config/network/ssids/';//{id}
+
+//删除SSID-DELETE
+_IFA['network_delete_ssids'] = _HOST+'config/network/ssids/';//{id}
+
+//检查设备SSID-POST
+_IFA['network_check_ssids'] = _HOST+'config/network/ssids/check/devices';
+
+//绑定时间控制策略 -POST  ID在中间做的时候处理下
+_IFA['network_bind_time_ssids'] = _HOST+'config/network/ssids/{id}/timeacls/bind';
+
+//解绑时间控制策略-POST  ID在中间做的时候处理下
+_IFA['network_unbind_time_ssids'] = _HOST+'config/network/ssids/{id}/timeacls/unbind';
+
+//获取portal配置列表-GET 
+_IFA['network_config_portal'] = _HOST+'config/portal/profiles';
+
+//邮件通知-POST 
+_IFA['network_notify_email'] = _HOST+'config/network/ssids/';
+
+//创建时间组件-POST 
+_IFA['network_create_component_times'] = _HOST+'config/component/times';
+
+//获取时间组件列表-GET 
+_IFA['network_get_component_times'] = _HOST+'config/component/times';
+
+//获取时间组件详情-GET 
+_IFA['network_detail_component_times'] = _HOST+'config/component/times/';//{id}
+
+//创建时间访问控制策略-POST 
+_IFA['network_create_component_timeacls'] = _HOST+'config/component/timeacls';
+
+//获取时间访问控制策略-GET 
+_IFA['network_get_component_timeacls'] = _HOST+'config/component/timeacls';
+
+//获取时间访问控制策略-PUT 
+_IFA['network_update_component_timeacls'] = _HOST+'config/component/timeacls/';//{id}
+
+/*AP用户接口*/
+
+//获取AP用户组--get
+_IFA['ap_groups_list'] = _HOST+'config/devices/groups?org_ids=';
+
+//获取AP列表--get
+_IFA['ap_table_list'] = _HOST+'monitor/devices';
+
+//创建AP设备组--post 
+_IFA['ap_create_able_list'] = _HOST+'config/devices/groups';
+
+//编辑AP设备组-- put
+_IFA['ap_update_able_list'] =  _HOST+'config/devices/groups/';
+
+//删除AP设备组--DELETE 
+_IFA['ap_delete_able_list'] = _HOST+'config/devices/groups/';
+
+//获取AP列表组详情 ----GET 
+_IFA['ap_list_particulars'] = _HOST+'config/devices/groups/';
+
+//添加设备  ---POST
+_IFA['ap_add_device'] = _HOST+'config/devices';
+
+//删除设备  ---DELETE
+_IFA['ap_delete_device'] = _HOST+'config/devices/';
+
+//批量删除设备----POST
+_IFA['ap_batch_delete_device'] = _HOST+'config/devices/delete';
+
+//更新设备配置---PUT
+_IFA['ap_update_device_config'] = _HOST+'config/devices/';
+
+//获取设备配置详情----GET
+_IFA['ap_get_device_config_detail'] = _HOST+'config/devices/';
+
+//批量更新设备配置-----PUT
+_IFA['ap_bulk_update_device_conﬁg'] = _HOST+'config/devices/';
+
+//更新多个设备配置----POST
+_IFA['ap_update_device_conﬁg'] = _HOST+'config/devices/multiple';
+
+//获取设备列列表---GET
+_IFA['ap_get_device_list'] = _HOST+'monitor/devices';
+
+//获取设备详情----GET  -----{id	or	mac}
+_IFA['ap_get_device_detail'] = _HOST+'monitor/devices/';
+
+//流量统计----GET  stat/devices/{id}/flow
+_IFA['ap_get_device_ﬂow_stat'] = _HOST+'stat/devices/';
+
+//终端统计-----GET   stat/devices/{id}/client
+_IFA['ap_get_device_clien_stat'] = _HOST+'stat/devices/';
+
+//RF利用率统计----GET   stat/devices/{id}/rf/utilization
+_IFA['ap_get_device_RF_utilization_stat'] = _HOST+'stat/devices/';
+
+//RF噪声值统计-----	GET   stat/devices/{id}/rf/noisefloor
+_IFA['ap_get_device_rf_noise_stat'] = _HOST+'stat/devices/';
+
+//信道分析 ------post   monitor/devices/{id}/channel/analyse
+_IFA['ap_channel_analyse'] = _HOST+'monitor/devices/';
+
+//获取信道分析结果---GET   monitor/devices/{id}/channel/analyse
+_IFA['ap_get_channel_analyse_result'] = _HOST+'monitor/devices/';
+
+//配置设备信道-----POST   monitor/devices/{id}/channel
+_IFA['ap_conﬁg_channel'] = _HOST+'monitor/devices/';
+
+//设备重启----POST    monitor/devices/{id}/reboot
+_IFA['ap_reboot_device'] = _HOST+'monitor/devices/';
+
+//批量设备重启---POST  monitor/devices/reboot
+_IFA['ap__batch_reboot_device'] = _HOST+'monitor/devices/reboot';
+
+//获取事件日志
+_IFA['ap__get_event_log'] = _HOST+'logs/events';
+
+
+
 
 

@@ -1,0 +1,149 @@
+<form method="post" action="" id="create-ssid-network" style="height: 450px;overflow: auto;">
+	<div class="overflow-scroll">
+		<div class="cont-box">
+			<div class="cont-title">名称：</div>
+			<div class="cont-cont" style="margin-top:15px;">
+				<div class="input-box">
+					<div class="input-left">SSID：</div>
+					<input type="text" name="ssid_name" placeholder="1-32个字符支持中文、英文、数字及下划线" class="input-text03 input-selected"/>
+					<a href="javascript:;" class="link link-position">简单设置</a>
+				</div>
+				<div class="band-content none" style="margin-top:5px;">
+					<div class="input-box">
+						<div class="input-left">射频设置：</div>
+						<div class="radio-choice">
+							<div class="radio-choiceBox">
+								<div class="radio-wrap">
+									<span class="normal-radio">
+										<input type="radio" checked="checked" value="3" name="band" />
+									</span>
+									<lable class="radio-label" style="width: 40px;">双频</lable>
+								</div>
+							</div>
+							<div class="radio-choiceBox">
+								<div class="radio-wrap">
+									<span class="normal-radio">
+										<input type="radio" value="1" name="band" />
+									</span>
+									<label class="radio-label" style="width: 50px;">仅2.4G</label>
+								</div>
+							</div>
+							<div class="radio-choiceBox">
+								<div class="radio-wrap">
+									<span class="normal-radio">
+										<input type="radio" value="2" name="band" />
+									</span>
+									<label class="radio-label" style="width: 50px;">仅5G</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="input-box">
+						<div class="" style="margin-left:85px;"> 
+							<div class="checkbox-wrap">
+								<span class="normal-checkbox">
+									<input type="checkbox" class="ssid_hide" value="0" name="ssid_hide" />
+								</span>
+								<label class="checkbox-label">隐藏SSID</label>
+							</div>
+						</div>
+					</div>
+					<div class="input-box">
+						<div class="input-left">带宽优先级：</div>
+						<div class="radio-choice">
+							<div class="radio-choiceBox">
+								<div class="radio-wrap">
+									<span class="normal-radio">
+										<input type="radio" value="3" name="bandwidth_priority" />
+									</span>
+									<lable class="radio-label" style="width: 40px;">高</lable>
+								</div>
+							</div>
+							<div class="radio-choiceBox">
+								<div class="radio-wrap">
+									<span class="normal-radio">
+										<input type="radio" value="2" checked="checked"  name="bandwidth_priority" />
+									</span>
+									<label class="radio-label" style="width: 50px;">中</label>
+								</div>
+							</div>
+							<div class="radio-choiceBox">
+								<div class="radio-wrap">
+									<span class="normal-radio">
+										<input type="radio" value="1" name="bandwidth_priority" />
+									</span>
+									<label class="radio-label" style="width: 50px;">低</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="cont-title" style="margin-top:10px">隧道模式：</div>
+			<div class="cont-cont">
+				<ul class="tunnel-mode" style="margin-top:5px;">
+					<li class="tunnel-choice">
+						<div class="radio-wrap">
+							<span class="normal-radio"><input type="radio" value="1" checked="checked" name="type" /></span>
+							<label class="radio-label">未启用</label>
+						</div>
+						
+					</li>
+					<li class="tunnel-choice">
+						<div class="radio-wrap">
+							<span class="normal-radio"><input type="radio" value="2" name="type" /></span>
+							<label class="radio-label">VLAN ID</label>
+							<input type="text" name="vlan" class="normal-input" style="position: absolute;left:90px;"/>
+						</div>
+					</li>
+					<li class="tunnel-choice">
+						<div class="radio-wrap">
+							<span class="normal-radio"><input type="radio" value="3" name="type" /></span>
+							<label class="radio-label">GRE</label>
+						</div>
+					</li>
+				</ul>
+			</div>	
+			<div class="cont-title">模式：</div>
+			<div class="cont-cont" style="margin-bottom: 10px;">
+				<ul class="">
+					<li class="pattern-choice">
+						<div class="normal-div">
+							<div class="radio-wrap">
+								<span class="normal-radio">
+									<input type="radio" checked="checked" value="1" name="auth" />
+								</span>
+								<label class="radio-label">虚拟私有无限网络（VPW），用户使用自己的密码来访问网络</label>
+							</div>
+						</div>
+						<div class="pattern-word02" style="margin-left:24px;margin-top:-5px;">
+							<label class="radio-label">虚拟私有无线网络(VPW)是 Oakridge的专利技术。使用者可以在WPA/WA2的网络中，使用自己的密码，而非共享密码，可以极大地提高安全性。</label>
+						</div>
+					</li>
+					<li class="pattern-choice">
+						<div class="radio-wrap">
+								<span class="normal-radio"><input type="radio" value="2" name="auth" /></span>
+								<label class="radio-label">WPA/WPA2共享密码，所有用户使用同一个加密密码来访问网络</label>
+						</div>
+						<div class="wpa" style="margin-left:24px;">所有用户使用同一个加密密码来访问网络，模式为WPA/WPA2，加密方式为TKIP/CCMP</div>
+						<div class="pattern-word03 normal-div wpa" style="margin-left:24px;">密码：<input type="text" name="key" value="12345678" placeholder="8-63个字符" class="normal-input"/></div>
+					</li>
+					<li class="pattern-choice">
+						<div class="normal-div">
+							<div class="radio-wrap">
+								<span class="normal-radio"><input type="radio" value="3" name="auth" /></span>
+								<label class="radio-label">开放，不加密</label>
+							</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+
+		</div>
+	</div>
+	<div class="network-footer">
+		<div class="btn btn-cancel" style="float: left;margin-top:12px;">取消</div>
+		<div class="btn btn-next-network" style="float: right;margin-top:12px;">下一步</div>
+	</div>
+</form>

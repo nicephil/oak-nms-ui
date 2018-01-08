@@ -13,18 +13,20 @@ define(['jquery','functions'],function($,_f){
 	
 	/*全局变量*/
 	var target = $('#page');
-	var tree = ".group-list";
-	var table = ".table-user";
-	var pagination = '#pagination_user';
+	var tree = "#app-user-layout .group-list";
+	var table = "#app-user-layout .table-user";
+	var pagination = '#app-user-layout #pagination_user';
 	var defPageNumber = 1;
 	var defPageSize = 10;
 	var defPageList = [10,20,50];
 	var org_ids = '';
 	var groupSubordinate = 1;
-	
+    var searchVal = '';//查询条件
+    var sortOrder = '';//排序条件
+
 	/*定义表结构*/
 	var columns = [[
-		{ field: 'id', title: '',checkbox:'true', align: 'center',width:50,formatter:
+		{ field: 'id', title: '',checkbox:'true', align: 'center',width:80,formatter:
             function(value,row,index){
                 var str = '';
                 str += '<input type="checkbox" name="" value="'+value+'"/>';
@@ -41,7 +43,16 @@ define(['jquery','functions'],function($,_f){
         	}
         },
 		{field:'email',title:'邮箱',sortable:true,align:'center'},
-		{field:'phone',title:'电话',sortable:true,align:'center'},
+		{field:'phone',title:'电话',sortable:true,align:'center',formatter:
+            function(value,row,index){
+			console.log(row)
+				if(row.country_code==undefined){
+                    return value;
+				}else{
+                    return '+'+row.country_code+' '+value;
+				}
+
+            }},
 		{field:'first_name',title:'姓名',sortable:true,align:'center'},
 		{field:'expire_at',title:'过期',sortable:true,align:'center',formatter:
 			function(value,row,index){
@@ -58,9 +69,7 @@ define(['jquery','functions'],function($,_f){
     
     /*过滤数据*/
    var filterData = function(data){
-   		data = JSON.stringify(data);
-		data = $.parseJSON(data.replace(/name/g,'text'));
-		data[0].text=  data[0].text=='default'?'默认':data[0].text;
+		data.text=  data.text=='default'?'默认':data.text;
 		return data;
    }
    
@@ -77,10 +86,7 @@ define(['jquery','functions'],function($,_f){
 	
 	/*追加结点*/
 	var appendNode = function(tree,data){
-		data = JSON.stringify(data);
-		data = $.parseJSON(data.replace(/name/g,'text'));
 		var selected = $(tree).tree('getSelected');
-		console.log(selected);
 		if(selected!=null){
 			if(selected.is_default==1){
 				selected = getRoot(tree);
@@ -91,7 +97,10 @@ define(['jquery','functions'],function($,_f){
 		
 		$(tree).tree('append',{
 			parent:selected.target,
-			data:[data]
+			data:[{
+				id: data.id,
+				text: data.name,
+			}]
 		});
 	}
 	/*更新结点*/
@@ -100,12 +109,12 @@ define(['jquery','functions'],function($,_f){
 		var selected = $(tree).tree('getSelected');
 		$(tree).tree('update',{
 			target:selected.target,
-			text:data.text
+			text:data.name,
 		});
 	}
 	/*调整树结构样式*/
 	var adjustTreeStyle = function(obj){
-		var appLeft = $('.app-left').layout('panel','center');
+		var appLeft = $('#app-user-layout .app-left').layout('panel','center');
 		var height = $(appLeft).panel('options').height;
 		obj.css({
 				'height':height-140+'px',
@@ -113,12 +122,17 @@ define(['jquery','functions'],function($,_f){
 			    'overflow-x': 'hidden'
 		});
 		//添加默认组图标
-		$('.group-list>li>ul>li:first-child .tree-icon').addClass('tree-file-default');
+		$('#app-user-layout .group-list>li>ul>li:first-child .tree-icon').addClass('tree-file-default');
 		//把根节点干掉
 		var treeTitle = '';
-		treeTitle = $('.group-list>li:first-child>div:first-child>span.tree-title').text();
-		$('.nav-home-title').text(treeTitle);
-		$('.group-list>li:first-child>div:first-child').addClass('none');
+		treeTitle = $('#app-user-layout .group-list>li:first-child>div:first-child>span.tree-title').text();
+		$('#app-user-layout .nav-home-title .head-title-active').html(treeTitle);
+		$('#app-user-layout  .group-list>li:first-child>div:first-child').addClass('none');
+		
+	}
+	/*刷新当前页*/
+	var refresh = function(){
+		$('.pagination-load').trigger('click');
 	}
 	/*重新加载数据*/
 	var loadTree = function(){
@@ -126,12 +140,8 @@ define(['jquery','functions'],function($,_f){
 		var url_groups =  _IFA['groups_list']+getOrg(target.data('org')).parent;
 		_ajax(url_groups,'GET','',function(data){
 			if(data.error_code==0){
-				data = JSON.stringify(data);
-				data = $.parseJSON(data.replace(/name/g,'text'));
 				data = data.list[0];
-
 				data.children[0].text = data.children[0].text=='default'?'默认':data.children[0].text;
-
 				$(tree).tree({
 					data:[data],
 					loadFilter:function(data){
@@ -140,15 +150,20 @@ define(['jquery','functions'],function($,_f){
 					onLoadSuccess:function(node,data){
 						if($(this).tree('getSelected')==null){
 							$('.user-region-west .win-nav .nav-home-title').addClass('home-selected');
+							$('.user-region-west .head-title-img').html('<img src="user/images/icon-home-white.png" />');
 						};
 						//设置滚动条高度
 						adjustTreeStyle($(this));
-						
 					},
 					onSelect:function(node){
 						//选中默认时  更多的 hover
+                        $('.btn-menu-more').next('ul.dropdown-menu').find('li').not('.btn-export-user').removeClass('disable-default');
+                        $('.btn-create-group').removeClass('disable-default');
+
 						if($(this).tree('getSelected').text=="默认"){
-							$('.btn-menu-more').next('ul.dropdown-menu').find('li').mouseenter(function(){
+							$('.btn-menu-more').next('ul.dropdown-menu').find('li').not('.btn-export-user').addClass('disable-default');
+							$('.btn-create-group').addClass('disable-default');
+							$('.btn-menu-more').next('ul.dropdown-menu').find('li.btn-export-user').mouseenter(function(){
 								$(this).removeClass('li-hover');
 								$(this).addClass('li-normal');
 							});
@@ -168,11 +183,13 @@ define(['jquery','functions'],function($,_f){
 						}
 						//移除树背景
 						$('.user-region-west .win-nav .nav-home-title').removeClass('home-selected');
+						$('.user-region-west .head-title-img').html('<img src="user/images/icon-home.png" />');
 						var options = {
 							group_ids:node.id
 						}
 						loadTable(options);
-						
+
+                        $('.input-search').val('');//点击树结构切换，清空查询条件
 					}
 				});
 			}
@@ -239,7 +256,7 @@ define(['jquery','functions'],function($,_f){
 		if(gid!=undefined){
 			options.group_ids = gid;
 		}
-		
+
 		getUser(options,function(data){
 			if(data.error_code==0){
 				$(table).datagrid({
@@ -258,24 +275,48 @@ define(['jquery','functions'],function($,_f){
 							options = {};
 						}
 						options.total = data.total;
-						onTableSuccess(data,options);
 						if(data.total==0){
 							insertNodata();
 						}else{
-							$('footer').removeClass('none');
+							$('.user-user footer').removeClass('none');
 							$(table).datagrid('getPanel').find('.datagrid-header input').removeAttr('disabled');
 						}
-						
+						onTableSuccess(data,options);
 					},
 					onSortColumn:function(sort, order){
+                        sortOrder = sort+' '+order;
 						var opt ={
-							sort:sort,
+                            search:searchVal,
+							sort:sortOrder,
 							page:options.page,
 							page_size:options.page_size
 						}
 						loadTable(opt);
+					},
+					onCheck:function(rowIndex,rowData){
+						var panel = $(this).datagrid('getPanel');
+						$(panel).find('.datagrid-cell-check').eq(rowIndex).addClass('cell-checked');
+						//如果当前页全部被选中，把头也构上
+						var checked = $(this).datagrid('getChecked');
+						if(checked.length==options.page_size){
+							$(panel).find('.datagrid-header-check').addClass('cell-checked');
+						}
+					},
+					onUncheck:function(rowIndex,rowData){
+						var panel = $(this).datagrid('getPanel');
+						$(panel).find('.datagrid-header-check').removeClass('cell-checked');
+						$(panel).find('.datagrid-cell-check').eq(rowIndex).removeClass('cell-checked');
+					},
+					onCheckAll:function(rows){
+						var panel = $(this).datagrid('getPanel');
+						$(panel).find('.datagrid-header-check,.datagrid-cell-check').addClass('cell-checked');
+					},
+					onUncheckAll:function(rows){
+						var panel = $(this).datagrid('getPanel');
+						$(panel).find('.datagrid-header-check,.datagrid-cell-check').removeClass('cell-checked');
 					}
 				});
+
 			}
 		});
 	}
@@ -310,69 +351,32 @@ define(['jquery','functions'],function($,_f){
 		var pageNumber = options.pageNumber;
 		var pageSize = options.pageSize;
 		var pageList = defPageList;
+		
 		$(paginationId).pagination({
 		    total:total,
 		    pageNumber:pageNumber,
 		    pageSize:pageSize,
 		    pageList:pageList,
 		    displayMsg:'共{total}条记录',
-		    beforePageText: '跳至',//页数文本框前显示的汉字 
-		    afterPageText: '页',//页数文本框后显示的汉字 
-		    layout:['prev','links','next','list','manual','info','sep','refresh'],
+		    layout:['first','prev','links','next','last','sep','list','info','sep','refresh'],
 		    onSelectPage:function(pageNumber, pageSize){
 		    	$(this).pagination('loading');
 		    	var opt = {
 					pageNumber:pageNumber,
-					pageSize:pageSize
+					pageSize:pageSize,
+                    search:searchVal,
+                    sort:sortOrder,
 				}
 				loadTable(opt);
 				$(this).pagination('loaded');
 		    },
 			onRefresh:function(pageNumber, pageSize){
-				//reloadTable();
+			},
+			onChangePageSize:function(pageSize){
 			}
 		});
-		/*分页汉化*/
-		$('.pagination-page-list option').each(function(){
-			$(this).val($(this).text());
-			$(this).text($(this).text()+'条/页');
-		});
-	}
-	/*重新加载数据-no*/
-	var reloadTable = function(){
-		var url = _IFA['user_local']+'?org_ids='+org_ids;
-		var type = 'GET';
-		_ajax(url,type,'',function(data){
-			if(data.error_code==0){
-				$(table).datagrid('reload',JSON.stringify(data.list));
-			}
-		});
-	}
-	/*获取JSON元素个数-一维数组*/
-	var getJsonLen = function(json){
-		var len = 0;
-		for(var i in json){
-			len++;
-		}
-		return len;
-	}
-	/*序列化json*/
-	var serializeJson = function(json){
-		var result = '';
-		var len = getJsonLen(json);
-		if(len>0){
-			var i = 0;
-			$.each(json, function(index,data) {
-				result +=index;
-				result +='=';
-				result +=data;
-				i++;
-				if(i<len){
-					result +='&';
-				}
-			});
-		}
-		return result;
+		//插入分页文件
+		$('#app-user-layout .pagination-page-list').before('每页显示数');
 	}
 	
 	/*获取用户*/
@@ -391,7 +395,7 @@ define(['jquery','functions'],function($,_f){
 	
 	/*检索用户*/
 	var findUser = function(){
-		var searchVal = $('.input-search').val()==undefined?'':$('.input-search').val();
+		searchVal = $('.input-search').val()==undefined?'':$('.input-search').val();
 		var options = {
 			search:searchVal
 		}
@@ -453,9 +457,18 @@ define(['jquery','functions'],function($,_f){
 			    panelWidth:'218',
 			    onShowPanel:function(){
 			    	
-			    }
-			});
-			
+			    },
+                onSelect: function(date){
+                    var mydate = new Date();
+                    var selectDate = date.getTime()/1000;
+                    var toDay = new Date(mydate.toLocaleDateString()).getTime()/1000;
+                    if(selectDate<toDay){
+                        toast('提示消息','所选日期不能小于当前日期','error');
+					}
+                }
+
+            });
+
 			/*调整时间位置*/
 			var panel = $(val).datetimebox('panel');
 			$(panel).parent('.combo-p').addClass('adjust-timer');
@@ -495,8 +508,8 @@ define(['jquery','functions'],function($,_f){
 		  	});	
 		  	$(table).datagrid('refreshRow',index);
 		  	if(data.error_code==0){
-					toast('提示消息','操作成功','success');
-				loadTable();
+				toast('提示消息','操作成功','success');
+				refresh();
 			}else{
 				toast('提示消息',data.error_message,'error');
 			}
@@ -567,10 +580,12 @@ define(['jquery','functions'],function($,_f){
 	/*增加新的用户记录*/
 	var addUserInfo = function(classId){
 		//验证重复数据
-	   
-		var country = '<select class="country">';
-		country += '<option>+86</option>';
-		country += '<option>+1</option>';
+
+		var country = '<select class="country select-box-mobile" name="country_code" >';
+	
+		country += '<option value="86">+86</option>';
+		country += '<option value="1">+1</option>';
+
 		country += '</select>';
 		
 		var html = '<div class="batch-inputBox">';
@@ -585,11 +600,11 @@ define(['jquery','functions'],function($,_f){
 		html += '</div>';
 	    var rehtml = $(html).appendTo(classId);
 	    
-	    $('.batch-add').unbind('click').bind('click',function(){
+	    $('.win-add-batch-user .batch-add').unbind('click').bind('click',function(){
 	    	//标记
 	   		var flag = true;
 	    	 //点击事件
-	    	$('.batch-inputBox').each(function(index,data){
+	    	$('.win-add-batch-user .batch-inputBox').each(function(index,data){
 	    		var email = $(this).find('input[name="email"]');
 	    		var phone = $(this).find('input[name="phone"]');
 	    		
@@ -616,7 +631,7 @@ define(['jquery','functions'],function($,_f){
 	    		}
 	    		//验证电话
 	    		if(phone.val()!=''){
-	    			if(!checkPhone(phone.val())){
+	    			if(!checkPhone(phone.val(),phone.prev('#select-box-mobile').val())){
 	    				flag = false;
 	    				toast('提示信息','电话格式错误！','error');
 	    				phone.focus();
@@ -630,13 +645,13 @@ define(['jquery','functions'],function($,_f){
 	    		}
 	    	});
 	    	if(flag==true){
-	    		addUserInfo('.user-list');
+	    		addUserInfo('.win-add-batch-user .user-list');
 	    	}
 	    });
 	    
-	    rehtml.find('.batch-delete').click(function(index){
-	    	if($('.user-list .batch-inputBox').length>1){
-	    		$(this).parent('.batch-inputBox').remove();
+	    $('.win-add-batch-user .batch-delete').click(function(index){
+	    	if($('.win-add-batch-user .user-list .batch-inputBox').length>1){
+	    		$(this).parent('.win-add-batch-user .batch-inputBox').remove();
 	    	}else{
 	    		toast('提示消息','至少存在一条记录','warning');
 	    		return false;
@@ -648,13 +663,12 @@ define(['jquery','functions'],function($,_f){
 	var listPanel = function(){
 		//调整左侧树的滚动条
 		var center = $('#app-user-layout').layout('panel','center');
-		var appRight = $('.app-right').layout('panel','center');
 		$(center).panel({
 			onResize:function(width,height){
 				var h = height-125;
 				//控制表格
 				$('.app-table').css({
-					height:h-20+'px',
+					height:h+'px',
 					'overflow-y':'auto',
 					'overflow-x':'none'
 				});
@@ -760,79 +774,56 @@ define(['jquery','functions'],function($,_f){
 	
 	/*绑定事件*/
 	var bindEven = function(){
-		/*收缩*/
-		var btnToCollect = $('.btn-to-collect img').click(function(){
-			$('.win-nav').css('display','none');
-			$('.win-nav-small').css('display','block');
-			
-			$('.user-region-west').panel({
-				width:60
-			});
-			$('#app-user-layout').layout('resize');
-			//加个边框
-			$('#app-user-layout').layout('panel','west').parent('.layout-panel').css({
-			    'border-right':'1px solid #e2e2e3'
-			});
-		});
-		/*展开*/
-		var btnToExpand = $('.btn-to-expand img').click(function(){
-			$('.win-nav-small').css('display','none');
-			$('.win-nav').css('display','block');
-			$('.user-region-west').panel({
-				width:246
-			});
-			$('#app-user-layout').layout('resize');
-		});
 		/*更多下拉列表*/
-		var btnMenuMore = $('.btn-menu-more').click(function(e){
+		var btnMenuMore = $('.user-region-west .btn-menu-more').click(function(e){
 			var self = this;
-			if($(this).next('ul').hasClass('none')){
-				$(this).next('ul').removeClass('none');
-				$(this).addClass('open');
-				e.stopPropagation();
-			}else{
-				$(this).next('ul').addClass('none');
-				$(this).removeClass('open');
-				e.stopPropagation();
-			}
 			$(this).next('ul').mouseleave(function(){
 				$(this).addClass('none');
 			});
+			if($(this).next('ul').hasClass('none')){
+				$(this).next('ul').removeClass('none');
+				$(this).addClass('open');
+				return false;
+			}else{
+				$(this).next('ul').addClass('none');
+				$(this).removeClass('open');
+				return false;
+			}
+			
 		});
 		
 		/*用户新增下拉列表*/
 		var btnMenuUserCreate = $('.btn-menu-user-create').click(function(e){
 			var self = this;
-			if($(this).next('ul').hasClass('none')){
-				$(this).next('ul').removeClass('none');
-				$(this).addClass('open');
-				e.stopPropagation();
-			}else{
-				$(this).next('ul').addClass('none');
-				$(this).removeClass('open');
-				e.stopPropagation();
-			}
-			
 			$(this).next('ul').mouseleave(function(){
 				$(this).addClass('none');
 			});
+			if($(this).next('ul').hasClass('none')){
+				$(this).next('ul').removeClass('none');
+				$(this).addClass('open');
+				return false;
+			}else{
+				$(this).next('ul').addClass('none');
+				$(this).removeClass('open');
+				return false;
+			}
 		});
 		
 		/*用户更多下拉列表*/
 		var btnMenuUserMore = $('.btn-menu-user-more').click(function(e){
 			var self = this;
-			if($(this).next('ul').hasClass('none')){
-				$(this).next('ul').removeClass('none');
-				$(this).addClass('open');
-				e.stopPropagation();
-			}else{
-				$(this).next('ul').addClass('none');
-				$(this).removeClass('open');
-				e.stopPropagation();
-			}
 			$(this).next('ul').mouseleave(function(){
 				$(this).addClass('none');
 			});
+			if($(this).next('ul').hasClass('none')){
+				$(this).next('ul').removeClass('none');
+				$(this).addClass('open');
+				return false;
+			}else{
+				$(this).next('ul').addClass('none');
+				$(this).removeClass('open');
+				return false;
+			}
 		});
 		
 		/*创建用户组提交*/
@@ -848,7 +839,7 @@ define(['jquery','functions'],function($,_f){
 			}
 			if(result['parent']==-1){
 				result['parent'] = node.id;
-			}console.log(node);
+			}
 			if(!$('.win-create-group').hasClass('save')){
 				var url = _IFA['groups_create'];
 				var type = 'POST';
@@ -862,7 +853,7 @@ define(['jquery','functions'],function($,_f){
 				return false;
 			}
 			var data = JSON.stringify(result);
-			_ajax(url,type,data,function(resp){console.log(resp);
+			_ajax(url,type,data,function(resp){
 				if(resp.error_code!=0){
 					toast('提示消息',resp.error_message,'success');
 					return false;
@@ -877,6 +868,7 @@ define(['jquery','functions'],function($,_f){
 					}
 					return true;
 				};
+
 			});
 		});
 		
@@ -891,7 +883,6 @@ define(['jquery','functions'],function($,_f){
 			var row = $(tree).tree('getSelected');
 			if(row != undefined){
 				if(row.text=='默认'){
-					//toast("提示消息","默认组不可修改","error");
 					return false;
 			   }
 			}
@@ -918,6 +909,7 @@ define(['jquery','functions'],function($,_f){
 						$("textarea[name='memo']").val(node.memo);
 					}
 					$(this).addClass('save');
+					
 				}
 			});
 		});
@@ -927,7 +919,7 @@ define(['jquery','functions'],function($,_f){
 			var row = $(tree).tree('getSelected');
 			if(row != undefined){
 				if(row.text=='默认'){
-					toast("提示消息","默认组不可删除","error");
+					// toast("提示消息","默认组不可删除","error");
 					return false;
 			   }
 			}
@@ -954,7 +946,7 @@ define(['jquery','functions'],function($,_f){
 		
 		/*左边栏创建工作组*/
 		var leftToolCreateUserGroup = $('.btn-add-group img').click(function(){
-			$('.btn-create-group').click();
+			$('#app-user-layout .btn-create-group').click();
 		});
 		
 		/*逐条新增用户-保存*/
@@ -982,7 +974,7 @@ define(['jquery','functions'],function($,_f){
 							
 							clearForm('#create-user');
 							$('.win-add-user').window('close');
-							loadTable();
+							refresh();
 						}else{
 							toast('提示消息',data.error_message,'error');
 						}
@@ -1025,7 +1017,7 @@ define(['jquery','functions'],function($,_f){
 						if(data.error_code==0){
 							toast('提示消息','操作成功','success');
 							clearForm('#create-user');
-							loadTable();
+							refresh();
 						}else{
 							toast('提示消息',data.error_message,'error');
 						}
@@ -1040,29 +1032,27 @@ define(['jquery','functions'],function($,_f){
 		
 		/*逐条新增用户-取消*/
 		var btnConcelUser = $('.win-add-user .but-cancel').click(function(){
-			clearForm('#create-user');
 			closeWindow('.win-add-user');
+			
+			/*clearForm('#create-user');
+			
 			$('.error-name,.error-email,.error-phone,.error-password').css({
 				'display':'none'
 			});
 			$('.name,.email,.password,.phone').css({
 				'border':'1px solid #ededed'
 			})
-			$('.select-box').val("+86")
-			$('.select-time-no').attr("checked",true)
+			$('.win-add-user .select-box').val("+86");
+			$('.select-time-no').attr("checked",true);
+			trueInput($('.phone'));
+			trueInput($('.password'));
+			trueInput($('.name'));
+			trueInput($('.email'));
+			$('.select-time-no-box').removeClass('checkRadio-unchecked').addClass('checkRadio-checked');
+			$('.select-radio-box').addClass('checkRadio-unchecked');*/
+			
 		});
-		/*逐条新增用户-叉号*/
-		var btnConcelUser = $('.win-add-user .panel-tool-close').click(function(){
-			clearForm('#create-user');
-			closeWindow('.win-add-user');
-			$('.error-name,.error-email,.error-phone,.error-password').css({
-				'display':'none'
-			});
-			$('.name,.email,.password,.phone').css({
-				'border':'1px solid #ededed'
-			})
-			$('.select-box').val("+86")
-		});
+		
 		
 		//逐条增加-随机密码
 		var checkRefreshPassWord = $('.refresh').click(function(){
@@ -1073,7 +1063,13 @@ define(['jquery','functions'],function($,_f){
 		var refreshPassWord = $('.refresh').click(function(){
 			$('.password').val(getRandomInt(8))
 		});
+		/*逐条新增-radio样式*/
+		var checkAddRadioPassword = $('.win-add-user .select-box-radio input[type="radio"]').click(function(){
 		
+			$('.select-time-no-box').addClass('checkRadio-unchecked');
+			$('.select-radio-box').addClass('checkRadio-unchecked');
+			$(this).parent('span').removeClass('checkRadio-unchecked').addClass('checkRadio-checked');
+		});
 		/*逐条修改用户*/
 		var btnUpdateUser = $('.win-update-user .but-conserve').click(function(){
 			var result = getFormValue('#update-user');
@@ -1093,7 +1089,7 @@ define(['jquery','functions'],function($,_f){
 					toast('提示消息','操作成功','success');
 					clearForm('#update-user');
 					$('.win-update-user').window('close');
-					loadTable();
+					refresh();
 				}else{
 					toast('提示消息',data.error_message,'error');
 				}
@@ -1193,7 +1189,9 @@ define(['jquery','functions'],function($,_f){
 						//加载数量
 						$('.win-update-batch-user .people').text(firstName);
 						$('.win-update-batch-user .amount').text(len);
-						
+						$('.win-update-batch-user .select_user_group').addClass('checkbox-unchecked');
+						$('.win-update-batch-user .select_user_password').addClass('checkbox-unchecked');
+						$('.win-update-batch-user .select-user-time').addClass('checkbox-unchecked');
 						
 					},
 					onClose:function(){
@@ -1283,7 +1281,7 @@ define(['jquery','functions'],function($,_f){
 					_ajax(url,type,data,function(data){
 						if(data.error_code==0){
 							toast('提示消息','操作成功','success');
-							loadTable();
+							refresh();
 						}else{
 							toast('提示消息',data.error_message,'error');
 						}
@@ -1295,8 +1293,8 @@ define(['jquery','functions'],function($,_f){
 		});
 		
 		/*检索用户*/
-		var btnSearchUser = $('.btn-search-user').click(function(){
-           	var searchVal = $('.input-search').val()==undefined?'':$('.input-search').val();
+		var btnSearchUser = $('.user-region-center .btn-search-user').click(function(){
+           	searchVal = $('.user-region-center .input-search').val()==undefined?'':$('.user-region-center .input-search').val();
            	var options = {
            		search:searchVal
            	}
@@ -1304,16 +1302,16 @@ define(['jquery','functions'],function($,_f){
         });
         
         /*键盘检索*/
-		var keySearchUser = $('.input-search').unbind().bind('keydown',function(event){
+		var keySearchUser = $('.user-region-center .input-search').unbind().bind('keydown',function(event){
             event.stopPropagation();
             var self = this;
             if(event.keyCode ==13){
-               $('.btn-search-user').click();
+               $('.user-region-center .btn-search-user').click();
             }
         });
         /*失焦检索*/
-        $('.input-search').on('input',function(){
-        	$('.btn-search-user').click();
+        $('.user-region-center .input-search').on('input',function(){
+        	$('.user-region-center .btn-search-user').click();
         });
         
         /*导入用户提交*/
@@ -1348,18 +1346,6 @@ define(['jquery','functions'],function($,_f){
        		closeWindow('.win-export-user');
        });
        
-       /*侧边栏导出导入窗口*/
-      var btnWinImportExport = $('.btn-import-export img').click(function(){
-      	 if($('.dropdown-menu-left').hasClass('none')){
-      	 	$('.dropdown-menu-left').removeClass('none');
-      	 }else{
-      	 	$('.dropdown-menu-left').addClass('none');
-      	 }
-      	 $('.dropdown-menu-left').mouseleave(function(){
-      	 	$(this).addClass('none');
-      	 });
-      });
-       
        /*取消导出用户提交*/
        var btnCancelExportUser = $('.win-export-user .but-cancel').click(function(){
        		closeWindow('.win-export-user');
@@ -1387,12 +1373,12 @@ define(['jquery','functions'],function($,_f){
 	   	   window.open(url);
 	   });
 	   /*返回跟节点首页*/
-	  var goHome = $('.nav-home-title').click(function(){
-	  	 $('.user-region-west .win-nav .nav-home-title').addClass('home-selected');
+	  var goHome = $('.user-user .nav-home-title').click(function(){
+	  	$('.user-user .user-region-west .win-nav .nav-home-title').addClass('home-selected');
+		$('.user-user .user-region-west .head-title-img').html('<img src="user/images/icon-home-white.png" />');
 	  	 var root = getRoot(tree);
 	  	 selectNode(root);
-	  	 loadTable();
-	  	 
+		  loadTable();
 	  });
 	 
 	  
@@ -1420,10 +1406,9 @@ define(['jquery','functions'],function($,_f){
 			var data = JSON.stringify(result);
 			
 			_ajax(url,type,data,function(data){
-				console.log(data);
 				if(data.error_code==0){
 					toast('提示消息','操作成功','success');
-					loadTable();
+					refresh();
 				}else{
 					toast('提示消息',data.error_message,'error');
 				}
@@ -1460,7 +1445,7 @@ define(['jquery','functions'],function($,_f){
 				console.log(data);
 				if(data.error_code==0){
 					toast('提示消息','操作成功','success');
-					loadTable();
+					refresh();
 				}else{
 					toast('提示消息',data.error_message,'error');
 				}
@@ -1494,12 +1479,20 @@ define(['jquery','functions'],function($,_f){
 		_ajax(url,type,data,function(data){
 			if(data.error_code==0){
 				toast('提示消息','操作成功','success');
-				loadTable();
+				refresh();
 				closeWindow('.win-add-batch-user');					
 			}else{
 				toast('提示消息',data.error_message,'error');
 			}
 		});
+	});
+	/*批量新增-radio样式*/
+	var checkBatchRadioPassword = $('.win-add-batch-user  .select-add-batch-box input[type="radio"]').click(function(){
+		var _val = $(this).val();
+		console.log(_val);
+		$('.never-radio-box').addClass('checkRadio-unchecked');
+		$('.select-radio-box').addClass('checkRadio-unchecked');
+		$(this).parent('span').removeClass('checkRadio-unchecked').addClass('checkRadio-checked');
 	});
 	/*批量修改用户-退出*/
 	var btnBatchUpdateUserExit = $('.win-update-batch-user .but-cancel').click(function(){
@@ -1554,7 +1547,6 @@ define(['jquery','functions'],function($,_f){
 		var type = 'PUT';
 		var data = JSON.stringify(result);
 		
-		console.log($('#form-batch-update-user').find('span.error-update-password'));
 		//保存验证
 		if($('#form-batch-update-user').find('span.error-update-password').text() == ''){
 			var errorMessage = $('#form-batch-update-user').find('span.error-update-password').eq(0).text();
@@ -1569,7 +1561,7 @@ define(['jquery','functions'],function($,_f){
 			console.log(data);
 			if(data.error_code==0){
 				toast('提示消息','操作成功','success');
-				loadTable();
+				refresh();
 				closeWindow('.win-update-batch-user');
 			}else{
 				toast('提示消息',data.error_message,'error');
@@ -1632,15 +1624,15 @@ define(['jquery','functions'],function($,_f){
 	});
 	/*触发批量新增用户事件*/
 	var btnBatchAddUser = $('.win-add-batch-user .batch-add').click(function(){
-		addUserInfo('.user-list');
+		addUserInfo('.win-add-batch-user .user-list');
 	});
 	  /*打开创建组窗口*/
-		var btnCreateGroup = $('.btn-create-group').click(function(e){
+		var btnCreateGroup = $('#app-user-layout .btn-create-group').click(function(e){
 			//验证是否是默认组
 			var row = $(tree).tree('getSelected');
 			if(row!=null){
 				if(row.text=='默认'){
-					toast('提示信息','默认组不能创建组','error');
+					// toast('提示信息','默认组不能创建组','error');
 					return false;
 				}	
 			}
@@ -1671,7 +1663,7 @@ define(['jquery','functions'],function($,_f){
 			var row = $(tree).tree('getSelected');
 			if(row != undefined){
 				if(row.text=='默认'){
-					toast("提示消息","默认组不可导入","error");
+					// toast("提示消息","默认组不可导入","error");
 					return false;
 			   }
 			}
@@ -1713,8 +1705,6 @@ define(['jquery','functions'],function($,_f){
 					var url_groups =  _IFA['groups_list']+getOrg(target.data('org')).parent;
 					_ajax(url_groups,'GET','',function(data){
 						if(data.error_code==0){
-							data = JSON.stringify(data);
-							data = $.parseJSON(data.replace(/name/g,'text'));
 							data = data.list[0];
 							$('#tree-export-user').tree({
 								data:[data],
@@ -1722,7 +1712,6 @@ define(['jquery','functions'],function($,_f){
 								lines:false,
 								onLoadSuccess:function(node,data){
 									$('#tree-export-user>li>ul>li:first-child .tree-icon').addClass('tree-file-default');
-									//$("#tree-export-user span[class^='tree-icon tree-file']").remove();
 								}
 							});
 						}
@@ -1756,18 +1745,19 @@ define(['jquery','functions'],function($,_f){
 						   onLoadSuccess:function(node,data){
 						   	  //设置默认值
 
-
+				
 						   	  $('.win-add-user #select-box-mobile').find("option[value='1']").prop("selected",true);
 						   	  $('.win-add-user #user-timer').datetimebox('setValue', getNowTimer());
 						   	  var group_list = $('.group-list').tree('getSelected');
 
                                if(!group_list){
-			           group_list = {};
+								   group_list = {};
                                    group_list.id = 1;
 							   }
                                $('#select-user-group').combotree('setValue', group_list.id);
-								$('.select-time-no').prop('checked',true)
-
+							   $('.select-time-no').prop('checked',true)
+							   $('.win-add-user .select-time-no-box').addClass('checkRadio-checked');
+							   $('.win-add-user .select-radio-box').addClass('checkRadio-unchecked');
 						   }
 						});
 					});
@@ -1777,6 +1767,20 @@ define(['jquery','functions'],function($,_f){
 				onClose:function(){
 					clearForm('#create-user');
 					closeDateTimer();
+					$('.error-name,.error-email,.error-phone,.error-password').css({
+						'display':'none'
+					});
+					$('.name,.email,.password,.phone').css({
+						'border':'1px solid #ededed'
+					})
+					$('.win-add-user .select-box').val("+86");
+					$('.select-time-no').attr("checked",true);
+					trueInput($('.phone'));
+					trueInput($('.password'));
+					trueInput($('.name'));
+					trueInput($('.email'));
+					$('.select-time-no-box').removeClass('checkRadio-unchecked').addClass('checkRadio-checked');
+					$('.select-radio-box').addClass('checkRadio-unchecked');
 				}
 			});		
 			$(".name").focus();
@@ -1805,17 +1809,27 @@ define(['jquery','functions'],function($,_f){
 						   data:subGroup,
 						   onLoadSuccess:function(node,data){
 						   	  //设置默认值
-						   	  $('#select-batch-user-group').combotree('setValue', { id: data[0].id, text:data[0].text}); 
+						   	  // $('#select-batch-user-group').combotree('setValue', { id: data[0].id, text:data[0].text});
 						   	  console.log(getNowTimer());
 						   	  $('#user-batch-timer').datetimebox('setValue', getNowTimer());
+
+                               var group_list = $('.group-list').tree('getSelected');
+
+                               if(!group_list){
+                                   group_list = {};
+                                   group_list.id = 1;
+                               }
+                               $('#select-batch-user-group').combotree('setValue', group_list.id);
 						   	  
 						   	  readonlyTimer('.win-add-batch-user','#user-batch-timer');
+						   	  $('.win-add-batch-user .never-radio-box').addClass('checkRadio-checked');
+							  $('.win-add-batch-user .select-radio-box').addClass('checkRadio-unchecked');
 						   }
 						});
 					});
 					//清空用户列表记录
 					$('.win-add-batch-user .user-list').empty();
-					addUserInfo('.user-list');
+					addUserInfo('.win-add-batch-user .user-list');
 					$(this).removeClass('save');
 				},
 				onClose:function(){
@@ -1868,7 +1882,12 @@ define(['jquery','functions'],function($,_f){
 		$('.ueser-time').prop('checked',false);
 		$('.input-text02').val("");
 		$('.assign-password').prop('checked',true);
+		
 		$('.never-time').prop('checked',true);
+		$('.never-time-box').addClass('checkBox-checkRadio-checked');
+		$('.data-time-ipt-box').addClass('checkBox-checkRadio-unchecked');
+		$('.assign-password-box').addClass('checkBox-checkRadio-checked');
+		$('.select-reset-password-box').addClass('checkBox-checkRadio-unchecked');
 		$('.error-update-password').hide();
 		//加载用户组
 		if($('.win-update-batch-user .ueser-grop').prop('checked')){
@@ -1909,10 +1928,8 @@ define(['jquery','functions'],function($,_f){
 				'border':'1px solid #ededed'
 			});
 		}).blur(function(){
-			
 			var resName = $('.win-add-user .name').val();
 			if(resName==""){
-				errorInput('.win-add-user .name','姓名不能为空');
 				return false
 			};
 			if(resName != ""){
@@ -1921,9 +1938,13 @@ define(['jquery','functions'],function($,_f){
 		});
 		/*逐条新增手机号输入*/
 		var onKeydownPhone = $('.win-add-user .phone').keydown(function(event){
-			verification('#select-box-mobile');
+			verification($('#select-box-mobile'));
 		});
-		
+		/*批量新增手机号输入*/
+		var onKeydownPhone = $(document).on('keydown','.win-add-batch-user .phone',function(){
+			verification($(this).prev('.select-box-mobile'));
+		});
+
 		/*新增用户验证邮件*/
 		var checkEmailFocus = $(document).on('focus','.email',function(){
 			$('.error-email').show();
@@ -1934,11 +1955,11 @@ define(['jquery','functions'],function($,_f){
 		}).on('blur','.email',function(){
 			var resEmail = $(this).val();
 			if(resEmail==""){
-			    errorInput('.win-add-user .email','邮箱不能为空');	
+			    trueInput('.win-add-user .email');
 				return false
 			}
 			if( resEmail !="" && checkEmail(resEmail)){
-			   trueInput('.win-add-user .email')
+			   trueInput('.win-add-user .email');
 			}else{
 				errorInput('.win-add-user .email','邮箱格式错误');	
 				return false
@@ -1953,12 +1974,13 @@ define(['jquery','functions'],function($,_f){
 			
 		}).on('blur','.phone',function(){
 			var resphone = $(this).val();
+			var resarea = $(this).prev('#select-box-mobile').val();
 			if(resphone==""){
-			    errorInput('.win-add-user .phone','手机号不能为空');
+			    trueInput('.win-add-user .phone');
 				return false
 			}
-			if( resphone !="" && checkPhone(resphone)){
-				trueInput('.win-add-user .phone',);
+			if( resphone !="" && checkPhone(resphone,resarea)){
+				trueInput('.win-add-user .phone');
 			}else{
 			    errorInput('.win-add-user .phone','手机号格式不对');
 			    return false
@@ -2002,8 +2024,12 @@ define(['jquery','functions'],function($,_f){
 		var checkedBox = $('.win-update-batch-user .ueser-grop').click(function(){
 			if($('.ueser-grop').prop('checked')){
 				$('.user-grop-children #select-batch-user').combo('readonly', false);
+				$('.select_user_group').removeClass('checkbox-unchecked');
+				$('.select_user_group').addClass('checkbox-checked');
 			}else{
 				$('.user-grop-children #select-batch-user').combo('readonly');
+				$('.select_user_group').removeClass('checkbox-checked');
+				$('.select_user_group').addClass('checkbox-unchecked');
 			}
 		});
 		
@@ -2014,11 +2040,20 @@ define(['jquery','functions'],function($,_f){
 				$('.select_reset_password').removeAttr('disabled');
 				$('.win-update-batch-user .input-text02').removeAttr('disabled');
 				$('.win-update-batch-user .password').focus();
+				$('.select_user_password').removeClass('checkbox-unchecked');
+				$('.select_user_password').addClass('checkbox-checked');
 				
+				$('.assign-password-box').removeClass('checkBox-checkRadio-checked').addClass('checkRadio-checked');
+				$('.select-reset-password-box').removeClass('checkBox-checkRadio-unchecked').addClass('checkRadio-unchecked');
 			}else{
 				$('.assign-password').attr('disabled','disabled');
 				$('.select_reset_password').attr('disabled','disabled');
 				$('.win-update-batch-user .input-text02').attr('disabled','disabled');
+				$('.select_user_password').removeClass('checkbox-checked');
+				$('.select_user_password').addClass('checkbox-unchecked');
+	
+				$('.assign-password-box').removeClass('checkRadio-checked').addClass('checkBox-checkRadio-checked');
+				$('.select-reset-password-box').removeClass('checkRadio-unchecked').addClass('checkBox-checkRadio-unchecked');
 			}
 			$('.win-update-batch-user .password').css({
 				'border':'1px solid #eaebec',
@@ -2026,17 +2061,42 @@ define(['jquery','functions'],function($,_f){
 			});
 			$('.error-update-password').text('');
 		});
-		
+		/*批量修改用户-密码重置radio*/
+		var checkRadioPassword = $('.win-update-batch-user .update-password-div input[type="radio"]').click(function(){
+			var _val = $(this).val();
+			console.log(_val);
+			$('.assign-password-box').addClass('checkRadio-unchecked');
+			$('.select-reset-password-box').addClass('checkRadio-unchecked');
+			$(this).parent('span').removeClass('checkRadio-unchecked').addClass('checkRadio-checked');
+		});
 		/*批量修改用户-账户有效时间复选框*/
 		var checkBoxTime = $('.win-update-batch-user .ueser-time').click(function(){
 			if($('.win-update-batch-user .ueser-time').prop('checked')){
 				$('.never-time').removeAttr('disabled');
 				$('.data-time-ipt').removeAttr('disabled');
+				$('.select-user-time').removeClass('checkbox-unchecked');
+				$('.select-user-time').addClass('checkbox-checked');
+				$('.never-time-box').removeClass('checkBox-checkRadio-checked').addClass('checkRadio-checked');
+				$('.data-time-ipt-box').removeClass('checkBox-checkRadio-unchecked').addClass('checkRadio-unchecked');
 			}else{
 				$('.never-time').attr('disabled','disabled');
 				$('.data-time-ipt').attr('disabled','disabled');
-			}
+				$('.select-user-time').removeClass('checkbox-checked');
+				$('.select-user-time').addClass('checkbox-unchecked');
+				$('.never-time-box').removeClass('checkRadio-checked').addClass('checkBox-checkRadio-checked');
+				$('.data-time-ipt-box').removeClass('checkRadio-unchecked').addClass('checkBox-checkRadio-unchecked');
+			};
 		});
+		/*批量修改用户-账户有效时间radio*/
+		var checkRadioTime = $('.win-update-batch-user .update-time-div input[type="radio"]').click(function(){
+			var _val = $(this).val();
+			console.log(_val);
+			$('.never-time-box').addClass('checkRadio-unchecked');
+			$('.data-time-ipt-box').addClass('checkRadio-unchecked');
+			$(this).parent('span').removeClass('checkRadio-unchecked').addClass('checkRadio-checked');
+		});
+		
+		
 		
 		//批量修改密码验证
 		var checkPasswordFocus = $(document).on('focus','.win-update-batch-user .password',function(){
