@@ -274,6 +274,17 @@ img.icon-row-disable{width:16px;vertical-align: middle;}
 	font-weight:normal;
 }
 
+.btn-save-icon{
+	width: 20px;
+    height: 20px;
+    background: url(../images/save-icon.png) no-repeat;
+}
+.btn-edit-icon{
+	width: 20px;
+    height: 20px;
+    background: url(../images/edit-icon.png) no-repeat;
+}
+
 /*表格样式--------cwj*/
 .datagrid .panel-body{
 	border-left: none;

@@ -76,17 +76,44 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 			}
 		});
 	}
+	
+	/*切换基本信息*/
+	var switchAbstractBase = function(){
+		$('.edit-base').click(function(){
+			if($('.edit-base').hasClass('btn-edit-icon')){
+				$('.edit-base').removeClass('btn-edit-icon');
+				$('.edit-base').addClass('btn-save-icon');
+				$('.abs-row .info-label').addClass('none');
+				$('.abs-row .info-input').removeClass('none');
+			}else{
+				$('.edit-base').removeClass('btn-save-icon');
+				$('.edit-base').addClass('btn-edit-icon');
+				$('.abs-row .info-label').removeClass('none');
+				$('.abs-row .info-input').addClass('none');
+			}
+		});
+	}
+	
+	/*选择tab页面*/
     var selectTabs = function(){
         chartOne();
 		$('#network-tabs').tabs({
             onSelect:function(title,index){
             	switch(index){
-					case '0':
+					case 0:
                         chartOne();
 						break;
-					case '1':
+					case 1:
+					    var tab = $(this).tabs('getTab',1);
+					    $(tab).panel({
+					    	href:'network/abstract.html',
+					    	onLoad:function(){
+					    		//切换基本信息
+					    		switchAbstractBase();
+					    	}
+					    });
 						break;
-					case '2':
+					case 2:
 						break;
 				}
 			}
@@ -423,6 +450,24 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 			}
 		});
 	}
+	/*设置摘要基本信息*/
+	var setAbstractInfo = function(node){
+		//更新ssid
+		$('.ssid_name_label').text(node.profile_name);
+		$('input[name="ssid_name"]').val(node.profile_name);
+		//更新射频
+		var band = 1;
+		switch(node.band){
+			case 1:
+			break;
+			case 2:
+			break;
+			case 3:
+			break;
+		}
+		/*$('.abs_band_label').text(node.profile_name);
+		$('input[name="abs_band"]').val(node.profile_name);*/
+	};
 	
 	/*重新加载数据*/
 	var loadTree = function(){
@@ -454,6 +499,8 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 						}
 					},
 					onSelect:function(node){
+						//设置摘要信息
+						setAbstractInfo(node);
 					}
 				});
 				
@@ -1167,6 +1214,17 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 			   }
 			});
 		});
+	}
+	
+	/*加载摘要*/
+	var loadAbstract = function(ele,index,href){
+	
+		//获取标签
+		var tab = $(ele).tabs('getTab',index);
+		
+		//刷新面板
+		//tab.panel('refresh',href);
+		//$('.win-abstract').text('test');
 	}
 	
 	/*初始化portal类型*/
@@ -1984,7 +2042,7 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 			});
 			
 		});
-	}
+	} 
 	
 	/*删除无线*/
 	var btnDeleteWireless = function(){

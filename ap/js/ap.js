@@ -27,7 +27,7 @@ define(['jquery','functions'],function($,_f){
 	var _id = '';
 	var _groupid = '';
 	/*var result = '';*/
-	
+	var setPage = {};
 	
 	
 	
@@ -232,12 +232,12 @@ define(['jquery','functions'],function($,_f){
 		var url = _IFA['ap_table_list'];
 		var type = 'GET';
 		var data = '';
-		var args = '?org_ids='+getOrg(target.data('org')).id + '&group_subordinate='+1 +'&group_ids='+ _group_ids;
+		var args = '?org_ids='+getOrg(target.data('org')).id + '&group_subordinate='+1;
 		if(serializeJson(options)){
 			args += '&'+serializeJson(options);	
 		}
 		url = url + args
-		
+		console.log(url)
 		_ajax(url,type,data,callback);
 	};
 	/*获取日志*/
@@ -298,9 +298,7 @@ define(['jquery','functions'],function($,_f){
 				$(tree).tree({
 					data:[data],
 					onLoadSuccess:function(node,data){
-//						if($(this).tree('getSelected').id == _groupid){
-//							
-//						}
+
 						if($(this).tree('getSelected')==null){
 							$('.ap-region-west .win-nav .nav-title').addClass('home-selected');
 							$('.ap-region-west .head-title-img').html('<img src="./ap/images/root-location-blue.png" />');
@@ -312,7 +310,7 @@ define(['jquery','functions'],function($,_f){
 					onSelect:function(node){
 						var row = $(tree).tree('getSelected');
 						_groupid = node.id;
-						console.log(_groupid)
+//						console.log(_groupid)
 						//移除树背景
 						$('.ap-region-west .win-nav .nav-title').removeClass('home-selected');
 						$('.ap-region-west .head-title-img').html('<img src="./ap/images/root-location.png" />');
@@ -327,7 +325,7 @@ define(['jquery','functions'],function($,_f){
 	};
     /*加载表格数据*/
 	var loadTable = function(options){
-		
+//		console.log(options)
 		//加载默认配置项
 		if(options!=undefined){
 			options.page = defPageNumber;
@@ -341,7 +339,7 @@ define(['jquery','functions'],function($,_f){
 			options.page = defPageNumber;
 			options.page_size = defPageSize;
 		}
-		
+		setPage = options
 		
 		var gid = getGid();
 		if(gid!=undefined){
@@ -349,6 +347,21 @@ define(['jquery','functions'],function($,_f){
 		}
 		/*console.log(options);*/
 		getUser(options,function(data){
+//			console.log(data)
+			$(data.list).each(function (index,data){
+				var str = data.mac;
+				var res = '';
+                	for(var i=0,len=str.length;i<len;i++){
+				    res += str[i];
+				    if(i < len -2 ){
+					    if(i % 2 == 1) {
+					    		 res = res + ':';
+					    };
+				    };
+				};
+				data.mac = res;
+			})
+			
 			if(data.error_code==0){
 				$(table).datagrid({
 					data:data.list,
@@ -570,6 +583,19 @@ define(['jquery','functions'],function($,_f){
 	});
 	/*打开创建组窗口*/
 	var btnCreateGroup = $('#app-ap-layout .btn-create-group').click(function(e){
+		var row = $(tree).tree('getSelected');
+		if(row==null){
+			toast('提示消息','不能编辑','warning');
+			return false;
+		}
+		if(row.id == 29){
+			toast('提示消息','默认组不能新增','warning');
+			return false;
+		}
+//		if(row.id == 0){
+//			toast('提示消息','不能编辑','warning');
+//			return false;
+//		};
 		//验证是否是默认组
 		var row = $(tree).tree('getSelected');
         onOpenDelete('.win-ap-group');
@@ -600,7 +626,7 @@ define(['jquery','functions'],function($,_f){
                                    group_list.id = 1;
 							   };
                                if(group_list.id == 0){
-                               		group_list.id = 29
+                               		group_list.id = '／'
                                };
                               /* console.log(group_list.id)*/
                                $('#select-ap-group').combotree('setValue',group_list.id);
@@ -843,8 +869,13 @@ define(['jquery','functions'],function($,_f){
 	                               if(!group_list){
 									   group_list = {};
 	                                   group_list.id = '默认';
-								   }
-	                               $('.update-ap-group #select-ap-update-group').combotree('setValue', group_list.id);
+								   };
+	                               var getParent = $('#app-ap-layout .group-list').tree('getParent',group_list.target);
+	                               console.log(getParent)
+	                               if(getParent.id == 0){
+	                               		getParent.id = '/';
+	                               };
+	                               $('.update-ap-group #select-ap-update-group').combotree('setValue', getParent.id);
 							   }
 							});
 						});
@@ -1092,7 +1123,7 @@ define(['jquery','functions'],function($,_f){
 					   	  var group_list = $('#app-ap-layout .group-list').tree('getSelected');
                            if(!group_list){
 							   group_list = {};
-                               group_list.id = 1;
+                               group_list.id = '默认';
 						   }
                            $('.ap-add-batch-equipment #select-add-ap-group').combotree('setValue', group_list.id);
 					   }
@@ -1360,6 +1391,14 @@ define(['jquery','functions'],function($,_f){
 	
 	//AP右侧箭头----进入详情
 	var rightParticulars = $('#app-ap-layout .right-cion').click(function(){
+		
+			$(setPage).data({
+				'type_tree':1,//左侧树还是右侧树
+			});
+			console.log(setPage[jQuery.expando].data)
+			setPage.type_tree = 1;
+			console.log(setPage)
+			
 			$('<div/>').addClass('win-ap-particulars').appendTo($('body'));
 			$('.win-ap-particulars').window({
 				width:1000,
@@ -1432,8 +1471,7 @@ define(['jquery','functions'],function($,_f){
 	
 	//获取ap详情数据
 	var ajaxTree = function(){
-		
-		var url = _IFA['ap_get_device_list']+'?org_ids='+getOrg(target.data('org')).id;
+		var url = _IFA['ap_get_device_list']+'?org_ids='+getOrg(target.data('org')).id+'&group_ids='+_groupid+'&page='+setPage.page;
 //			console.log(url)
 			_ajax(url,'GET','',function (data) {
 //	            console.log(data);
@@ -1442,7 +1480,7 @@ define(['jquery','functions'],function($,_f){
 					
 	                //处理返回的数组
 	                $(data.list).each(function (index,data) {
-	                	console.log(data)
+//	                	console.log(data)
 	                	if(data.connected == -1){//新增
 	                		data.connected = '<span class="add-status"></span>';
 	                	}else if(data.connected == 0){//断开
@@ -1453,6 +1491,8 @@ define(['jquery','functions'],function($,_f){
 	                	}else if(data.connected == 2){//警告,严重负载
 	                		data.connected = '<span class="error-status"></span>';
 	                	}
+	                	var str = data.display_name;
+
 	                    $('.group-list-particulars').append('<li a="'+data.id+'">'
 	                      		+'<span class="li-left-connected">'+data.connected+'</span>'
 	                            +'<span class="li-left-mac">'+data.display_name+'</span>'+
@@ -1474,9 +1514,15 @@ define(['jquery','functions'],function($,_f){
 	var returnTable = function(){
 		var leftParticulars = $('.win-ap-particulars .return-index').click(function(){
 			$('.win-ap-particulars').window('close');
-			console.log(_groupid)
 			$('.app-ap-tip').parent('li').trigger('click');
-			
+			$(tree).tree({
+				onLoadSuccess:function(node, data){alert();
+					console.log(node)
+					var node = $(tree).tree('find',setPage.group_ids);
+					$(tree).tree('select',node.target);
+					console.log(node);
+				}
+			});
 		});
 	};
 	//设备修改
@@ -1622,19 +1668,29 @@ define(['jquery','functions'],function($,_f){
 		if(_id == undefined){
 			_id = $('.group-list-particulars').find('li').first().attr('a');
 		}
-		console.log(_id);
+//		console.log(_id);
 		var _id = $('.list-select').attr('a');
 		var url = _IFA['ap_get_device_detail']+_id;
 		console.log(url)
 		_ajax(url,'GET','',function (data) {
-	            console.log(data);
+//	            console.log(data);
 	            if(data.error_code == 0){
 	           	 	//名称	
 					$('#ap-input').val(data.device_name);
 					//位置	
 					$('#ap-location-label').val(data.location);
 					//mac
-					$('.ap-mac-label').text(data.mac);
+					var str = data.mac;
+					var res = '';
+	                	for(var i=0,len=str.length;i<len;i++){
+					    res += str[i];
+					    if(i < len -2 ){
+						    if(i % 2 == 1) {
+						    		 res = res + ':';
+						    };
+					    };
+					};
+					$('.ap-mac-label').text(res);
 					//ip
 					$('.ap-ip-label').text(data.controller_address);
 					//序列号

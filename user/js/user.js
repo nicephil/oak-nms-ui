@@ -162,7 +162,7 @@ define(['jquery','functions'],function($,_f){
 
 						if($(this).tree('getSelected').text=="默认"){
 							$('.btn-menu-more').next('ul.dropdown-menu').find('li').not('.btn-export-user').addClass('disable-default');
-							$('.btn-create-group').addClass('disable-default');
+							$('.user-user .btn-create-group').addClass('disable-default');
 							$('.btn-menu-more').next('ul.dropdown-menu').find('li.btn-export-user').mouseenter(function(){
 								$(this).removeClass('li-hover');
 								$(this).addClass('li-normal');
