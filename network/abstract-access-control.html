@@ -1,0 +1,78 @@
+<form method="post" id="abstract-access-network" action="">
+	<div class="cont-box">
+		<div class="cont-title01">控制策略：</div>
+		<div class="cont-cont">
+			<div class="step-box">
+				<div class="step-word">第一步：以下列表中的终端将被拒绝连接</div>
+				<div class="step-choiceBox">
+					<div class="step-choice step-choice-selected">
+						<div class="checkbox-wrap">
+							<span class="normal-checkbox">
+								<input type="checkbox" class="ssid_hide" value="0" name="refuse" />
+							</span>
+							<label class="checkbox-label"></label>
+						</div>
+					</div>
+					<select class="step-select" name="black_list_profle_id">
+						<option value="-1">---</option>
+					</select>
+				</div>
+			</div>
+			<div class="step-box">
+				<div class="step-word">第二步：以下列表中的终端将被允许连接</div>
+				<div class="step-choiceBox">
+					<div class="step-choice">
+						<div class="checkbox-wrap">
+							<span class="normal-checkbox">
+								<input type="checkbox" class="ssid_hide" value="0" name="allow" />
+							</span>
+							<label class="checkbox-label"></label>
+						</div>
+					</div>
+					<select class="step-select" name="white_list_profle_id">
+						<option value="-1">---</option>
+					</select>
+				</div>
+				<div class="step-choiceBox wrap-combotree">
+					<input class="select-user-combotree combotree-network" style="width:524px;height:30px;line-height: 30px;"/>
+				</div>
+			</div>
+			<div class="step-box">
+				<div class="step-word">第三步：其他终端</div>
+				<ul class="step-choice-circular">
+					<li class="step-choice-circularLi">
+						<div class="radio-wrap">
+							<span class="normal-radio">
+								<input type="radio" checked="checked" value="1" name="otherclient" />
+							</span>
+							<lable class="radio-label" style="width: 100px;">需要Portal认证</lable>
+						</div>
+					</li>
+					<li class="step-choice-circularLi">
+						<div class="radio-wrap">
+							<span class="normal-radio">
+								<input type="radio"  value="2" name="otherclient" />
+							</span>
+							<lable class="radio-label" style="width: 80px;">拒绝</lable>
+						</div>
+					</li>
+					<li class="step-choice-circularLi">
+						<div class="radio-wrap">
+							<span class="normal-radio">
+								<input type="radio" value="3" name="otherclient" />
+							</span>
+							<lable class="radio-label" style="width: 40px;">允许</lable>
+						</div>
+					</li>
+				</ul>
+			</div>
+			
+		</div>
+	</div>
+	
+	<div class="network-footer">
+		<div class="btn btn-save" style="float: right;margin-top:12px;margin-left:10px;">确定</div>
+		<div class="btn btn-cancel" style="float: right;margin-top:12px;">取消</div>
+	</div>
+	
+</form>

@@ -1,0 +1,541 @@
+ /*CSS Document */
+@import url('../../public/css/font-awesome.min.css');
+html,body{height:100%;width:100%;}
+body {
+	font-size: 14px;
+	color: #4f5358;
+	background-color: #fff;
+	display: block;
+	-webkit-font-smoothing: antialiased;
+	font-family: '微软雅黑',verdana,arial,tahoma,helvetica,sans-serif;
+	
+}
+*{
+	padding: 0;
+	margin: 0;
+}
+html{
+	height: 100%;
+}
+ul,li{
+	list-style: none;
+}
+a:hover{
+	text-decoration: none;
+}
+
+.indent5{
+	text-indent: 5px;
+}
+
+.w-sep{
+	width:18px;
+}
+.w-top{
+	width:20px;
+}
+
+.transparent {
+	background: transparent;
+}
+
+.over-hide{
+	overflow: hidden;
+}
+label{
+	font-size:14px;
+}
+
+/*桌面*/
+.app-wall{
+	height:100%;
+	width:100%;
+	background: transparent;
+}
+.clearfix:after,.clearfix:before {
+	display: table;
+	line-height: 0;
+	content: ""
+}
+.none{
+	display: none;
+}
+.clearfix:after {
+	clear: both
+}
+
+.left {
+	float: left
+}
+
+.right {
+	float: right
+}
+.lpx15{
+	margin-left:15px;
+}
+.top-line{
+	border-top: 1px solid #e2e2e3; 
+}
+#page{
+	background-image:url(../images/bj.jpg);
+	background-size:cover;
+	background-position: center;
+}
+/*-----通用-----*/
+.dropdown-menu li:hover{
+	cursor: pointer;
+	background: #eff4f5;
+	color: #6badd8;
+}
+
+.wall-mask{
+	height: 100%;
+	width:100%;
+	background: rgba(0,0,0,0.5);
+	position: absolute;
+    top: 39px;
+    z-index: 999999;
+}
+.wall-mask .app-rows{
+	width:65%;
+	margin:70px auto;
+}
+.wall-mask .app-rows .row-element{/*136*100*/
+	width:100px;height:64px;float:left;
+	padding-top:20px;
+	text-align: center;
+}
+.wall-mask .app-rows .row-element img:hover{
+	cursor: pointer;
+}
+.wall-mask .app-rows .app-row-text{
+	color: #ffffff;
+    text-shadow: 1px 2px 3px #000000;
+    font-size: 16px;
+	
+}
+/*-----/通用-----*/
+
+/*-----task-----*/
+.topbar{
+	height:39px;
+	min-width:600px;
+	width: 100%;
+	position: relative;
+	background: url(../images/taskbar-bj.png) repeat-x;
+}
+.taskbar-shadow{
+	width: 100%;
+    height: 4px;
+    position: absolute;
+    top: 39px;
+    background: url(../images/taskbar_shadow.png) repeat-x;
+}
+.topbar .container-fluid{
+	padding: 0px 22px 0px 0px;
+}
+.topbar .refresh{
+	width: 22px;
+    height: 39px;
+    float: left;
+    background: url(../images/sprite-bj.png) no-repeat 0px -96px;
+}
+.topbar .refresh:hover{
+	cursor: pointer;
+    background-position: 0px -135px;
+}
+.topbar .start{
+	width:89px;
+	height: 39px;
+	float: left;
+	background: url(../images/sprite-bj.png) no-repeat 0px -252px;	
+}
+.topbar .start-line{
+	width:8px;
+	height: 39px;
+	float: left;
+    background: transparent no-repeat;
+    background-image: url(../images/sprite-bj.png);
+    background-position: 0 -369px;
+}
+.topbar .start:hover{
+	cursor: pointer;
+}
+.topbar .start-hover{
+	background-position: 0 -291px;
+}
+.topbar .start-pressed{
+	background-position: 0 -330px;
+}
+.topbar .task-end-sep{
+	background: no-repeat;
+    background-image: url(../images/sprite-bj.png);
+    background-position: 0 -603px;
+    width: 2px;
+    height: 33px;
+    float: left;
+    position: relative;
+    top: 6px;
+}
+.topbar .task-content{
+	height: 39px;
+	line-height: 39px;
+	float:left;
+	min-width: 100px;
+}
+.topbar .task-content .app-list-list{
+	height:39px;
+}
+.topbar .task-content .app-list-list li{
+	float:left;
+	height: 39px;
+    width: 62px;
+    text-align: center;
+    background: transparent no-repeat;
+    background-image: url(../images/sprite-bj.png);
+    background-position: -124px -213px;
+}
+.topbar .task-content .app-list-list li:hover{
+	cursor: pointer;
+}
+.topbar .task-content .app-list-list li img{
+	vertical-align: middle;
+	width:32px;
+	height:32px;
+}
+.topbar .task-end{
+	width:190px;
+	height: 39px;
+	line-height: 39px;
+	float: right;
+}
+.topbar .task-end .shortcut{
+	width:62px;
+	height: 39px;
+	line-height: 39px;
+	float: left;
+	position: relative;
+}
+/*config*/
+.topbar .task-end .shortcut .icon-task-config{
+	height: 39px;
+	line-height: 39px;
+	width:48px;
+	display: block;
+	background: url(../images/icon-task-config.png) no-repeat center center;
+}
+.topbar .task-end .shortcut .icon-task-number{
+	height: 20px;
+	line-height: 20px;
+	width:20px;
+	display: block;
+	position: absolute;
+	top:2px;
+	left:34px;
+	text-align: center;
+	color: #ffffff;
+	background: url(../images/icon-task-number.png) no-repeat center center;
+}
+.topbar .task-end .shortcut .icon-task-config:hover{
+	cursor: pointer;
+	background: url(../images/icon-task-config-hover.png) no-repeat center center;
+}
+
+/*user*/
+.topbar .task-end .shortcut .icon-task-user{
+	height: 39px;
+	line-height: 39px;
+	width:35px;
+	display: inline-block;
+	float: left;
+	background: url(../images/icon-task-user.png) no-repeat center center;
+}
+.topbar .task-end .shortcut:nth-child(2) .icon-task-downarrow{
+	height: 39px;
+	line-height: 39px;
+	width:23px;
+	display: inline-block;
+	float:left;
+	background: url(../images/icon-task-down-arrow.png) no-repeat left center;
+}
+.topbar .task-end .shortcut .icon-task-user:hover,.topbar .task-end .shortcut .icon-task-downarrow:hover{
+	cursor: pointer;
+}
+.topbar .task-end .shortcut .icon-task-user:hover{
+	background: url(../images/icon-task-user-hover.png) no-repeat center center;
+}
+/*country*/
+.topbar .task-end .shortcut .icon-task-country{
+	height: 39px;
+	line-height: 39px;
+	width:45px;
+	display: inline-block;
+	float:left;
+	background: url(../images/icon-task-china.png) no-repeat center center;
+}
+.topbar .task-end .shortcut .icon-task-downarrow{
+	height: 39px;
+	line-height: 39px;
+	width:12px;
+	display: inline-block;float:left;
+	background: url(../images/icon-task-down-arrow.png) no-repeat center center;
+}
+.topbar .task-end .shortcut .icon-task-country{cursor: pointer;}
+
+.user-menu{
+	position: absolute;
+    top: 42px;
+    width: 185px;
+    right: 126px;
+    box-shadow: 0 6px 12px rgba(0,0,0,.175);
+}
+.user-menu li{
+	position: relative;
+	height:34px;
+	line-height: 34px;
+	background-color: #ffffff;
+	border-bottom: 1px solid #dfe3e9;
+	z-index: 100;
+}
+.user-menu li:hover{
+	background: #eff2f5;
+	cursor: pointer;
+	color:#6badd8;
+}
+.user-menu li span{
+	width: 100%;
+	text-indent: 38px;
+	position: absolute;
+}
+.user-menu li:nth-child(1){
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+}
+.user-menu li:nth-child(4){
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+}
+
+.user-menu li:nth-child(1) span{
+	background: url(../images/icon-menu-user.png) no-repeat 10px center;
+}
+.user-menu li:nth-child(2) span{
+	background: url(../images/icon-menu-version.png) no-repeat 10px center;
+}
+.user-menu li:nth-child(3) span{
+	background: url(../images/icon-menu-cloud.png) no-repeat 10px center;
+}
+.user-menu li:nth-child(4) span{
+	background: url(../images/icon-exit-account.png) no-repeat 10px center;
+}
+
+
+.user-menu li:nth-child(1) span:hover{
+	background: url(../images/icon-menu-user-hover.png) no-repeat 10px center;
+}
+.user-menu li:nth-child(2) span:hover{
+	background: url(../images/icon-menu-version-hover.png) no-repeat 10px center;
+}
+.user-menu li:nth-child(3) span:hover{
+	background: url(../images/icon-menu-cloud-hover.png) no-repeat 10px center;
+}
+.user-menu li:nth-child(4) span:hover{
+	background: url(../images/icon-exit-account-hover.png) no-repeat 10px center;
+}
+
+.user-menu li:hover{
+	background-color: #eff2f5;
+}
+/*-----/task-----*/
+/*-----app container-----*/
+.app-container{
+	width: 100%;
+	position: relative;
+	top:30px;
+}
+
+.app-container li{
+	width: 112px;
+	overflow:hidden;
+	margin:13px 20px;
+	text-align: center;
+	float:left;
+	clear: both;
+	margin-left:28px;
+}
+.app-container li:hover{
+	cursor: pointer;
+}
+.app-container li span{
+	font-size: 16px;
+	color:#fff;
+	display: block;
+	text-align: center;
+	text-shadow: 1px 2px 3px #000000;
+}
+/*-----/app container-----*/
+
+.pagination > li:first-child > a, .pagination > li:first-child > span {
+    margin-left: 0;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+.pagination > li > a, .pagination > li > span {
+    position: relative;
+    float: left;
+    padding: 6px 12px;
+    margin-left: -1px;
+    line-height: 1.42857143;
+    color: #337ab7;
+    text-decoration: none;
+    background-color: #fff;
+    border: 1px solid #ddd;
+}
+
+.glyphicon {
+    position: relative;
+    top: 1px;
+    display: inline-block;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+.glyphicon-triangle-right:before {
+    content: "\e250";
+}
+.glyphicon-triangle-left:before {
+    content: "\e251";
+}
+
+.pagination > li > a:hover, .pagination > li > span:hover, .pagination > li > a:focus, .pagination > li > span:focus {
+    z-index: 3;
+    color: #23527c;
+    background-color: #eee;
+    border-color: #ddd;
+}
+.pagination > li:last-child > a, .pagination > li:last-child > span {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+.app-user-window .win-content .app-page .btn-group{
+    left: 240px;
+    position: absolute;
+}
+.app-user-window .win-content .app-page .btn-group .btn{
+	font-size:14px;
+	border-color:#ddd; 
+}
+
+.app-user-window .win-content .app-page .jump-content{
+	width: 120px;
+    text-align: center;
+    position: absolute;
+    left: 322px;
+}
+.app-user-window .win-content .app-page .jump-content .jumpto{
+	width: 48px;
+    height: 32px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.app-user-window .win-content .app-page .total-record{
+	min-width: 80px;
+    text-align: center;
+    position: absolute;
+    right: 60px;
+}
+.app-user-window .win-content .app-page .icon-refresh{
+	height: 18px;
+    width: 32px;
+    position: absolute;
+    top: 25px;
+    right: 18px;
+    border-left: 1px solid #e2e2e3;
+    text-align: right;
+    line-height: 16px;
+}
+.app-user-window .win-content .app-page .icon-refresh img:hover{
+	cursor: pointer;
+}
+.app-user-window .win-content .app-page .btn-group .dropdown-menu{
+	width: 86px;
+    padding: 0px;
+    margin-top: 3px;
+    border:1px solid #e2e2e3;
+}
+.app-user-window .win-content .app-page .btn-group .dropdown-menu li.last:hover{
+	border-bottom-right-radius: 4px;	
+	border-bottom-left-radius: 4px;	
+}
+
+.icon-check-box-all{
+	background: url(../images/icon-check-box.png) no-repeat center center;
+    display: block;
+    width: 100%;
+    height: 40px;
+    position: absolute;
+    top: -10px;
+    z-index: 1;
+} 
+.icon-check-box{
+	background: url(../images/icon-check-box.png) no-repeat center center;
+    display: block;
+    width: 100%;
+    height: 40px;
+    position: absolute;
+    top: -2px;
+    left: 0px;
+    z-index: 1;
+}
+.icon-checked-box{
+	background: url(../images/icon-checked-box.png) no-repeat center center;
+    display: block;
+    width: 100%;
+    height: 40px;
+    position: absolute;
+    top: -2px;
+    left: 0px;
+    z-index: 1;
+}
+
+/* 通用 开始 */
+.small-close{ width: 10px; height: 10px; background: url(images/mask_close.png) no-repeat; margin-top: 15px; float:right; cursor: pointer;}
+.small-close:hover{ width: 10px; height: 10px; background: url(images/mask_close01.png) no-repeat; margin-top: 15px; float:right; cursor: pointer;}
+.input-boxBox{width: 100%; overflow: hidden;}
+select::-ms-expand {display: none;}/*清除ie的默认选择框样式,隐藏下拉箭头*/
+.margin-top10{ margin-top: 10px;}
+.margin-top25{ margin-top: 25px;}
+.margin-top30{ margin-top: 30px !important;}
+.padding-bottom30{ padding-bottom: 30px !important;}
+.box{ width: 100%; overflow: hidden;}
+/* 通用 结束 */
+.datagrid-mask {  
+  position: absolute;  
+  left: 0;  
+  top: 0;  
+  width: 100%;  
+  height: 100%;  
+  opacity: 0.4;  
+  filter: alpha(opacity=30);  
+  display: none;  
+} 
+.datagrid-mask-msg {  
+ 	top: 50%;
+    margin-top: -20px;
+    padding: 11px 14px 10px 47px;
+    width: auto;
+    height: 16px;
+    border-width: 1px;
+    border-style: solid;
+    display: none;
+    z-index: 1000;
+    border-radius: 3px;
+    font-size: 14px;
+    box-shadow: 0px 2px 7px #b3b3af;
+    border-color: #c8d2dc;
+}  

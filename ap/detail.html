@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>桌面</title>
+</head>
+<body>
+    <!--AP详情-->
+    <div id="app-ap-particulars-layout" class="easyui-layout" fit="true">
+ 	<!--左侧布局-->
+ 	<div data-options="region:'west',border:false" class="ap-region-west">
+ 		<div class="easyui-layout app-left" fit="true" class="transparent">
+			<div data-options="region:'east',border:false" class="w-sep transparent"></div>
+			<div data-options="region:'west',border:false" class="w-sep transparent"></div>
+			<div data-options="region:'south',border:false" class="transparent" style="height: 50px; border-top:1px solid #e6e6e6">
+				<div class="bottom-number">
+					共
+					<span class="number-total"></span>
+					条记录
+				</div>
+				<div class="refresh-right"></div>
+				<div class="refresh-icon"></div>
+			</div>
+			
+			<div data-options="region:'center',border:false" class="transparent over-hide ncenter" style="">
+				<!--用户层-->
+		        <div class="win-nav ap-div-left">
+		            <div class="left-menu">
+		                <span class="return-index"></span>
+		                <span class="return-text">
+		                	返回到无线接入点列表
+		                </span>
+		            </div>
+		            
+		            <div class="left-div">
+		            	<div class="left-div-top">
+		            		<span class="status">
+		            			<span class="status-text">状态</span>
+		            			<!--<span class="status-icon"></span>-->
+		            		</span>
+		            		<span class="wireless">
+		            			<span class="wireless-text">无线接入点</span>
+		            			<!--<span class="wireless-icon"></span>-->
+		            		</span>
+		            	</div>
+		            	<ul class="group-list-particulars">
+		            		
+		            	</ul>
+		            </div>
+		          
+		        </div>
+			</div>
+		</div>
+		
+ 	</div>
+ 	<!--右侧布局-->
+	<div data-options="region:'center',border:false" class="ap-region-center">
+		<div class="easyui-layout app-right"  fit="true">
+			<div data-options="region:'west',border:false" class="w-sep transparent"></div>
+			<div data-options="region:'east',border:false" class="w-sep transparent" style="position: relative;">
+				<span class="right-cion"></span>
+			</div>
+			<div data-options="region:'center',border:false" class="transparent" style="position:relative;overflow:hidden;">
+				
+				<div class="win-content">
+		            <div class="right-menu">
+		               
+		            </div>
+		            <div id="ap-tabs" class="easyui-tabs" fit="true" style="height:490px;">
+		            	<!--总览的选项卡-->
+					    <div title="总览" class="scan" style="padding:20px;display:none;">
+							<div class="equipment">
+								<span class="equipment-title">设备</span>
+								<span class="equipment-compile" style="display: none;"></span>
+								<span class="equipment-icon"></span>
+								
+							</div>
+							
+							<!--设备显示内容-->
+							<div class="equipment-box">
+								<div class="left-equipment">
+									<div class="equipment-left-name">
+										<span class="ap-name">名称:</span>
+										<input type="text" name="ap-input" id="ap-input" style="background: #fff;font-size: 14px;" value="" disabled="disabled"/>
+									</div>
+									<div class="equipment-left-ip">
+										<span class="ap-ip">IP:</span>
+										<span class="ap-ip-label"></span>
+									</div>
+									<div class="equipment-left-serial">
+										<span class="ap-serial">序列号:</span>
+										<span class="ap-serial-label"></span>
+									</div>
+									<div class="equipment-left-provider">
+										<span class="ap-provider">供应商:</span>
+										<span class="ap-provider-label"></span>
+									</div>
+									<div class="equipment-left-cpu">
+										<span class="ap-cpu">CPU:</span>
+										<span class="ap-cpu-label"></span>
+									</div>
+								</div>
+								<div class="right-equipment">
+									<div class="equipment-location">
+										<span class="ap-location">位置:</span>
+										<input type="text" name="ap-location-label" id="ap-location-label" value="" />
+									</div>
+									<div class="equipment-mac">
+										<span class="ap-mac">MAC:</span>
+										<span class="ap-mac-label"></span>
+									</div>
+									<div class="equipment-prodect">
+										<span class="ap-prodect">软件版本号:</span>
+										<span class="ap-prodect-label"></span>
+									</div>
+									<div class="equipment-version">
+										<span class="ap-version">产品型号:</span>
+										<span class="ap-version-label"></span>
+									</div>
+									<div class="equipment-internal">
+										<span class="ap-internal">内存:</span>
+										<span class="ap-internal-label"></span>
+									</div>
+								</div>
+							</div>								
+							<!--设备显示内容-->
+							
+							<!--设备隐藏内容-->
+							<div class="equipment-box-none" style="display: none;">
+								
+								<div class="left-equipment-none">
+									<div class="equipment-name-none">
+										<span class="ap-name">名称:</span>
+										<input type="text" name="ap-input-none" id="ap-input-none" value="" />
+									</div>
+									<div class="equipment-left-dhcp">
+										<span class="ap-dhcp">DHCP:</span>
+										<select class="ap-dhcp-label">
+											<option value="">启用</option>
+											<option value="">静态</option>
+										</select>
+									</div>
+									<div class="equipment-left-mark">
+										<span class="ap-mark">掩码:</span>
+										<span class="ap-mark-label"></span>
+									</div>
+									<div class="equipment-left-dns1">
+										<span class="ap-dns1">DNS1:</span>
+										<input type="text" name="ap-dns1-label" id="ap-dns1-label" value="" />
+									</div>
+								</div>
+								<div class="right-equipment-none">
+									<div class="equipment-location-none">
+										<span class="ap-location-none">位置:</span>
+										<input type="text" name="ap-location-label-none" id="ap-location-label-none" value="" />
+									</div>
+									<div class="equipment-ip-none">
+										<span class="ap-ip-none">IP:</span>
+										<span class="ap-ip-label-none"></span>
+									</div>
+									<div class="equipment-gateway">
+										<span class="ap-gateway">网关:</span>
+										<span class="ap-gateway-label"></span>
+									</div>
+									
+									<div class="equipment-dns2">
+										<span class="ap-dns2">DNS2S:</span>
+										<input type="text" name="ap-dns2-label" id="ap-dns2-label" value="" />
+									</div>
+								</div>
+							</div>
+							<!--设备隐藏内容-->
+							
+							
+							<div class="frequency">
+								<span class="frequency-title">射频</span>
+								<span class="frequency-compile" style="display: none;"></span>
+								<span class="frequency-icon"></span>
+							</div>
+							
+							
+							
+							<!--射频显示内容-->
+							<div class="cont-box02 ap-show side">
+								<div class="small-box-left">2.4G</div>
+								<div class="cont-box02-left">
+									<div class="left-route">
+										<span class="left-title">信道:</span>
+										<span class="left-route-value"></span>
+										
+									</div>
+									<div class="left-transmission">
+										<span class="left-title">传输功率:</span>
+										<span class="left-transmission-value"></span>
+										
+									</div>
+									<div class="left-deal">
+										<span class="left-title">协议:</span>
+										<span class="left-deal-value"></span>
+										
+									</div>
+									<div class="left-usage">
+										<span class="left-title">使用率:</span>
+										<span class="left-usage-value"></span>
+										
+									</div>
+									<div class="left-tautology">
+										<span class="left-title">重试率:</span>
+										<span class="left-tautology-value"></span>
+										
+									</div>
+									<div class="left-noise">
+										<span class="left-title">噪声值:</span>
+										<span class="left-noise-value"></span>
+										
+									</div>
+									<div class="left-error">
+										<span class="left-title">误码率:</span>
+										<span class="left-error-value"></span>
+										
+									</div>
+								</div>
+								<div class="small-box-right">5G</div>
+								<div class="cont-box02-right">
+									<div class="right-route">
+										<span class="right-title">信道:</span>
+										<span class="right-route-value"></span>
+										
+									</div>
+									<div class="right-transmission">
+										<span class="right-title">传输功率:</span>
+										<span class="right-transmission-value"></span>
+										
+									</div>
+									<div class="right-deal">
+										<span class="right-title">协议:</span>
+										<span class="right-deal-value"></span>
+										
+									</div>
+									<div class="right-usage">
+										<span class="right-title">使用率:</span>
+										<span class="right-usage-value"></span>
+										
+									</div>
+									<div class="right-tautology">
+										<span class="right-title">重试率:</span>
+										<span class="right-tautology-value"></span>
+										
+									</div>
+									<div class="right-noise">
+										<span class="right-title">噪声值:</span>
+										<span class="right-noise-value"></span>
+										
+									</div>
+									<div class="right-error">
+										<span class="right-title">误码率:</span>
+										<span class="right-error-value"></span>
+										
+									</div>
+								</div>
+							</div>
+							<!--射频显示内容-->
+							
+							
+							<!--射频隐藏内容-->
+							<div class="cont-box02 ap-hide side" style="display: none;">
+								<form method="post" action="" id="equipment-form">
+								<div class="small-box-left">2.4G</div>
+								<div class="cont-box02-left">
+									<div class="left-channel">
+										<span class="left-title">信道:</span>
+										<select class="left-channel-select" name="r24_status">
+											<option value="1" >默认</option>
+											<option value="0">关闭</option>
+										</select>
+									</div>
+									<div class="left-agreement">
+										<span class="left-title">协议:</span>
+										<select class="left-agreement-select" name="r24_mode">
+											<option value="4">802.11b/g/n</option>
+											<option value="12">802.11ng</option>
+										</select>
+									</div>
+									<div class="left-bandwidth">
+										<span class="left-title">带宽:</span>
+										<select class="left-bandwidth-select" name="r24_bandwidth">
+											<option value="20">20MHZ</option>
+										</select>
+										<select class="left-bandwidth-select-bottom" style="display: none;">
+											<option value="0">自动</option>
+											<option value="20">20MHZ</option>
+											<option value="40">40MHZ</option>
+										</select>
+									</div>
+									<div class="left-power">
+										<span class="left-title">功率:</span>
+										<select class="left-power-select" name="r24_power">
+											<option value="0">自动</option>
+											<option value="1">1</option>
+											<option value="2">2</option>
+											<option value="3">3</option>
+											<option value="4">4</option>
+											<option value="5">5</option>
+											<option value="6">6</option>
+											<option value="7">7</option>
+											<option value="8">8</option>
+											<option value="9">9</option>
+											<option value="10">10</option>
+											<option value="11">11</option>
+											<option value="12">12</option>
+											<option value="13">13</option>
+											<option value="14">14</option>
+											<option value="15">15</option>
+											<option value="16">16</option>
+											<option value="17">17</option>
+											<option value="18">18</option>
+											<option value="19">19</option>
+											<option value="20">20</option>
+											<option value="21">21</option>
+											<option value="22">22</option>
+											<option value="23">23</option>
+											<option value="24">24</option>
+											<option value="25">25</option>
+											<option value="26">26</option>
+											<option value="27">27</option>
+											<option value="28">28</option>
+											<option value="29">29</option>
+											<option value="30">30</option>
+											<option value="31">31</option>
+											<option value="32">32</option>
+										</select>
+									</div>
+									<div class="left-terminal">
+										<span class="left-title">最大终端数:</span>
+										<input type="text" name="r24_maxclients" id="left-terminal-select" value="30" />
+									</div>
+								</div>
+								<div class="small-box-right">5G</div>
+								<div class="cont-box02-right">
+									<div class="right-channel">
+										<span class="right-title">信道:</span>
+										<select class="right-channel-select" name="r5_status">
+											<option value="1">默认</option>
+											<option value="0">关闭</option>
+										</select>
+									</div>
+									<div class="right-agreement">
+										<span class="right-title">协议:</span>
+										<select class="right-agreement-select" name="r5_mode">
+											<option value="9">802.11na/ac</option>
+											<option value="16">802.11ac</option>
+										</select>
+									</div>
+									<div class="right-bandwidth">
+										<span class="right-title">带宽:</span>
+										<select class="right-bandwidth-select" name="r5_bandwidth">
+											<option value="0">自动</option>
+											<option value="20">20MHZ</option>
+											<option value="40">40MHZ</option>
+										</select>
+										<select class="right-bandwidth-select-bottom" style="display: none;">
+											<option value="0">自动</option>
+											<option value="20">20MHZ</option>
+											<option value="40">40MHZ</option>
+											<option value="80">80MHZ</option>
+										</select>
+									</div>
+									<div class="right-power">
+										<span class="right-title">功率:</span>
+										<select class="right-power-select" name="r5_power">
+											<option value="0" selected="selected">自动</option>
+											<option value="1">1</option>
+											<option value="2">2</option>
+											<option value="3">3</option>
+											<option value="4">4</option>
+											<option value="5">5</option>
+											<option value="6">6</option>
+											<option value="7">7</option>
+											<option value="8">8</option>
+											<option value="9">9</option>
+											<option value="10">10</option>
+											<option value="11">11</option>
+											<option value="12">12</option>
+											<option value="13">13</option>
+											<option value="14">14</option>
+											<option value="15">15</option>
+											<option value="16">16</option>
+											<option value="17">17</option>
+											<option value="18">18</option>
+											<option value="19">19</option>
+											<option value="20">20</option>
+											<option value="21">21</option>
+											<option value="22">22</option>
+											<option value="23">23</option>
+											<option value="24">24</option>
+											<option value="25">25</option>
+											<option value="26">26</option>
+											<option value="27">27</option>
+											<option value="28">28</option>
+											<option value="29">29</option>
+											<option value="30">30</option>
+											<option value="31">31</option>
+											<option value="32">32</option>
+										</select>
+									</div>
+									<div class="right-terminal">
+										<span class="right-title">最大终端数:</span>
+										<input type="text" name="r5_maxclients" id="right-terminal-select" value="30" />
+									</div>
+								</div>
+							</div>
+							<!--射频隐藏内容-->
+							</form>
+					    </div>
+					    	<!--总览的选项卡-->
+					    	
+					    	
+					    	<!--流量的选项卡-->
+					    	<!--临时
+					    <div title="流量／终端"  style="overflow:auto;padding:20px;padding-top:10px;display:none;">
+						    	<div class="ap-all-traffic" id="chart-three"></div>
+							<div class="ap-wireless-clients"  id="chart-four"></div>
+							<div class="ap-footer-tools">
+								<div style="width:auto;position: absolute;left:0px">
+									<label>数据范围：</label>
+									<select>
+										<option>24小时</option>
+									</select>
+								</div>
+								<div style="width:auto;position: absolute;right: 40px;">
+									<label>自动刷新：</label>
+									<select>
+										<option>5分钟</option>
+									</select>
+								</div>
+								<div class="sep" style="width:auto;position: absolute;right: 40px;"></div>
+								<div class="btn-network-fresh"></div>
+							</div>
+					    </div>
+					    	-->
+					    	<!--流量的选项卡-->
+					    	
+					    	<!--射频的选项卡-->
+					    	<!--临时
+					    <div title="射频" style="padding:20px;display:none;padding-top: 10px;">
+							<div class="ap-all-traffic" id="chart-five"></div>
+							<div class="ap-wireless-clients"  id="chart-six"></div>
+							<div class="ap-footer-tools">
+								<div style="width:auto;position: absolute;left:0px">
+									<label>数据范围：</label>
+									<select>
+										<option>24小时</option>
+									</select>
+								</div>
+								<div style="width:auto;position: absolute;right: 40px;">
+									<label>自动刷新：</label>
+									<select>
+										<option>5分钟</option>
+									</select>
+								</div>
+								<div class="sep" style="width:auto;position: absolute;right: 40px;"></div>
+								<div class="btn-network-fresh"></div>
+							</div>
+					    </div>
+					    	-->
+					    	<!--射频的选项卡-->
+					    	
+					    	<!--信道的选项卡-->
+					    	<!--临时
+					    <div title="信道分析" style="padding:20px;display:none;">
+							<div class="channel-text">
+								信道分析将无线接入点的扫描功能，对周边的信道进行分析，为你推荐最优的可用信道
+							</div>
+							<a href="#" class="btn analyze">扫描分析</a>
+							<div class="result-analyze" style="display: none;">
+								<span class="result-analyze-icon"></span>
+								<span class="result-analyze-text">
+									该无线接入点射频处于关闭状态，无法进行扫描分析。你可以前往配置界面，将射频打开。
+								</span>
+								
+							</div>
+					    </div>
+					    	-->
+					    <!--信道的选项卡-->
+					    
+					    <!--日志的选项卡-->
+					    <div title="日志" style="padding:20px;display:none;padding-top: 10px;padding-bottom:0px ;">
+					    		
+							<a href="#" class="btn export-record" >导出</a>
+							<div>
+								<div class="app-table-details" style="margin-top: 10px;height:348px">
+									<table class="tb table-log" style="height:348px;overflow: hidden;">
+									</table>
+					            </div>
+					            
+					            <footer>
+						            <div class="pagination-wrap">
+						            	<div id="pagination-ap-details"></div>
+						            </div>
+					            </footer>
+				          </div>
+					    </div>
+					     <!--日志的选项卡-->
+					</div>
+		           
+		        </div>
+			</div>
+		</div>
+	</div>
+ </div> 
+ <!--AP详情-->
+ 
+ 
+</body>
+</html>

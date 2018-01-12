@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>桌面</title>
+</head>
+<body>
+ <!-- 网络模块 -->
+ <div id="app-network-layout" class="easyui-layout" fit="true">
+ 	<!--左侧布局-->
+ 	<div data-options="region:'west',border:false" class="network-region-west net-tree">
+ 		<div class="easyui-layout app-left" fit="true" class="transparent">
+			<div data-options="region:'east',border:false" class="w-sep transparent"></div>
+			<div data-options="region:'west',border:false" class="w-sep transparent"></div>
+			<div data-options="region:'south',border:false" class="transparent" >
+			</div>
+			
+			<div data-options="region:'center',border:false" class="transparent over-hide ncenter" style="">
+				<!--用户层-->
+		        <div class="win-nav">
+		            <div class="left-menu">
+		                <a href="#" class="btn btn-create-network" >新增</a>
+		                <div class="btn-group">
+		                  <a class="btn btn-menu-more" href="#">更多<span class="caret"></span></a>
+		                  <ul class="dropdown-menu none">
+		                    <li class="btn-update-network">配置</li>
+		                    <li class="btn-delete-network">删除</li>
+		                    <li class="btn-enabled-network">启用</li>
+		                    <li class="btn-disabled-network">停用</li>
+		                  </ul>
+		                </div>
+		            </div>
+		            <div class="nav-home-title">
+		            	<span class="head-title-img">
+		            		<img src="ap/images/root-location.png" />
+		            	</span>
+		            	<span class="head-title-active"></span>
+		            </div>
+		            <div class="nav-segment"></div>
+		            <ul class="group-list">
+		            </ul>
+		        </div>
+		        <!--用户层-->
+			</div>
+		</div>
+ 	</div>
+ 	<!--右侧布局-->
+	<div data-options="region:'center',border:false" class="network-region-center">
+		<div class="easyui-layout app-right"  fit="true">
+			<div data-options="region:'west',border:false" class="w-sep transparent"></div>
+			<div data-options="region:'east',border:false" class="w-sep transparent"></div>
+			<div data-options="region:'south',border:false" class="w-sep transparent" style="height:41px;">
+				<div class="network-footer-tools">
+					<div style="width:auto;position: absolute;left:0px">
+						<label>数据范围：</label>
+						<select>
+							<option>24小时</option>
+						</select>
+					</div>
+					<div style="width:auto;position: absolute;right: 40px;">
+						<label>自动刷新：</label>
+						<select>
+							<option>5分钟</option>
+						</select>
+					</div>
+					<div class="sep" style="width:auto;position: absolute;right: 40px;"></div>
+					<div class="btn-network-fresh"></div>
+				</div>
+			</div>
+			<div data-options="region:'center',border:false" class="transparent" style="position:relative;overflow:hidden;">
+				<div class="win-content">
+		            <div class="network-title easyui-tabs" id="network-tabs" fit="true" style="height:490px;margin-top: 0px; */">
+						<div title="总览"  style="overflow:auto;padding:20px;display:none;">
+							<div class="network-all-traffic" id="chart-one"></div>
+							<div class="network-wireless-clients"  id="chart-two"></div>
+						</div>
+						<div title="摘要" style="padding:20px;display:none;">
+							
+						</div>
+						<!--<div title="定时访问" style="padding:20px;display:none;">
+							暂停营运
+						</div>-->
+		        </div>
+			</div>
+		</div>
+	</div>
+ </div>
+<script src="./network/js/main.js" ></script>
+</body>
+</html>

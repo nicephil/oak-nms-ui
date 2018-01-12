@@ -1,0 +1,31 @@
+<form method="post" action="" >
+	<div class="cont-box">
+		<div class="options-box">
+			<div class="options-choice">
+				<div class="checkbox-wrap">
+					<span class="normal-checkbox">
+						<input type="checkbox" class="email-network" name="select_notice" />
+					</span>
+					<label class="checkbox-label">网络部署完成后以邮件形式通知用户</label>
+				</div>
+			</div>
+		</div>
+		<div class="options-box" style="border-bottom:none;">
+			<div class="options-choice options-choice-selected"></div>
+			<div class="options-choice">
+				<div class="checkbox-wrap">
+					<span class="normal-checkbox">
+						<input type="checkbox" class="email-content-network ed" disabled="disabled" name="set_notice" />
+					</span>
+					<label class="checkbox-label">定制通知内容</label>
+				</div>
+			</div>
+			<textarea class="options-textarea" name="send_content" disabled="disabled">欢迎使用Oakridge网络！你可以通过使用账户认证来连接#SSID#。你的初始PSK密码是#password#</textarea>
+		</div>
+	</div>
+	<div class="network-footer">
+		<div class="btn btn-pre-network btn-fl btn-mt12">上一步</div>
+		<div class="btn btn-cancel btn-fl btn-mt12 btn-ml10">取消</div>
+		<div class="btn btn-save btn-frm12 btn-prl">保存并部署</div>
+	</div>
+</form>
