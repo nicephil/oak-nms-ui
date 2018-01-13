@@ -233,6 +233,46 @@
     margin-top: 14px;
 }
 
+/*公共部分*/
+ .ap-footer{
+    height: 55px;
+    overflow: hidden;
+    border-top: 1px solid #ededed;
+    background: #f0f4f8;
+    border-radius: 0 0 4px 4px;
+    width: 100%;
+    position: absolute;
+    bottom:0px;
+ }
+.ap-footer .but-conserve {
+    font-size: 14px;
+    margin-left: 20px;
+    color: #fff;
+    display: inline-block;
+    padding: 0 28px;
+    height: 30px;
+    border: 1px solid #5497c1;
+    border-radius: 4px;
+    background: url(../../public/images/but-blue-noselected.png);
+    line-height: 28px;
+    cursor: pointer;
+    margin-top: 12px;
+    margin-right: 20px;
+}
+.ap-footer .but-cancel {
+    font-size: 14px;
+    display: inline-block;
+    padding: 0 28px;
+    height: 30px;
+    border: 1px solid #ced0da;
+    border-radius: 4px;
+    background: url(../../public/images/but-gray-noselected.png);
+    line-height: 28px;
+    cursor: pointer;
+    margin-top: 12px;
+}
+/*/公共部分*/
+
 /*右侧布局*/
 
 /*创建群组*/
@@ -563,7 +603,7 @@ hr{
 }
 .ip-head-img{
 	width: 40px;
-	height: 30px;
+	height: 40px;
 	float: right;
 
 	margin-top: 10px;
@@ -624,6 +664,9 @@ hr{
 }
 .ip-left-ul li{
 	height: 30px;
+	white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 .ip-left-ul input[type="checkbox"]{
 	float: left;
@@ -636,6 +679,9 @@ hr{
 	width: 79px;
 	float: left;
 	margin-left: 3px;
+	white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 

@@ -228,14 +228,19 @@
 .network-region-center .win-content .network-title .selected{
 	border-bottom:2px solid #0086E5;
 }
+
+.network-region-center .link-add-network{
+	color:#0086E5;
+	cursor: pointer;
+}
 /*右侧内容*/
 .network-all-traffic,.network-wireless-clients{
-	height:50%;
+	height:45%;
 }
 
 /*底部工具条*/
 .network-footer-tools{
-	height:41px;position: relative;line-height: 40px;border-top:1px solid #ddd;margin:0px 18px;box-sizing:border-box;
+	height:41px;position: relative;line-height: 40px;border-top:1px solid #ddd;box-sizing:border-box;
 }
 .network-footer-tools .btn-network-fresh{
 	cursor: pointer;

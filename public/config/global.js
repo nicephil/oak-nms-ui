@@ -245,7 +245,8 @@ _IFA['ap__batch_reboot_device'] = _HOST+'monitor/devices/reboot';
 //获取事件日志
 _IFA['ap__get_event_log'] = _HOST+'logs/events';
 
-
+//日志详情导出
+_IFA['ap__export_log'] = _HOST+'logs/events/export';
 
 
 

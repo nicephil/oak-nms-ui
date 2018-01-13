@@ -474,10 +474,7 @@ define(['jquery','global','functions','provide','zui'],function($,_g,_f,provide,
 		var thisAppWindow = $('div[w_id="' + uuid + '"]');
 		
         if (thisAppWindow.length) {
-            thisAppWindow.window('open');
-            thisAppWindow.window('refresh');
-            return ;
-           //thisAppWindow.window('close');
+           thisAppWindow.window('close');
 
         }
 		

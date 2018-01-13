@@ -64,12 +64,13 @@ var isMac = function(val){
 	if(val=='' || val==undefined){
 		return true;
 	}
-	var mac_rule = /[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}/;
+	//var mac_rule = /[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}/;
+    	var mac_rule = /^(([A-Fa-f0-9]{2}[:]){5}[A-Fa-f0-9]{2}[,]?)+$/;
     if(!mac_rule.test(val))
     {
         return false;
     }else{
-    	return true;
+   	 	return true;
     }
 }
 

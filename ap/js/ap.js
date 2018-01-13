@@ -137,12 +137,62 @@ define(['jquery','functions'],function($,_f){
 				});
 			}
 		});
+		
 	};
+	
     /*初始化*/
 	var init = function(){
 		//获取公司ID
 		org_ids = getOrg(target.data('org')).parent;
 	};
+	
+	/*初始化时间插件-缺少英文*/
+	var initDateTimer = function(timerIds){
+		$.fn.datebox.defaults.formatter = function(date){
+			var y = date.getFullYear();
+			var m = date.getMonth()+1;
+			var d = date.getDate();
+			return y+'-'+m+'-'+d;
+		}
+		$.fn.datebox.defaults.parser = function(s){
+			var t = Date.parse(s);
+			if (!isNaN(t)){
+				return new Date(t);
+			} else {
+				return new Date();
+			}
+		}
+		$.each(timerIds,function(index,val){
+
+			//载入时间插件
+			$(val).datetimebox({
+			    required: true,
+			    value:getNowTimer(),
+			    showSeconds: true,
+			    okText:'确认',
+			    currentText:'今天',
+			    closeText:'关闭',
+			    height:'28',
+			    panelWidth:'218',
+			    onShowPanel:function(){
+			    	
+			    },
+/*                onSelect: function(date){
+                    var mydate = new Date();
+                    var selectDate = date.getTime()/1000;
+                    var toDay = new Date(mydate.toLocaleDateString()).getTime()/1000;
+                    if(selectDate<toDay){
+                        toast('提示消息','所选日期不能小于当前日期','error');
+					}
+                }*/
+
+            });
+
+			/*调整时间位置*/
+			var panel = $(val).datetimebox('panel');
+			$(panel).parent('.combo-p').addClass('adjust-timer');
+		});
+	}
     /*获取用户组ID*/
 	var getGid = function(){
 		var node = $(tree).tree('getSelected');
@@ -390,8 +440,15 @@ define(['jquery','functions'],function($,_f){
 						$(panel).find('.datagrid-cell-check').eq(rowIndex).addClass('cell-checked');
 						//如果当前页全部被选中，把头也构上
 						var checked = $(this).datagrid('getChecked');
-						if(checked.length==options.page_size){
-							$(panel).find('.datagrid-header-check').addClass('cell-checked');
+						console.log(checked);
+						if(options.total < options.page_size){
+							if(checked.length == options.total){
+								$(panel).find('.datagrid-header-check').addClass('cell-checked');
+							}
+						}else if(options.total >= options.page_size){
+							if(checked.length==options.page_size){
+								$(panel).find('.datagrid-header-check').addClass('cell-checked');
+							}
 						}
 					},
 					onUncheck:function(rowIndex,rowData){
@@ -1157,18 +1214,23 @@ define(['jquery','functions'],function($,_f){
 					console.log(data)
 					var subGroup = data.list[0].children;
 					subGroup[0].text = subGroup[0].text=='default'?'默认':subGroup[0].text;
-					subGroup = filterData(data.list[0]);
+//					subGroup = filterData(data.list[0]);
 					
 					$('.ap-add-batch-equipment #select-add-ap-group').combotree({
 					   required: true,
-					   data:[subGroup],
+					   data:subGroup,
 					   onLoadSuccess:function(node,data){
 					   	  var group_list = $('#app-ap-layout .group-list').tree('getSelected');
+					   	  console.log(group_list)
                            if(!group_list){
 							   group_list = {};
-                               group_list.id = '默认';
+                               group_list.id = 29;
 						   }
-                           $('.ap-add-batch-equipment #select-add-ap-group').combotree('setValue', group_list.id);
+                           if(group_list.id == 0){
+                           		group_list.id = 29;
+                           }
+                        
+                           $('.ap-add-batch-equipment #select-add-ap-group').combotree('setValue',group_list.id);
 					   }
 					});
 				});	
@@ -1207,15 +1269,14 @@ define(['jquery','functions'],function($,_f){
 	    		var mac_address = $(this).find('input[name="mac_address"]');
 	    		var ap_name = $(this).find('input[name="ap_name"]');
 	    		var ap_location = $(this).find('input[name="ap_location"]');
+
 	    		//验证空值  	
 	    		if(mac_address.val()==''){
 	    			flag = false;
 	    			toast('提示信息','mac地址为必填项！','warning');
 	    			mac_address.focus();
-	    			return ;
-	    		}
-	    			//验证MAC地址
-	    		if(mac_address.val()!=''){
+	    			
+	    		}else if(mac_address.val()!=''){//验证MAC地址
 	    			if(!isMac(mac_address.val())){
 	    				flag = false;
 	    				toast('提示信息','mac地址格式错误！','error');
@@ -1251,7 +1312,30 @@ define(['jquery','functions'],function($,_f){
 	/*添加无线接入点-----保存*/
 	var btnBatchAddAp = $('.ap-add-batch-equipment .but-conserve').click(function(){
 		var result = getApFormValue('#create-ap-batch',true);
+		console.log(result.list.length);
+		console.log(result.list[0].mac);
+		var length = result.list.length;
+		if(result.list.length ==1){
+			if(!result.list[0].mac){
+				toast('提示消息','请填写mac地址','warning');
+				alert()
+				return
+			}
+		}else{
+			if(!result.list[length-1].mac){
+				toast('提示消息','请填写mac地址','warning');
+				alert(1);
+				return
+			}
+		}
 		var row = $(tree).tree('getSelected');
+		if(!row){
+			row = {};
+			row.id = 0;
+		}
+		if(row.id == 0){
+			row.id = 29;
+		}
 		result.group_id = row.id;
 		console.log(row)
 		console.log(result)
@@ -1476,6 +1560,8 @@ define(['jquery','functions'],function($,_f){
 					refreshLoad();
 					//信道分析----扫描按钮
 					analyze();
+					//日志导出				
+					btnExportAp();
 					$('#ap-tabs').tabs({
 						onSelect:function(title,index){
 							switch(index){
@@ -1697,6 +1783,7 @@ define(['jquery','functions'],function($,_f){
 			getList();
 			//获取日志记录
 			getLog('',function(data){
+				console.log(data)
 			});
 			//获取流量数据
 			flow();
@@ -2245,6 +2332,78 @@ define(['jquery','functions'],function($,_f){
 		})
 	}
 	
+	/*获取当前时间*/
+	var getNowTimer = function(param){
+		var date = new Date();
+		var yy = date.getFullYear();
+		var mm = date.getMonth()+1;
+		var dd = date.getDate();
+		var hh = date.getHours();
+		var mm = date.getMinutes();
+		var ss = date.getSeconds();
+		return yy+'-'+mm+'-'+dd+' '+hh+':'+mm+':'+ss;
+	}
+	/*打开日志导出窗口*/
+	var btnExportAp = function(){
+		$('.export-record').click(function(){
+		$('<div/>').addClass('win-export-ap-abc').appendTo($('body'));
+		
+		$('.win-export-ap-abc').window({
+			width:650,
+			height:300,
+			title:'日志导出',
+			href:'ap/record.html',
+			headerCls:'sm-header',
+			collapsible:false,
+			minimizable:false,
+			maximizable:false,
+			resizable:false,
+			modal:true,
+			onLoad:function(){
+				//console.log($('.win-export-ap #ap-start-timer'));
+				//console.log(getNowTimer());
+				initDateTimer(['.ap-start-timer']);
+				initDateTimer(['.ap-end-timer']);
+				$('.win-export-ap-abc .ap-start-timer').datetimebox('setValue', getNowTimer());
+				$('.win-export-ap-abc .ap-end-timer').datetimebox('setValue', getNowTimer());
+				btnSubmitExportAp();
+				btnConcelAp();
+			},
+			onClose:function(){
+				$(this).window('destroy');
+			}
+		});
+		
+		$('.dropdown-menu-left').addClass('none');
+      });
+	}
+    /*导出日志提交*/
+   var btnSubmitExportAp = function(){
+	   $('.win-export-ap-abc .but-conserve').click(function(){
+	       	var begin_time = $('.win-export-ap-abc .ap-start-timer').val();
+	       	var begin_time_long = Date.parse(new Date(begin_time));
+	       	begin_time_long = begin_time_long / 1000;
+	       	
+	       	var end_time = $('.win-export-ap-abc .ap-end-timer').val();
+	       	var end_time_long = Date.parse(new Date(end_time));
+	       	end_time_long = end_time_long / 1000;
+	       	
+            if(end_time_long<begin_time_long){
+                toast('提示消息','所选日期不能小于当前日期','error');
+			}else{
+				var url = _IFA['ap__export_log']+'?org_ids='+19+'&begin_time='+begin_time_long;
+		       	window.open(url);
+		   		closeWindow('.win-export-ap-abc');
+			}
+	   });
+   }
+	/*取消日志导出*/
+	var btnConcelAp = function(){
+		$('.win-export-ap-abc .but-cancel').click(function(){
+			closeWindow('.win-export-ap-abc');
+		});
+	}
+
 	/*运行主程序*/
 	var run = function(){
 		/*初始化*/

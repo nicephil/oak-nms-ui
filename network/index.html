@@ -51,32 +51,31 @@
 		<div class="easyui-layout app-right"  fit="true">
 			<div data-options="region:'west',border:false" class="w-sep transparent"></div>
 			<div data-options="region:'east',border:false" class="w-sep transparent"></div>
-			<div data-options="region:'south',border:false" class="w-sep transparent" style="height:41px;">
-				<div class="network-footer-tools">
-					<div style="width:auto;position: absolute;left:0px">
-						<label>数据范围：</label>
-						<select>
-							<option>24小时</option>
-						</select>
-					</div>
-					<div style="width:auto;position: absolute;right: 40px;">
-						<label>自动刷新：</label>
-						<select>
-							<option>5分钟</option>
-						</select>
-					</div>
-					<div class="sep" style="width:auto;position: absolute;right: 40px;"></div>
-					<div class="btn-network-fresh"></div>
-				</div>
-			</div>
 			<div data-options="region:'center',border:false" class="transparent" style="position:relative;overflow:hidden;">
 				<div class="win-content">
 		            <div class="network-title easyui-tabs" id="network-tabs" fit="true" style="height:490px;margin-top: 0px; */">
-						<div title="总览"  style="overflow:auto;padding:20px;display:none;">
-							<div class="network-all-traffic" id="chart-one"></div>
-							<div class="network-wireless-clients"  id="chart-two"></div>
+						<div title="总览"  style="overflow:auto;padding:10px;display:none;">
+							<div class="network-all-traffic has-echarts" id="network-traffic-echarts"></div>
+							<div class="network-wireless-clients has-echarts" id="network-client-echarts"></div>
+							<div class="network-footer-tools">
+								<div style="width:auto;position: absolute;left:0px">
+									<label>数据范围：</label>
+									<select>
+										<option>24小时</option>
+									</select>
+								</div>
+								<div style="width:auto;position: absolute;right: 40px;">
+									<label>自动刷新：</label>
+									<select>
+										<option>5分钟</option>
+									</select>
+								</div>
+								<div class="sep" style="width:auto;position: absolute;right: 40px;"></div>
+								<div class="btn-network-fresh"></div>
+							</div>
+							<div class="no-has-echarts none">你还没有任何网络,请点击<span class="link-add-network">新建网络</span></div>
 						</div>
-						<div title="摘要" style="padding:20px;display:none;">
+						<div title="摘要" style="padding:10px;display:none;">
 							
 						</div>
 						<!--<div title="定时访问" style="padding:20px;display:none;">

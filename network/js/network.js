@@ -10,16 +10,34 @@
  * @Copyright        	峥嵘时代
 /*========================================================*/
 define(['jquery','echarts','functions'],function($,echarts,_f){
-	/*全局变量*/
-	var target = $('#page');
-	var content = $('body');
-	var tree = "#app-network-layout .group-list";
-	var apTree = '.win-select-ssid-network .aptree';
-	var userTree = '.win-select-user-network .usertree';
-	var ssidInfo = {};
-	var nodes = '';
-	var leftPanel = '';
+	/*******全局变量*******/
+	//弹窗容器
+	var container = $('body');
 	
+	//无线树的DOM节点
+	var tree = "#app-network-layout .group-list";
+	
+	//AP树DOM节点
+	var apTree = '.win-select-ssid-network .aptree';
+	
+	//用户树DOM节点
+	var userTree = '.win-select-user-network .usertree';
+	//-----------
+	// ssidInfo : 记录对象
+	// @baseInfo : 基本信息记录
+	// @ssidInfo : 无线接入点记录
+	// @accessInfo : 访问控制记录
+	// @optionsInfo : 更多选项记录
+	// @portalInfo : Portal信息记录
+	// @userInfo : 选择用户记录
+	// ------------
+	var ssidInfo = {};
+	
+	//节点集合
+	var nodes = '';
+	
+	//左侧面板对象
+	var leftPanel = '';
 	
     /*初始化*/
 	var init = function(){
@@ -27,10 +45,9 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 		//初始化radio
 		initRadio();
 		
-		//初始化checkbox
-		//initCheckBox();
+		//初始化tabs面板
         selectTabs();
-		
+	
 	}
 	
 	/*取消事件*/
@@ -40,6 +57,7 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 	
 	/*初始化radio*/
 	var initRadio = function(){
+		
 		//初始化未选中
 		$('.radio-wrap input').parent('span').removeClass('radio-checked');
 		$('.radio-wrap input').parent('span').addClass('normal-radio');
@@ -48,15 +66,18 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 		$('.radio-wrap input:radio:checked').parent('span').addClass('radio-checked');
 		$('.radio-wrap input:radio:checked').parent('span').removeClass('normal-radio');
 		
+		//绑定radio事件
 		$('.radio-wrap input:radio').click(function(){
 			$('.radio-wrap input:radio').parent('span').addClass('normal-radio');
 			$('.radio-wrap input:radio:checked').parent('span').addClass('radio-checked');
 			$('.radio-wrap input:radio:checked').parent('span').removeClass('normal-radio');
 		});
+		
 	}
 	
 	/*初始化checkbox*/
 	var initCheckBox = function(){
+		
 		//初始化未选中
 		$('.checkbox-wrap input').parent('span').removeClass('checkbox-checked');
 		$('.checkbox-wrap input').parent('span').addClass('normal-checkbox');
@@ -65,7 +86,7 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 		$('.checkbox-wrap input:checkbox:checked').parent('span').addClass('checkbox-checked');
 		$('.checkbox-wrap input:checkbox:checked').parent('span').removeClass('normal-checkbox');
 		
-		//绑定选中事件
+		//绑定checkbox事件
 		$('.checkbox-wrap input:checkbox').click(function(){
 			if($(this).is(':checked')){
 				$(this).parent('span').removeClass('normal-checkbox');
@@ -77,8 +98,10 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 		});
 	}
 	
-	/*切换基本信息*/
+	/*编辑摘要基本信息*/
 	var switchAbstractBase = function(){
+		
+		//绑定编辑切换效果
 		$('.edit-base').click(function(){
 			if($('.edit-base').hasClass('btn-edit-icon')){
 				$('.edit-base').removeClass('btn-edit-icon');
@@ -91,20 +114,42 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 				$('.abs-row .info-label').removeClass('none');
 				$('.abs-row .info-input').addClass('none');
 				
-				//保存数据
+				//保存基本信息数据
 				bindAbstractBaseSave();
 			}
 		});
+		
+	}
+	
+	/*
+	 * 获取流量统计数据--当树onselect时加载此函数
+	 * */
+	var getFlow = function(node,func,options){console.log(node);
+		if(node!=null){
+			var url = _IFA['ap_get_device_ﬂow_stat']+node.id+'/flow';
+			if(options.length>0){
+				url = url+'?'+options;
+			}
+			var type = 'GET';
+			var data = '';
+			_ajax(url,type,data,function(data){
+				func(data);
+			});
+		}
+		
 	}
 	
 	/*选择tab页面*/
     var selectTabs = function(){
-        chartOne();
+        
 		$('#network-tabs').tabs({
             onSelect:function(title,index){
             	switch(index){
 					case 0:
-                        chartOne();
+						var node = $(tree).tree('getSelected');
+						var data = getFlow(node,function(data){
+							chartOne(data);
+						});
 						break;
 					case 1:
 					    var tab = $(this).tabs('getTab',1);
@@ -130,17 +175,18 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 			}
 		});
 	}
-
-	var chartOne = function(){
-
-        var myChartOne = echarts.init(document.getElementById('chart-one'));
+	
+	//定义总览流量图表
+	var chartOne = function(data){
+	    console.log(data);
+        var myChartOne = echarts.init(document.getElementById('network-traffic-echarts'));
 
         var colors = ['#8ec6ad', '#d14a61', '#675bba'];
 
         optionOne = {
             title: {
-                text: '堆叠区域图',
-                left: '8%'
+            	text:'流量',
+                left: '0%'
             },
             color: colors,
             tooltip: {
@@ -148,11 +194,13 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
             },
             legend: {
                 data:['Total', 'Tx', 'Rx'],
-                right: "10%",
+                right: 12,
             },
             grid: {
-                top: 55,
+                top: 40,
                 bottom: 40,
+                width:630,
+                left:50
             },
             xAxis: [
                 {
@@ -161,13 +209,12 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
                     axisTick:{
                         alignWithLabel: true,
                     },
-                    data: [ "Noon", "3PM", "6PM", "9PM", "Ninght", "3AM", "6AM", "9AM"]
+                    data: [ "Noon", "3PM", "6PM", "9PM", "Ninght", "3AM", "6AM", "9AM","Noon"]
                 }
             ],
             yAxis: [
                 {
                     type: 'value',
-                    name: '流量',
                     nameGap: 10,
                     axisLabel: {
                         formatter: '{value} M'
@@ -216,14 +263,14 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
             myChartOne.setOption(optionOne, true);
         },500);
 
-        var myChartTwo = echarts.init(document.getElementById('chart-two'));
+        var myChartTwo = echarts.init(document.getElementById('network-client-echarts'));
 
         var colors = ['#8ec6ad', '#d14a61', '#675bba'];
 
         optionTwo = {
             title: {
-                text: '折柱混合',
-                left: '5%'
+            	text:'终端',
+                left: '0%'
             },
             tooltip: {
                 trigger: 'axis',
@@ -234,18 +281,20 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
                     }
                 }
             },
-            grid: {
-                top: 55,
-                bottom: 30,
+           grid: {
+                top: 40,
+                bottom: 40,
+                width:630,
+                left:50
             },
             legend: {
-                data:['Total', 'Tx', 'Rx'],
-                right: "10%",
+                data:['Total', '2.4G', '5G'],
+                right: 12
             },
             xAxis: [
                 {
                     type: 'category',
-                    data: [ "Noon", "3PM", "6PM", "9PM", "Ninght", "3AM", "6AM", "9AM"],
+                    data: [ "Noon", "3PM", "6PM", "9PM", "Ninght", "3AM", "6AM", "9AM","Noon"],
                     axisPointer: {
                         type: 'shadow'
                     },
@@ -254,7 +303,6 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
             yAxis: [
                 {
                     type: 'value',
-                    name: '流量',
                     min: 0,
                     max: 250,
                     interval: 50,
@@ -271,12 +319,12 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
                     data:[2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2]
                 },
                 {
-                    name:'Tx',
+                    name:'2.4G',
                     type:'bar',
                     data:[2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2]
                 },
                 {
-                    name:'Rx',
+                    name:'5G',
                     type:'line',
                     yAxisIndex: 0,
                     symbol: 'none',
@@ -687,6 +735,13 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 						}
 					},
 					onSelect:function(node){console.log(node);
+						//初始化总览
+						var timestamp1 = (new Date()).valueOf()-86400000;//获取前一天的时间戳
+						console.log(timestamp1);
+						var data = getFlow(node,function(data){
+							chartOne(data);
+						},'begin_time='+1515729600);
+						
 						//设置摘要信息
 						setAbstractInfo(node);
 					}
@@ -1622,7 +1677,7 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 		if(isOpen('.win-create-ssid-network')){
 			return false;
 		};
-		$('<div class="win-create-ssid-network"/>').appendTo(content);
+		$('<div class="win-create-ssid-network"/>').appendTo(container);
 		$('.win-create-ssid-network').window({
 			width:650,
 			height:546,
@@ -1701,8 +1756,16 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 						ssid_hide = 1;
 					};
 					
+					//合并基本信息
+					var baseInfo = {
+						ssid_hide:ssid_hide,
+					};
+					$.extend(baseInfo,result,getTunnelValue(result.type),getModeValue(result.auth));
+					console.log(baseInfo);
 					//合并数据
-					$.extend(ssidInfo,result,{ssid_hide:ssid_hide},getTunnelValue(result.type),getModeValue(result.auth));
+					$.extend(ssidInfo,baseInfo);console.log(ssidInfo);
+					ssidInfo.baseInfo = baseInfo;
+					console.log(ssidInfo);
 					
 					//验证数据长度
 					if(ssidInfo.ssid_name.length>1 && ssidInfo.ssid_name.length<32){
@@ -1742,7 +1805,7 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 		if(isOpen('.win-select-ssid-network')){
 			return false;
 		};
-		$('<div/>').addClass('win-select-ssid-network').appendTo(content);
+		$('<div/>').addClass('win-select-ssid-network').appendTo(container);
 		$('.win-select-ssid-network').window({
 			width:650,
 			height:546,
@@ -1808,7 +1871,7 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 		if(isOpen('.win-select-ssid-network')){
 			return false;
 		};
-		$('<div/>').addClass('win-select-ssid-network').appendTo(content);
+		$('<div/>').addClass('win-select-ssid-network').appendTo(container);
 		$('.win-select-ssid-network').window({
 			width:650,
 			height:546,
@@ -1843,7 +1906,7 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 		if(isOpen('.win-select-user-network')){
 			return false;
 		};
-		var selectUser = $('<div/>').addClass('win-select-user-network').appendTo(content);
+		var selectUser = $('<div/>').addClass('win-select-user-network').appendTo(container);
 		selectUser.window({
 			width:650,
 			height:546,
@@ -1878,7 +1941,7 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 		if(isOpen('.win-select-user-network')){
 			return false;
 		};
-		var selectUser = $('<div/>').addClass('win-select-user-network').appendTo(content);
+		var selectUser = $('<div/>').addClass('win-select-user-network').appendTo(container);
 		selectUser.window({
 			width:650,
 			height:546,
@@ -1953,7 +2016,7 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 		if(isOpen('.win-config-network')){
 			return false;
 		};
-		var selectConfig = $('<div/>').addClass('win-config-network').appendTo(content);
+		var selectConfig = $('<div/>').addClass('win-config-network').appendTo(container);
 		selectConfig.window({
 			width:650,
 			height:546,
@@ -2021,7 +2084,7 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 		if(isOpen('.win-options-network')){
 			return false;
 		};
-		var selectOptions = $('<div/>').addClass('win-options-network').appendTo(content);
+		var selectOptions = $('<div/>').addClass('win-options-network').appendTo(container);
 		selectOptions.window({
 			width:650,
 			height:350,
@@ -2070,7 +2133,7 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 		if(isOpen('.win-portal-network')){
 			return false;
 		};
-		var selectPortal = $('<div/>').addClass('win-portal-network').appendTo(content);
+		var selectPortal = $('<div/>').addClass('win-portal-network').appendTo(container);
 		selectPortal.window({
 			width:650,
 			height:546,
@@ -2159,7 +2222,7 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 		if(isOpen('.win-access-control-network')){
 			return false;
 		};
-		var accessControl = $('<div/>').addClass('win-access-control-network').appendTo(content);
+		var accessControl = $('<div/>').addClass('win-access-control-network').appendTo(container);
 		accessControl.window({
 			width:650,
 			height:546,
@@ -2240,7 +2303,7 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 		if(isOpen('.win-access-control-network')){
 			return false;
 		};
-		var accessControl = $('<div/>').addClass('win-access-control-network').appendTo(content);
+		var accessControl = $('<div/>').addClass('win-access-control-network').appendTo(container);
 		accessControl.window({
 			width:650,
 			height:546,

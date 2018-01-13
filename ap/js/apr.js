@@ -669,9 +669,36 @@ define(['jquery','functions'],function($,_f) {
                         '<span class="ip-left-li-first">' + data.device_name + '</span>' +
                         '<span class="ip-left-li-last">' + data.mac + '</span>' +
                         '</li>');
+                    $('.text-checkbox').attr('checked', true);
                     //绑定时机事件
-                    ip_type_config_list();
+                    ip_type_config_list(index);
                 });
+                
+                //初始化
+                if(data.length==1){
+	                //单条编辑
+	                var _self = $('input[name="ip_config_id"]:checked');
+	
+	                var ap_id = $(_self).val();
+	
+	                ip_config_cid = ap_id;//赋值
+	
+	                ip_type_config_info(ap_id);//调用接口
+	                
+                }else if(data.length>1){
+                	//多条
+	                var str = '---';
+	
+	                $('input[name="ip_config_name"]').val(str);//设备名称
+	
+	                $('input[name="ip_config_one"]').val(str);//ip
+	
+	                $('input[name="ip_config_ym"]').val(str);//掩码地址
+	
+	                $('input[name="ip_config_position"]').val(str);//位置
+	
+	                $('input[name="ip_config_wg"]').val(str);//网关地址
+                }
 
             } else {
 
@@ -690,8 +717,8 @@ define(['jquery','functions'],function($,_f) {
      * @param ''
      * @return
      */
-    var ip_type_config_list = function () {
-
+    var ip_type_config_list = function (number) {
+    	
         $('.text-checkbox').unbind().bind('change', function () {
             var flag = true;
             //判断是否是批量编辑模式
@@ -705,6 +732,7 @@ define(['jquery','functions'],function($,_f) {
             });
 
             if (flag) {
+            	
                 //单条编辑
                 var _self = this;
 
@@ -715,7 +743,7 @@ define(['jquery','functions'],function($,_f) {
                 ip_type_config_info(ap_id);//调用接口
 
             } else {
-
+            	
                 //批量编辑 名称,位置,ip,掩码,网关不可修改
                 var str = '---';
 
@@ -731,8 +759,6 @@ define(['jquery','functions'],function($,_f) {
                 $('input[name="ip_config_wg"]').val(str);//网关地址
 
             }
-
-
 
         });
     };
