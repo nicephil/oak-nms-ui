@@ -127,16 +127,17 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 	var getFlow = function(node,func,options){console.log(node);
 		if(node!=null){
 			var url = _IFA['ap_get_device_ﬂow_stat']+node.id+'/flow';
-			if(options.length>0){
-				url = url+'?'+options;
+			if(options!=undefined){
+				if(options.length>0){
+					url = url+'?'+options;
+				}
+				var type = 'GET';
+				var data = '';
+				_ajax(url,type,data,function(data){
+					func(data);
+				});
 			}
-			var type = 'GET';
-			var data = '';
-			_ajax(url,type,data,function(data){
-				func(data);
-			});
 		}
-		
 	}
 	
 	/*选择tab页面*/
