@@ -969,6 +969,9 @@ hr{
 	float: left;
 	line-height: 35px;
 	text-align: center;
+	white-space: nowrap;
+    	text-overflow: ellipsis;
+    overflow: hidden;
 }
 #app-ap-particulars-layout .bottom-number{
 	width: 180px;

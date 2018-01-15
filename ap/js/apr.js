@@ -603,7 +603,14 @@ define(['jquery','functions'],function($,_f) {
     var ip_config = function(){
 	    $('.ap-config-ip').unbind().bind('click', function () {
 	        onOpenDelete('#win-ap-config');//删除以前存在的窗口
-	
+			//获取树
+			var row = $(tree).tree('getSelected');
+			var site = getSite();
+			if(!row){
+				row = {};
+				row.name = site.name;
+			}
+			$('.ip-head-title-text').text(row.name);
 	        //获取当前选定的点
 	        var checked_list = getChecked();
 	

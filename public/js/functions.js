@@ -375,6 +375,21 @@ var verification = function(phone){
 		}
 	}
 }
+//mac输入样式   
+var verificationMac = function(mac){
+		mac.attr('maxlength','17');
+		if(event.keyCode==17){
+			return;
+		};
+		var val = '';
+		if(mac.val().length==2 || mac.val().length==5|| mac.val().length==8|| mac.val().length==11|| mac.val().length==14){
+			 val += mac.val();
+			 val+=':'
+			 mac.val(val);
+		}
+	
+}
+
 //验证提示错误样式问题   
 var errorInput = function(className ,message){
 	var iptWidth = $(className).width();

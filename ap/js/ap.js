@@ -75,7 +75,12 @@ define(['jquery','functions'],function($,_f){
                 return "<span data-id="+value+">严重</span>";
 			}
         }},
-        {field:'timestamp',title:'发生时间',sortable:true,align:'center'},
+        {field:'timestamp',title:'发生时间',sortable:true,align:'center',formatter:function (value,row,index){
+        	var timestamp = value;
+			var newDate = new Date();
+			timestamp = newDate.toLocaleDateString();
+			return timestamp;
+        }},
 
         {field:'description',title:'日志',sortable:true,align:'center'}
 
@@ -95,9 +100,7 @@ define(['jquery','functions'],function($,_f){
 			options.page = defPageNumber;
 			options.page_size = defPageSize;
 		}
-		console.log(options)
 		getLog(options,function(data){
-			console.log(data)
 			if(data.error_code==0){
 				$(table3).datagrid({
 					data:data.list,
@@ -236,6 +239,7 @@ define(['jquery','functions'],function($,_f){
 	};
 	/*插入空信息*/
 	var insertNodata =  function(table){
+		//$(table).datagrid('getPanel').find('.datagrid-body').find('.nodata').remove();
 		$(table).datagrid('getPanel').find('.datagrid-body').append($('<div class="nodata"><img src="public/images/nodata.png" /><div>没有可以显示的数据</div></div>'));
 		var height = $('.ap-user .app-table-detail').height();
 		$('.ap-user .nodata').css({
@@ -273,21 +277,27 @@ define(['jquery','functions'],function($,_f){
 			args += '&'+serializeJson(options);	
 		}
 		url = url + args
-		console.log(url)
 		_ajax(url,type,data,callback);
 	};
+
 	/*获取日志*/
 	var getLog = function(options,callback){
-		
+		if(!options){
+			options = {};
+			options.page_size = 10;
+			options.page = 1;
+		}
+		console.log(options)
 		var _id = $('.list-select').attr('a')
 		var url = _IFA['ap__get_event_log'];
-		var args = '?org_ids='+getOrg(target.data('org')).id+'&page_size='+1+'&type='+1;
+		var _mac = $('.list-select').attr('mac');
+		console.log(_mac)
+		var args = '?org_ids='+getOrg(target.data('org')).id+'&type='+1+'&search='+_mac;
 		if(serializeJson(options)){
 			args += '&'+serializeJson(options);	
 		}
 		
 		url = url + args
-		
 		var type = 'GET';
 		var data = '';
 		console.log(url);
@@ -345,7 +355,6 @@ define(['jquery','functions'],function($,_f){
 					onSelect:function(node){
 						var row = $(tree).tree('getSelected');
 						_groupid = node.id;
-//						console.log(_groupid)
 						//移除树背景
 						$('.ap-region-west .win-nav .nav-title').removeClass('home-selected');
 						$('.ap-region-west .head-title-img').html('<img src="./ap/images/root-location.png" />');
@@ -372,7 +381,6 @@ define(['jquery','functions'],function($,_f){
 	}
     /*加载表格数据*/
 	var loadTable = function(options){
-//		console.log(options)
 		//加载默认配置项
 		if(options!=undefined){
 			options.page = defPageNumber;
@@ -515,8 +523,7 @@ define(['jquery','functions'],function($,_f){
 			pageSize:pageSize,
 			pageList:defPageList
 		}
-		/*console.log(optPage)*/
-		loadPagination(optPage);
+		loadPagination1(optPage);
 		
 		//去掉加载条
 		MaskUtil.unmask();
@@ -571,6 +578,41 @@ define(['jquery','functions'],function($,_f){
 		//插入分页文件
 		$('#app-ap-layout .pagination-page-list').before('每页显示数');
 	}
+	
+	/*加载日志分页*/
+	var loadPagination1 = function(options){
+		console.log(options)
+		//分页ID
+		var paginationId = options.paginationId;
+		var total = options.total;
+		var pageNumber = options.pageNumber;
+		var pageSize = options.pageSize;
+		var pageList = options.pageList;
+		$(paginationId).pagination({
+		    total:total,
+		    pageNumber:pageNumber,
+		    pageSize:pageSize,
+		    pageList:pageList,
+		    displayMsg:'共{total}条记录',
+		    layout:['first','prev','links','next','last','sep','list','info','sep','refresh'],
+		    onSelectPage:function(pageNumber, pageSize){
+		    	$(this).pagination('loading');
+		    	var opt = {
+					pageSize:pageSize,
+					pageNumber:pageNumber
+				}
+				$(this).pagination('loaded');
+				loadDetailTable(opt);
+		    },
+			onRefresh:function(pageNumber, pageSize){
+			},
+			onChangePageSize:function(pageSize){
+			}
+		});
+		//插入分页文件
+		$('#ap-tabs .pagination-page-list').before('每页显示数');
+	}
+	
 	
 	/*加载绑定*/
 	var bindEven = function(){
@@ -690,13 +732,19 @@ define(['jquery','functions'],function($,_f){
 //                             };
                               /* console.log(group_list.id)*/
                                $('#select-ap-group').combotree('setValue',group_list.id);
+						  },
+						  onShowPanel:function(){
+						   	//移出下拉树列表，隐含面板
+						   	$('.win-ap-group *').not('#select-ap-group,.combo *').mouseenter(function(){
+						   		$('#select-ap-group').combo('hidePanel');
+						   	})
 						   }
 						});
 					});
 					/*$(this).removeClass('save');*/
 			},
 			onClose:function(){
-				
+				$(this).window('destroy');
 			}
 		});
 	});
@@ -747,7 +795,7 @@ define(['jquery','functions'],function($,_f){
 				});
 			},
 			onClose:function(){
-				
+				$(this).window('destroy');
 			}
 		});
 	});
@@ -966,6 +1014,7 @@ define(['jquery','functions'],function($,_f){
 			},
 			onClose:function(){
 				/*$('.win-ap-next-group').removeClass('save');*/
+				$(this).window('destroy');
 			}
 		});
 	})
@@ -1100,6 +1149,7 @@ define(['jquery','functions'],function($,_f){
 				//更新数据保存
 			},
 			onClose:function(){
+				$(this).window('destroy');
 			}
 		});
 	});
@@ -1198,17 +1248,20 @@ define(['jquery','functions'],function($,_f){
 	});
 	/*添加AP设备*/
 	var addApEquipment = $('#app-ap-layout .btn-menu-ap-create').click(function(){
-		$('.ap-add-batch-equipment').window({
+		$('<div/>').addClass('win-create-ap').appendTo($('body'));
+		$('.win-create-ap').window({
 			width:650,
 			height:520,
 			title:'添加无线接入点',
+			href:'ap/win-create-ap.html',
 			headerCls:'sm-header',
 			collapsible:false,
 			minimizable:false,
 			maximizable:false,
 			resizable:false,
 			modal:true,
-			onOpen:function(){
+			loadingMessage:'',
+			onLoad:function(){
 				/*clearForm('.update-ap-group #create-ap-group');*/
 				getGroups(function(data){
 					console.log(data)
@@ -1216,7 +1269,7 @@ define(['jquery','functions'],function($,_f){
 					subGroup[0].text = subGroup[0].text=='default'?'默认':subGroup[0].text;
 //					subGroup = filterData(data.list[0]);
 					
-					$('.ap-add-batch-equipment #select-add-ap-group').combotree({
+					$('.win-create-ap #select-add-ap-group').combotree({
 					   required: true,
 					   data:subGroup,
 					   onLoadSuccess:function(node,data){
@@ -1230,7 +1283,13 @@ define(['jquery','functions'],function($,_f){
                            		group_list.id = 29;
                            }
                         
-                           $('.ap-add-batch-equipment #select-add-ap-group').combotree('setValue',group_list.id);
+                           $('.win-create-ap #select-add-ap-group').combotree('setValue',group_list.id);
+					   },
+					   onShowPanel:function(){
+					   	//移出下拉树列表，隐含面板
+					   	$('.win-create-ap *').not('#select-add-ap-group,.combo *').mouseenter(function(){
+					   		$('#select-add-ap-group').combo('hidePanel');
+					   	})
 					   }
 					});
 				});	
@@ -1238,10 +1297,13 @@ define(['jquery','functions'],function($,_f){
 				//清空用户列表记录
 				$('.ap-add-batch-equipment .user-list').empty();
 				addapInfo('.ap-add-batch-equipment .user-list');
-			
+				//退出
+				closeCreatAp();
+				//保存
+				createApMac();
 			},
 			onClose:function(){
-
+				$(this).window('destroy');
 			}
 		});
 	});
@@ -1288,6 +1350,8 @@ define(['jquery','functions'],function($,_f){
 	    				return;
 	    			}*/
 	    		}
+	    			
+	    		
 	    		
 	    		
 	    });
@@ -1295,13 +1359,13 @@ define(['jquery','functions'],function($,_f){
 	    		addapInfo('.ap-add-batch-equipment .user-list');
 	    	}
 		    
-		    $('.ap-add-batch-equipment .batch-delete').click(function(index){
-		    	if($('.ap-add-batch-equipment .user-list .batch-inputBox').length>1){
-		    		$(this).parent('.ap-add-batch-equipment .batch-inputBox').remove();
-		    	}else{
-		    		toast('提示消息','至少存在一条记录','warning');
-		    		return false;
-		    	};
+			$('.ap-add-batch-equipment .batch-delete').click(function(index){
+			    	if($('.ap-add-batch-equipment .user-list .batch-inputBox').length>1){
+			    		$(this).parent('.ap-add-batch-equipment .batch-inputBox').remove();
+			    	}else{
+			    		toast('提示消息','至少存在一条记录','warning');
+			    		return false;
+			    	};
 		    });
 		});
 	};
@@ -1309,66 +1373,78 @@ define(['jquery','functions'],function($,_f){
 	var btnBatchAddUser = $('.ap-add-batch-equipment .batch-add').click(function(){
 		addapInfo('.ap-add-batch-equipment .user-list');
 	});
+	/*mac地址输入格式*/
+	var onKeydownMac = $(document).on('keydown','.ap-add-batch-equipment .mac_address',function(){
+		verificationMac($(this));
+	});
 	/*添加无线接入点-----保存*/
-	var btnBatchAddAp = $('.ap-add-batch-equipment .but-conserve').click(function(){
-		var result = getApFormValue('#create-ap-batch',true);
-		console.log(result.list.length);
-		console.log(result.list[0].mac);
-		var length = result.list.length;
-		if(result.list.length ==1){
-			if(!result.list[0].mac){
-				toast('提示消息','请填写mac地址','warning');
-				alert()
-				return
-			}
-		}else{
-			if(!result.list[length-1].mac){
-				toast('提示消息','请填写mac地址','warning');
-				alert(1);
-				return
-			}
-		}
-		var row = $(tree).tree('getSelected');
-		if(!row){
-			row = {};
-			row.id = 0;
-		}
-		if(row.id == 0){
-			row.id = 29;
-		}
-		result.group_id = row.id;
-		console.log(row)
-		console.log(result)
-		var selected = getSelected(tree);
-		result.org_id = getOrg(target.data('org')).id;
-		if(result.select_expire<=0){
-				result.expire_at = result.select_expire;
+	var createApMac = function(){
+		$('.ap-add-batch-equipment .but-conserve').click(function(){
+			var result = getApFormValue('#create-ap-batch',true);
+			console.log(result.list.length);
+			console.log(result.list[0].mac);
+			var length = result.list.length;
+			if(result.list.length ==1){
+				if(!result.list[0].mac){
+					toast('提示消息','请填写mac地址','warning');
+					return
+				}
 			}else{
-				result.expire_at = toTimeStamp(result.expire_at);
+				if(!isMac(result.list[length-1].mac)){
+					toast('提示消息','请填写正确mac地址','warning');
+					return
+				}else{
+					if(!result.list[length-1].mac){
+						toast('提示消息','请填写mac地址','warning');
+						return
+					}
+				}
 			}
-		var url = _IFA['ap_add_device'];
-		var type = 'POST';
-		var data = JSON.stringify(result);
-		
-		console.log(data)
-	    /*if(!checkRepeatUser()){
-	    	toast('提示消息','数据重复','error');
-	    	return;
-	    }*/
-		_ajax(url,type,data,function(data){
-			if(data.error_code==0){
-				toast('提示消息','操作成功','success');
-				refresh();
-				closeWindow('.ap-add-batch-equipment');					
-			}else{
-				toast('提示消息',data.error_message,'error');
+			var row = $(tree).tree('getSelected');
+			if(!row){
+				row = {};
+				row.id = 0;
 			}
+			if(row.id == 0){
+				row.id = 29;
+			}
+			result.group_id = row.id;
+			console.log(row)
+			console.log(result)
+			var selected = getSelected(tree);
+			result.org_id = getOrg(target.data('org')).id;
+			if(result.select_expire<=0){
+					result.expire_at = result.select_expire;
+				}else{
+					result.expire_at = toTimeStamp(result.expire_at);
+				}
+			var url = _IFA['ap_add_device'];
+			var type = 'POST';
+			var data = JSON.stringify(result);
+			
+			console.log(data)
+		    /*if(!checkRepeatUser()){
+		    	toast('提示消息','数据重复','error');
+		    	return;
+		    }*/
+			_ajax(url,type,data,function(data){
+				if(data.error_code==0){
+					toast('提示消息','操作成功','success');
+					refresh();
+					closeWindow('.win-create-ap');					
+				}else{
+					toast('提示消息',data.error_message,'error');
+				}
+			});
 		});
-	});
+	}
 	/*添加无线节点----取消*/
-	var btnBatchCancelApDev = $('.ap-add-batch-equipment .but-cancel').click(function(){
-		closeWindow('.ap-add-batch-equipment');
-	});
+	var closeCreatAp = function(){
+		$('.ap-add-batch-equipment .but-cancel').click(function(){
+			$('.win-create-ap').window('destroy');
+		});
+	}
+
 	/*AP移除功能*/
 	 var btnApEnable = $('.ap-region-center .btn-enable-ap').click(function(){
 	 	//获取选中的记录
@@ -1448,18 +1524,20 @@ define(['jquery','functions'],function($,_f){
 			if(checked.length==0){
 				toast('提示消息','请选择要迁移的设备','warning');
 				return ;
-			}/*else */
-			onOpenDelete('.win-export-ap');
-			$('.win-export-ap').window({
+			};
+			$('<div/>').addClass('win-export-migration-window').appendTo($('body'));
+			$('.win-export-migration-window').window({
 				width:650,
 				height:422,
 				title:'导出用户',
+				href:'ap/win-export-migration.html',
 				headerCls:'sm-header',
 				collapsible:false,
 				minimizable:false,
 				maximizable:false,
 				resizable:false,
 				modal:true,
+				loadingMessage:'',
 				onOpen:function(){
 					//加载树结构
 					var url_groups =  _IFA['ap_groups_list']+getOrg(target.data('org')).id;
@@ -1471,18 +1549,22 @@ define(['jquery','functions'],function($,_f){
 								checkbox:true,
 								lines:false,
 								onLoadSuccess:function(node,data){
-									/*$('#tree-export-ap>li>ul>li:first-child .tree-icon').addClass('tree-file-default');*/
+									$('#tree-export-ap>li>ul>li:first-child .tree-icon').addClass('tree-file-default');
 								}
 							});
 						}
 					});
+				},
+				onClose:function(){
+					$(this).window('destroy')
 				}
+				
 			});		
 			/*$('.dropdown-menu-left').addClass('none');*/
 	});
 	
 	/*AP迁移功能---保存*/
-	var saveApMigration = $('.win-export-ap .but-conserve').click(function(){
+	var saveApMigration = $('.win-export-migration .but-conserve').click(function(){
 		var row = $('#tree-export-ap').tree('getSelected');
 		var checked = getChecked();
 		if(checked.length>0){
@@ -1566,13 +1648,21 @@ define(['jquery','functions'],function($,_f){
 						onSelect:function(title,index){
 							switch(index){
 								case 1:{
-									loadDetailTable('');
 									//flow();
 									//临时chartOne();
+									getLog('',function(data){
+										var opt = {
+											page_size:defPageSize,
+											page:defPageNumber
+										}
+										loadDetailTable(opt);
+									})
 									break;
 								}
 								case 2:{
 									channel()
+									
+									
 									//chartTwo();
 									break;
 								}
@@ -1580,7 +1670,7 @@ define(['jquery','functions'],function($,_f){
 									break;
 								}
 								case 4:{
-									//临时loadDetailTable('');
+									
 									break;
 								}
 								
@@ -1622,7 +1712,7 @@ define(['jquery','functions'],function($,_f){
 	                	}
 	                	var str = data.display_name;
 
-	                    $('.group-list-particulars').append('<li a="'+data.id+'">'
+	                    $('.group-list-particulars').append('<li a="'+data.id+'" mac="'+data.mac+'">'
 	                      		+'<span class="li-left-connected">'+data.connected+'</span>'
 	                            +'<span class="li-left-mac">'+data.display_name+'</span>'+
 	                        '</li>');
@@ -1782,9 +1872,17 @@ define(['jquery','functions'],function($,_f){
 			$(this).addClass('list-select').siblings().removeClass('list-select');
 			getList();
 			//获取日志记录
-			getLog('',function(data){
-				console.log(data)
-			});
+			var tab = $('#ap-tabs').tabs('getSelected');
+			var index = $('#ap-tabs').tabs('getTabIndex',tab);
+			if(index==1){
+				getLog('',function(data){
+					var opt = {
+						page_size:defPageSize,
+						page:defPageNumber
+					}
+					loadDetailTable(opt);
+				});
+			}
 			//获取流量数据
 			flow();
 //			//渲染流量
@@ -1896,6 +1994,7 @@ define(['jquery','functions'],function($,_f){
 	          		};
 				}
 	      });
+	      
 	};
 	//信道分析--扫描按钮
 	var analyze = function(){
