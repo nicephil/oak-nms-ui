@@ -64,14 +64,66 @@ var isMac = function(val){
 	if(val=='' || val==undefined){
 		return true;
 	}
+	var re1 = /^(([A-Fa-f0-9]{2}[-]){5}[A-Fa-f0-9]{2}[,]?)+$/;//输入
+	
 	//var mac_rule = /[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}/;
-    	var mac_rule = /^(([A-Fa-f0-9]{2}[:]){5}[A-Fa-f0-9]{2}[,]?)+$/;
-    if(!mac_rule.test(val))
-    {
-        return false;
-    }else{
-   	 	return true;
-    }
+    
+//  if()
+//  {
+//     return false;
+//  }else{
+// 	   return true;
+//  }
+	if(!re1.test(val)){
+		return false ;
+	}else{
+		return true;
+	}
+}
+//表单格式转换
+var convetMac = function(val){
+	if(val=='' || val==undefined){
+		return '';
+	}
+	var re2 =  /^(([A-Fa-f0-9]{3}[:.\-]?){3}[A-Fa-f0-9]{3}[,]?)+$/;//粘贴
+	var re3 = /^(([A-Fa-f0-9]{2}[:.\-]?){5}[A-Fa-f0-9]{2}[,]?)+$/;//粘贴
+	var reg = /[:.\-]/g;
+	if(!re2.test(val) && !re3.test(val)){
+		return val;
+	}else{
+		var str = val.replace(reg,'');
+		console.log(str)
+		var res = '';
+        	for(var i=0,len=str.length;i<len;i++){
+		    res += str[i];
+		    if(i < len -2 ){
+			    if(i % 2 == 1) {
+			    		 res = res + '-';
+			    };
+		    };
+		};
+		val = res;
+		console.log(val);
+		return val;
+		
+		//return true;
+	}
+}
+//失焦渲染Mac
+var writeMac = function(data){
+	console.log(data)
+	console.log($(this))
+	$(this).val(data);
+}
+
+//验证中英文数字
+var isVerifyName = function(username){
+	var reg = /^(\w|[\u4E00-\u9FA5])*$/; 
+	if(username.match(reg)){
+		return true;
+	}else{
+		return false;
+	}
 }
 
 //获取表单数据
@@ -378,13 +430,13 @@ var verification = function(phone){
 //mac输入样式   
 var verificationMac = function(mac){
 		mac.attr('maxlength','17');
-		if(event.keyCode==17){
+		if(event.keyCode==8){
 			return;
 		};
 		var val = '';
 		if(mac.val().length==2 || mac.val().length==5|| mac.val().length==8|| mac.val().length==11|| mac.val().length==14){
 			 val += mac.val();
-			 val+=':'
+			 val+='-';
 			 mac.val(val);
 		}
 	
@@ -469,7 +521,7 @@ var toast = function(title,text,icon,afterHidden){
 var getNetworkList = function(data,networkName){
 	var type = [
 		'VLAN Untagged',
-		'VLAN',
+		'VLAN ',
 		'GRE'
 	];
 	var root = {}
@@ -496,7 +548,10 @@ var getNetworkList = function(data,networkName){
 	//解析数据
 	$.each(data.list,function(index,val){
 		val.text = val.ssid_name;
-		delete val.ssid_name;
+		if(val.text.length>15){
+			val.text = val.ssid_name.substring(0,15)+'...';
+		}
+		delete val.ssid_name;;
 		if(val.type==0){
 			//vlan全为1的情况
 			if(vlan==true){
@@ -560,6 +615,14 @@ var getSite = function(){
 		}
 	}
 	return site;
+}
+//设置缓存
+var setCache = function(cls,key,val){
+   $(cls).data(key,val);
+}
+//获取缓存
+var getCache = function(cls,key){
+	return $(cls).data(key);
 }
 //遮罩层
 var MaskUtil = (function(){   

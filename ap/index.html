@@ -383,7 +383,7 @@
 						 </div>
 						 <div class="ip-info-div">
 							 <span class="ip-info-title">DHCP:</span>
-							 <select class="left-channel-select ip-input" name="ip_config_dhcp">
+							 <select class="left-channel-select ip-input ap-xxx" name="ip_config_dhcp">
 								 <option value="0" >启用</option>
 								 <option value="1">静态</option>
 							 </select>
@@ -408,14 +408,14 @@
 					 <!--左右两侧-->
 					 <div class="ip-right-info" >
 
-						 <div class="ip-info-left ip-info-border " style="width:45%;height: 190px;margin-top: 10px;">
+						 <div class="ip-info-left ip-info-border 2G-left-info" style="width:45%;height: 190px;margin-top: 10px;">
 							 <div class="ip-small-box-left" style="display: inline-block;">2.4G</div>
 							 <div class="cont-box02-left" style="margin-top: 10px">
 								 <div class="left-channel ip-info-div-1">
 									 <span class="left-title">信道:</span>
 									 <select class="left-channel-select ip-input" name="ip_r24_channel">
-										 <option value="1" >默认</option>
-										 <option value="0">关闭</option>
+										 <!--<option value="1">默认</option>
+										 <option value="0">关闭</option>-->
 									 </select>
 								 </div>
 								 <div class="left-agreement ip-info-div-1">
@@ -429,6 +429,7 @@
 									 <span class="left-title">带宽:</span>
 									 <select class="left-bandwidth-select ip-input" name="ip_r24_bandwidth">
 										 <option value="20">20MHZ</option>
+										 <option value="10">10MHZ</option>
 									 </select>
 									 <select class="left-bandwidth-select-bottom ip-input" style="display: none;">
 										 <option value="0">自动</option>
@@ -481,32 +482,45 @@
 							 </div>
 
 						 </div>
-						 <div class="ip-info-left ip-info-border " style="width:45%;height: 190px;margin-top: 10px;float: right;">
+						 <!--5G-->
+						 <div class="ip-info-left ip-info-border ip-info-right-5G" style="width:45%;height: 190px;margin-top: 10px;float: right;">
 							 <div class="ip-small-box-left" style="display: inline-block;">5G</div>
 							 <div class="cont-box02-left" style="margin-top: 10px">
 								 <div class="left-channel ip-info-div-1">
 									 <span class="left-title">信道:</span>
-									 <select class="left-channel-select ip-input" name="ip_r5_status">
-										 <option value="1" >默认</option>
-										 <option value="0">关闭</option>
+									 <select class="left-channel-select ip-input" name="ip_r5_channel">
+											<option value="-1">关闭</option>
+											<option value="0">自动</option>
+											<option value="36">36</option>
+											<option value="40">40</option>
+											<option value="44">44</option>
+											<option value="48">48</option>
+											<option value="149">149</option>
+											<option value="153">153</option>
+											<option value="157">157</option>
+											<option value="161">161</option>
+											<option value="165">165</option>
 									 </select>
 								 </div>
 								 <div class="left-agreement ip-info-div-1">
 									 <span class="left-title">协议:</span>
-									 <select class="left-agreement-select ip-input" name="ip_r5_mode">
-										 <option value="4">802.11b/g/n</option>
-										 <option value="12">802.11ng</option>
+									 <select class="left-agreement-select ip-input 5G-right-title" name="ip_r5_mode">
+										 <option value="9">802.11na/a</option>
+										 <option value="16">802.11ac</option>
 									 </select>
 								 </div>
 								 <div class="left-bandwidth ip-info-div-1">
 									 <span class="left-title">带宽:</span>
 									 <select class="left-bandwidth-select ip-input" name="ip_r5_bandwidth">
-										 <option value="20">20MHZ</option>
+											<option value="0">自动</option>
+											<option value="20">20MHZ</option>
+											<option value="40">40MHZ</option>
 									 </select>
 									 <select class="left-bandwidth-select-bottom ip-input" style="display: none;">
-										 <option value="0">自动</option>
-										 <option value="20">20MHZ</option>
-										 <option value="40">40MHZ</option>
+											<option value="0">自动</option>
+											<option value="20">20MHZ</option>
+											<option value="40">40MHZ</option>
+											<option value="80">80MHZ</option>
 									 </select>
 								 </div>
 								 <div class="left-power ip-info-div-1">

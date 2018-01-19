@@ -230,7 +230,7 @@ define(['jquery','functions'],function($,_f){
 	var insertNodata =  function(){
 		$(table).datagrid('getPanel').find('.datagrid-body').append($('<div class="nodata"><img src="public/images/nodata.png" /><div>没有可以显示的数据</div></div>'));
 		var height = $('.app-table').height();
-		$('.nodata').css({
+		$('.app-table .nodata').css({
 			'height':height-50+'px',
 			'line-height':height-50+'px'
 		});

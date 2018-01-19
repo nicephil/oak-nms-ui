@@ -9,7 +9,7 @@
  * @Version:       		V1.0 
  * @Copyright        	峥嵘时代
 /*========================================================*/
-define(['jquery','echarts','functions'],function($,echarts,_f){
+define(['echarts','functions'],function(echarts,_f){
 	/*******全局变量*******/
 	//弹窗容器
 	var container = $('body');
@@ -23,15 +23,18 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 	//用户树DOM节点
 	var userTree = '.win-select-user-network .usertree';
 	//-----------
-	// ssidInfo : 记录对象
+	// SSID : 记录对象
 	// @baseInfo : 基本信息记录
-	// @ssidInfo : 无线接入点记录
+	// @apInfo : 无线接入点记录
 	// @accessInfo : 访问控制记录
 	// @optionsInfo : 更多选项记录
 	// @portalInfo : Portal信息记录
 	// @userInfo : 选择用户记录
 	// ------------
-	var ssidInfo = {};
+	var SSID = {};
+	
+	//验证结果
+	var verifyResult = {};
 	
 	//节点集合
 	var nodes = '';
@@ -39,8 +42,17 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 	//左侧面板对象
 	var leftPanel = '';
 	
+	var myChartOne = '';
+	
+	var myChartTwo = '';
+	
     /*初始化*/
 	var init = function(){
+		//初始化流量对象
+		myChartOne = echarts.init(document.getElementById('network-traffic-echarts'));
+		
+		//初始化客户端对象
+		myChartTwo = echarts.init(document.getElementById('network-client-echarts'));
 
 		//初始化radio
 		initRadio();
@@ -98,6 +110,14 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 		});
 	}
 	
+	/*关闭摘要保存状态*/
+	var setCloseAbsBase = function(){
+		$('.edit-base').removeClass('btn-save-icon');
+		$('.edit-base').addClass('btn-edit-icon');
+		$('.abs-row .info-label').removeClass('none');
+		$('.abs-row .info-input').addClass('none');
+	}
+	
 	/*编辑摘要基本信息*/
 	var switchAbstractBase = function(){
 		
@@ -108,6 +128,19 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 				$('.edit-base').addClass('btn-save-icon');
 				$('.abs-row .info-label').addClass('none');
 				$('.abs-row .info-input').removeClass('none');
+				
+				//屏蔽密码
+				var node = getCache('.network-wireless-clients','node');
+				//当有key值时auth=5 cipher=5
+				if(node.auth==5 && node.cipher ==5){
+					$('.abs-password .info-label').addClass('none');
+					$('.abs-password .info-input').removeClass('none');
+				}else{
+					//当无KEY值时
+					$('.abs-password .info-label').removeClass('none');
+					$('.abs-password .info-input').val('');
+					$('.abs-password .info-input').addClass('none');
+				}
 			}else{
 				$('.edit-base').removeClass('btn-save-icon');
 				$('.edit-base').addClass('btn-edit-icon');
@@ -124,9 +157,9 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 	/*
 	 * 获取流量统计数据--当树onselect时加载此函数
 	 * */
-	var getFlow = function(node,func,options){console.log(node);
+	var getFlow = function(node,func,options){
 		if(node!=null){
-			var url = _IFA['ap_get_device_ﬂow_stat']+node.id+'/flow';
+			var url = _IFA['network_flow_ssids']+node.id+'/flow';
 			if(options!=undefined){
 				if(options.length>0){
 					url = url+'?'+options;
@@ -152,11 +185,11 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 							chartOne(data);
 						});
 						break;
-					case 1:
+					case 1:console.log(1);
 					    var tab = $(this).tabs('getTab',1);
 					    $(tab).panel({
 					    	href:'network/abstract.html',
-					    	onLoad:function(){
+					    	onLoad:function(){console.log(2);
 					    		//加载基本信息
 					    		var node = $(tree).tree('getSelected');
 					    		setAbstractInfo(node);
@@ -179,11 +212,36 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 	
 	//定义总览流量图表
 	var chartOne = function(data){
-	    console.log(data);
-        var myChartOne = echarts.init(document.getElementById('network-traffic-echarts'));
 
         var colors = ['#8ec6ad', '#d14a61', '#675bba'];
-
+        
+        var tx = [];
+        var rx = [];
+        var total = [];
+        var dataX = [];
+        var result = [];
+        
+        for(var i=0; i<25;i++) {
+        	if(i>data.list.length-1){
+        		tx=0;
+        		rx=0;
+        		total=0;
+        		timestamp=0;
+        	}else{
+        		var node = data.list[i];
+        		tx=getMB(node.tx_bytes);
+        		rx=getMB(node.rx_bytes);
+        		total=getMB(node.total_bytes);
+        		timestamp=node.timestamp;
+        	}
+        	dataX.push({
+        		'tx':tx,
+        		'rx':rx,
+        		'total':total,
+        		'timestamp':timestamp
+        	});
+        };
+        dataX  = getXdate(dataX,25);
         optionOne = {
             title: {
             	text:'流量',
@@ -201,7 +259,7 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
                 top: 40,
                 bottom: 40,
                 width:630,
-                left:50
+                left:70
             },
             xAxis: [
                 {
@@ -210,7 +268,7 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
                     axisTick:{
                         alignWithLabel: true,
                     },
-                    data: [ "Noon", "3PM", "6PM", "9PM", "Ninght", "3AM", "6AM", "9AM","Noon"]
+                    data: dataX.mark
                 }
             ],
             yAxis: [
@@ -218,8 +276,10 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
                     type: 'value',
                     nameGap: 10,
                     axisLabel: {
-                        formatter: '{value} M'
-                    }
+                        formatter: function(value,index){
+                        	return value+'M';
+                        }
+                    },
                 }
             ],
             series: [
@@ -238,7 +298,7 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
                         }
                     },
                     connectNulls: true,
-                    data: [6, 9, 15, 26, 28]
+                    data: dataX.total
                 },
                 {
                     name:'Tx',
@@ -246,7 +306,7 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
                     xAxisIndex: 0,
                     smooth: true,
                     symbol: 'none',
-                    data: [2, 5, 3, 15, 12]
+                    data: dataX.tx
                 },
                 {
                     name:'Rx',
@@ -254,17 +314,13 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
                     xAxisIndex: 0,
                     smooth: true,
                     symbol: 'none',
-                    data: [5, 5, 11, 18, 20]
+                    data: dataX.rx
                 }
 
             ]
         };
 
-        setInterval(function () {
-            myChartOne.setOption(optionOne, true);
-        },500);
-
-        var myChartTwo = echarts.init(document.getElementById('network-client-echarts'));
+        myChartOne.setOption(optionOne, true);
 
         var colors = ['#8ec6ad', '#d14a61', '#675bba'];
 
@@ -358,17 +414,30 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 		var number = 0;
 		
 		$.each(nodes, function(index,data) {
-			if(tree==apTree){
-				number += data.device_number;
+			var dom = $(tree).tree('getParent',data.target);
+			//非根节点
+			if(dom!=null){
+				if(dom.checked==false){
+					if(tree==apTree){
+						number += data.device_number;
+					}else{
+						number += data.user_number;
+					}
+				}
 			}else{
-				number += data.user_number;
+				//跟节点
+				if(tree==apTree){
+					number += data.device_number;
+				}else{
+					number += data.user_number;
+				}
 			}
 		});
 		
 		if(tree==apTree){
-			ssidInfo.ap_number = number;
+			SSID.ap_number = number;
 		}else{
-			ssidInfo.user_number = number;
+			SSID.user_number = number;
 		}
 		
 		$('.select-number').text(number);
@@ -429,7 +498,7 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 			});
 		}
 		if(result.length==0){
-			result.push(0);
+			result=[];
 		}
 		return $.unique(result);
 	};
@@ -440,7 +509,7 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 		var flag = false;
 		
 		//配置无线暂时不验证
-		if(ssidInfo.initStatus==1){
+		if(SSID.initStatus==1){
 			return false;
 		}
 		
@@ -579,10 +648,13 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 	}
 	
 	/*
-	 * 获取AP列表
+	 * 获取AP设备列表
 	 */
-	var getApList = function(func){
-		var url = _IFA['ap_groups_list']+getSite().id;
+	var getApList = function(func,ssid){
+		var url = _IFA['ap_table_list']+'?org_ids='+getSite().id;
+		if(ssid!=undefined){
+			url = url+'&ssid_id='+ssid;
+		}
 		var type = 'GET';
 		var data = '';
 		_ajax(url,type,data,function(data){
@@ -591,20 +663,11 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 	}
 	
 	/*获取AP设备数*/
-	var getApNumber = function(ids){
+	var getApNumber = function(ids,func){
 		getApList(function(data){
-			if(ids.length){
-				$.each(ids,function(index,val){
-					if(val==0){
-						//全选
-						tmpText = '所有，共'+'个AP';
-						return false;
-					}else{
-						'等共'+ids.length+'个组，共计'+'个AP';
-						return false;
-					}
-				});
-			};
+			console.log(ids);
+			console.log(data);
+			func();
 		});
 	}
 	
@@ -612,35 +675,54 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 	 * 设置摘要AP组
 	 * */
 	var setAbstractAp = function(ele,node){
-		getSsidDetail(node,function(data){
-			var tmpText = '---';
-			if(data.network_policy_ids.length){
-				$.each(data.network_policy_ids,function(index,val){
-					if(val==0){
-						//全选
-						tmpText = '所有，共'+data.ap_number+'个AP';
-						return false;
-					}else{
-						'等共'+data.network_policy_ids.length+'个组，共计'+'个AP';
-						return false;
+		getApList(function(data){console.log(data);
+			var tmpText = '无';
+			var wireless = getCache('.network-wireless-clients','node');
+			if(data.total>0){
+				//获取组个数
+				var group_number = [];
+				var group_name = '';
+				$.each(data.list,function(index,ap){
+					if(index==0){
+						group_name = ap.group_name;
 					}
+					group_number.push(ap.group_id);
 				});
-			};
-			console.log(node);
-			console.log(data);
+				group_number = $.unique(group_number);
+				
+				tmpText = group_name.substring(1)+'等共'+group_number.length+'个组，共计'+data.total+'个AP';
+			}
+			if(wireless != undefined && wireless.network_policy_ids[0]==0){console.log(group_number);
+				if(group_number != undefined){
+					tmpText = '所有，共'+group_number.length+'个组，共计'+data.total+'个AP';
+				}
+			}
+			
 			$(ele).text(tmpText);
-		});
+		},node.id);
 	}
 	
 	/*
 	 * 设置摘要用户组
+	 * 待验证
 	 * */
 	var setAbstractUser = function(ele,node){
-		
+		getGroups(function(data){
+			var tmpText = '无';
+			var group = getCache('.network-wireless-clients','node');
+			console.log(group);
+			console.log(data);
+			if(group.user_group_ids.length>1 && group.user_group_ids[0]!=0){
+				tmpText = group.substring(1)+'等共'+data.total+'个组，共计'+group.user_number+'个用户';
+			}else if(group.user_group_ids[0]==0){
+				tmpText = '所有，共'+data.total+'个组，共计'+group.user_number+'个用户';
+			}
+			$(ele).text(tmpText);
+		});
 	}
 	
 	/*设置摘要基本信息*/
-	var setAbstractInfo = function(node){console.log(node);
+	var setAbstractInfo = function(node){
 		//更新ssid
 		$('.ssid_name_label').text(node.profile_name);
 		$('input[name="ssid_name"]').val(node.profile_name);
@@ -653,7 +735,6 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 		 //设置密码
 		 $('.abs_key_label').text(node.key);
 		 $('input[name="abs_key"]').val(node.key);
-		 
 	
 		 /*
 		  * VPW模式： auth=6, cipher=0
@@ -692,17 +773,180 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 	
 	/*设置默认选中节点*/
 	var setDefaultNode = function(data){
-		var selected = $(tree).tree('getSelected');console.log(selected);
+		var selected = $(tree).tree('getSelected');
 		if(selected==null){
-			$.each(data[0].children,function(index,data){
-				if(data.children.length>0){
-					var node = data.children[0];
-					$(tree).tree('select',node.target);
-					return false;
-				}
-			});	
+			var children = data[0].children;
+			if(children.length>0){
+				$.each(children,function(index,node){
+					//数字节点
+					if($.isNumeric(node.id)){
+						$(tree).tree('select',node.target);
+						return false;
+					}else{
+						//非数字节点
+						if(node.children.length>0){
+							$.each(node.children, function(i,n) {
+								$(tree).tree('select',n.target);
+								return false;
+							});
+							return false;
+						}
+					}
+					
+				});	
+			}
 		}
 	};
+	
+	  
+    /*获取MB*/
+   	var getMB = function(k){
+   		var mb = k/1024/1024;
+   		return mb.toFixed(2);
+   	}
+   
+    /*
+     * 设置标记
+     */
+    var setMark = function(index){
+    	var result = '';
+    	var arr = [
+    		{id:0,mark:'Noon'},
+    		{id:3,mark:'3PM'},
+    		{id:6,mark:'6PM'},
+    		{id:9,mark:'9PM'},
+    		{id:12,mark:'Night'},
+    		{id:15,mark:'3AM'},
+    		{id:18,mark:'6AM'},
+    		{id:21,mark:'9AM'},
+    		{id:24,mark:'Noon'}
+    	];
+    	$.each(arr,function(id,data){
+    		if(data.id==index){
+    			result = data.mark;
+    			return false;
+    		}
+    	});
+    	return result;
+    }
+   	/*
+   	 * 获取时间轴节点
+   	 * @data 当前时间数组-后端返回值
+   	 * @hour 设定时间间隔
+   	 * */
+  	var getXdate = function(data,hour){
+	  	var dataX = [];
+	  	var res = {};
+	  	res.tx = [];
+	  	res.rx = [];
+	  	res.total = [];
+	  	res.timestamp = [];
+	  	res.mark = [];
+	  
+	  	var time = new Date();
+	  	var mHour = 60*60*1000;
+	  	
+	  	//清空分秒
+	  	time.setMinutes(0);
+	  	time.setSeconds(0);
+	  	time.setMilliseconds(0);
+	  	
+	  	//获取时间戳
+	  	var timeStamp = time.getTime();
+	  	var dehour = hour*mHour;
+	  	
+	  	//前推hour小时
+	  	var x = parseInt(timeStamp)-parseInt(dehour);
+	  	time.setTime(x);
+	  	
+	  	timeStamp = time.getTime();
+	  	
+	  	for(var i=0;i<hour;i++){
+	  	  var tx = timeStamp+ i*mHour;
+		  dataX.push(tx);
+	  	}
+	  	var ks = {
+	  		id:0,
+	  	}
+	  	$.each(dataX,function(index,node){
+	  		var flag = false;
+	  		var result = '';
+	  		$.each(data,function(i,n){
+	  			if(node==n.timestamp){
+	  				flag = true;
+	  				result = n;
+	  				return false;
+	  			}
+	  		});
+	  		
+	  		if(flag==false){
+	  			res.tx.push(0);
+	  			res.rx.push(0);
+	  			res.total.push(0);
+	  			res.timestamp.push(0);
+	  			res.mark.push(setMark(index));
+	  		}else{
+	  			res.tx.push(result.tx);
+	  			res.rx.push(result.rx);
+	  			res.total.push(result.total);
+	  			res.timestamp.push(result.timestamp);
+	  			res.mark.push(setMark(index));
+	  		}
+	  	});
+	  	return res;
+  	}
+	
+	/*
+	 * 获取当前时间戳
+	 * 取整数
+	 * */
+	var getTimeStamp = function(day){
+		var date = new Date();
+		if(day!=undefined){
+			date.setDate(date.getDate()+day);
+			return date.getTime();
+		}
+		return date.getTime();
+	}
+	
+	/*时间戳转换日期*/
+	var getDate = function(time){
+		var date = new Date(time);
+		var year = date.getFullYear();
+		var month = date.getMonth();
+		var day = date.getDay();
+		var hour = date.getHours();
+		var minute = date.getMinutes();
+		var second = date.getSeconds();
+		return year;
+		
+	}
+	
+	/*选中树节点*/
+	var selectNode = function(node,data){
+		var findNode = $(tree).tree('find', node.id);
+		console.log(findNode);
+		if(findNode!=null){
+			$(tree).tree('select', findNode.target);
+		}else{
+			setDefaultNode(data);
+		}
+	}
+	
+	/*获取网络详情*/
+	var getNetworkDetail = function(node,callback){
+		var url = _IFA['network_detail_ssids']+node.id;
+		var type = 'GET';
+		var data = '';
+		_ajax(url,type,data,function(data){
+			//绑定树的选中节点信息
+			setCache('.network-wireless-clients','node',data);
+			//回调
+			if(callback!=undefined){
+				callback(data);
+			}
+		});
+	}
 	
 	/*重新加载数据*/
 	var loadTree = function(){
@@ -711,6 +955,8 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 		_ajax(url,'GET','',function(data){
 			if(data.error_code==0){
 				var root = getNetworkList(data,'缺省网络');
+				var selected = $(tree).tree('getSelected');
+				
 				$(tree).tree({
 					data:[root],
 					onLoadSuccess:function(node,data){
@@ -723,28 +969,39 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 						//设置停用图标
 						setDisabled(data);
 						//选中默认节点
-						setDefaultNode(data);
-					},
-					onBeforeSelect:function(node){
-						//屏蔽父节点
-						if(isNaN(node.id)){
-							return false;
-						};
-						//屏蔽缺省网络
-						if(node.id==0){
-							return false;
+						if(selected!=null){
+							selectNode(selected,data);
+						}else{
+							setDefaultNode(data);
 						}
 					},
-					onSelect:function(node){console.log(node);
+					onBeforeSelect:function(node){
+						if(node!=null){
+							//屏蔽父节点
+							if(isNaN(node.id)){
+								return false;
+							};
+							//屏蔽缺省网络
+							if(node.id==0){
+								return false;
+							}
+						}
+						
+					},
+					onSelect:function(node){
+						//获取网络详情
+						getNetworkDetail(node);
+						
 						//初始化总览
-						var timestamp1 = (new Date()).valueOf()-86400000;//获取前一天的时间戳
-						console.log(timestamp1);
 						var data = getFlow(node,function(data){
 							chartOne(data);
-						},'begin_time='+1515729600);
+						},'begin_time='+getTimeStamp(-1));
+						if(node!=null){
+							setCloseAbsBase();
+							//设置摘要信息
+							setAbstractInfo(node);console.log(node);
+						}
 						
-						//设置摘要信息
-						setAbstractInfo(node);
 					}
 				});
 				
@@ -897,10 +1154,10 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 		var tmpData = '';
 		
 		//ssid名称
-		$('.ssid-label').text(ssidInfo.ssid_name);
+		$('.ssid-label').text(SSID.ssid_name);
 		
 		//射频
-		switch(ssidInfo.band){
+		switch(SSID.band){
 			case '1':
 			$('.frequency-label').text('仅2.4G');
 			break;
@@ -911,9 +1168,8 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 			$('.frequency-label').text('双频');
 			break;
 		}
-
 		//ssid_hide状态
-		switch(ssidInfo.ssid_hide){
+		switch(SSID.baseInfo.ssid_hide){
 			case 0:
 			$('.hide-ssid-label').text('否');
 			break;
@@ -923,7 +1179,7 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 		}
 		
 		//带宽优先
-		switch(ssidInfo.bandwidth_priority){
+		switch(SSID.bandwidth_priority){
 			case '1':
 			$('.bandwidth-label').text('低');
 			break;
@@ -934,16 +1190,16 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 			$('.bandwidth-label').text('高');
 			break;
 		}
-		console.log(ssidInfo.model);
+		console.log(SSID.model);
 		//模式
-		switch(ssidInfo.model){
+		switch(SSID.model){
 			case "1":
 			$('.auth-label').text('虚拟私有无线网络(VPW)');
 			$('.key-label').text('---');
 			break;
 			case "2":{
 				$('.auth-label').text('WPA/WPA2共享密码');
-				$('.key-label').text(ssidInfo.key);console.log('*****');
+				$('.key-label').text(SSID.key);console.log('*****');
 				break;
 			}
 			case "3":
@@ -953,30 +1209,35 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 		}
 		
 		//AP组
-		var aps = ssidInfo.network_policy_ids;
-		$.each(aps,function(index,data){
-			if(data==0){
-				result = '所有，共'+ssidInfo.ap_number+'个AP';
-				return false;
-			}else{
-				//获取第一个AP的名称
-				result = ssidInfo.first_ap.text+'等共'+aps.length+'个组，共计'+ssidInfo.ap_number+'个AP';
-				return false;
-			}
-		});
-		$('.ap-group-label').text(result);
-		
-		//用户组
-		var users = ssidInfo.user_group_ids;
-		if(users!=undefined){
-			$.each(users,function(index,data){
+		var aps = SSID.network_policy_ids;
+		if(aps.length>0){
+			$.each(aps,function(index,data){
 				if(data==0){
-					ssidInfo.user_number=ssidInfo.user_number==undefined?0:ssidInfo.user_number;
-					result = '所有，共'+ssidInfo.user_number+'个用户';
+					result = '所有，共'+SSID.ap_number+'个AP';
 					return false;
 				}else{
 					//获取第一个AP的名称
-					result = ssidInfo.first_user.text+'等共'+users.length+'个组，共计'+ssidInfo.user_number+'个用户';
+					result = SSID.first_ap.text+'等共'+aps.length+'个组，共计'+SSID.ap_number+'个AP';
+					return false;
+				}
+			});
+		}else{
+			result = '无，共0个AP';
+		}
+		
+		$('.ap-group-label').text(result);
+		
+		//用户组
+		var users = SSID.user_group_ids;
+		if(users!=undefined && users.length>0){
+			$.each(users,function(index,data){
+				if(data==0){
+					SSID.user_number=SSID.user_number==undefined?0:SSID.user_number;
+					result = '所有，共'+SSID.user_number+'个用户';
+					return false;
+				}else{
+					//获取第一个AP的名称
+					result = SSID.first_user.text+'等共'+users.length+'个组，共计'+SSID.user_number+'个用户';
 					return false;
 				}
 			});
@@ -1020,16 +1281,16 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 	
 	/*验证微信字段*/
 	var vertifyWeixin = function(){
-		if(ssidInfo.portalType==4){
+		if(SSID.portalType==4){
 			var shopId = $('input[name="shop_id"]');
 			var appId = $('input[name="app_id"]');
 			var secretKey = $('input[name="secret_key"]');
 			if(shopId.val()=='' || appId.val()=='' || secretKey.val()==''){
 				return false;
 			}else{
-				ssidInfo.shop_id = shopId.val();
-				ssidInfo.app_id = appId.val();
-				ssidInfo.secret_key = secretKey.val();
+				SSID.shop_id = shopId.val();
+				SSID.app_id = appId.val();
+				SSID.secret_key = secretKey.val();
 			}
 		}
 		return true;
@@ -1040,7 +1301,7 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 		var res = $('input[name="loginTime"]:checked');
 		switch(res.val()){
 			case '1':{
-				ssidInfo.timeout_interval = -1;
+				SSID.timeout_interval = -1;
 				break;
 			}
 			case '2':{
@@ -1061,11 +1322,11 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 					return false;
 				}
 				
-				ssidInfo.timeout_interval = time;
+				SSID.timeout_interval = time;
 				break;
 			}
 			case '3':{
-				ssidInfo.timeout_interval = 365*24*60*60;
+				SSID.timeout_interval = 365*24*60*60;
 				break;
 			}
 		}
@@ -1076,8 +1337,8 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 	var setAccessPolicy = function(){
 		var client = '';
 		var portal = '';
-		if(ssidInfo.model!=1 && ssidInfo.otherclient==1){
-			switch(ssidInfo.portalType){
+		if(SSID.model!=1 && SSID.otherclient==1){
+			switch(SSID.portalType){
 				case '1':
 				portal = '账户密码认证';
 				break;
@@ -1094,7 +1355,7 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 				portal = '无';
 				
 			}
-			switch(ssidInfo.otherclient){
+			switch(SSID.otherclient){
 				case '1':
 				client = '需要Portal认证';
 				break;
@@ -1107,11 +1368,24 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 				default:
 				client = '无';
 			}
-			
 			$('.need-portal-label').text(client);
 			$('.user-portal-label').text(portal);
 		}else{
-			$('.need-portal-label').text('无');
+			
+			switch(SSID.otherclient){
+				case '1':
+				client = '需要Portal认证';
+				break;
+				case '2':
+				client = '拒绝';
+				break;
+				case '3':
+				client = '允许';
+				break;
+				default:
+				client = '无';
+			}
+			$('.need-portal-label').text(client);
 			$('.user-portal-label').text('无');
 		}
 		
@@ -1126,8 +1400,8 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 			if(data.error_code==0){
 				//写入模板ID
 				$.each(data.list, function(index,node) {
-					if(node.auth_mode==ssidInfo.auth_mode){
-						ssidInfo.portal_template_id = node.id;
+					if(node.auth_mode==SSID.auth_mode){
+						SSID.portal_template_id = node.id;
 						return false;
 					}
 				});
@@ -1145,24 +1419,31 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 		var win = $(this).parent('.network-footer').parent('form').parent('div');
 		var info = {
 			org_id:getSite().id,
-			profile_name:ssidInfo.ssid_name
+			profile_name:SSID.ssid_name
 		}
-		$.extend(ssidInfo,info);
+		$.extend(SSID,info);
 		
 		//新增
 		var url = _IFA['network_create_ssids'];
 		var type = 'POST';
 		
-		ssidInfo.send_content = $('.options-textarea').val();
+		SSID.send_content = $('.options-textarea').val();
 		
 		//配置
-		if(ssidInfo.initStatus==1){
-			ssidInfo.ssid_id = ssidInfo.update_id;
+		if(SSID.initStatus==1){
+			SSID.ssid_id = SSID.update_id;
 		}
 		
-		var data = JSON.stringify(ssidInfo);
+		//踢出非wpa的key
+		if(SSID.model!=2){
+			delete SSID.key;
+			delete SSID.baseInfo.key;
+		}
+		
+		var data = JSON.stringify(SSID);
 		
 		_ajax(url,type,data,function(data){
+			
 			if(data.error_code==0){
 				//重载树
 				loadTree();
@@ -1174,7 +1455,7 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 					var sendContent = {};
 					sendContent.id = data.id;
 					
-					sendContent.content = ssidInfo.send_content;console.log(ssidInfo);
+					sendContent.content = SSID.send_content;console.log(SSID);
 					sendMail(sendContent);
 				}
 				
@@ -1244,25 +1525,29 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 		var abs_key = $('input[name="abs_key"]').val();
 		var band_text = $(".selector").find("option:selected").text();
 		
-		var node = $(tree).tree('getSelected');
+		var currentNode = getCache('.network-wireless-clients','node');
 		var url = _IFA['network_update_ssids'];
 		var type = 'POST';
-		var data = JSON.stringify({
+		var data = {
 			org_id:getSite().id,
-			ssid_id:+node.id,
 			profile_name:ssid_name,
 			ssid_name:ssid_name,
 			band:abs_band,
-			key:abs_key,
-			auth:node.auth,
-			cipher:node.cipher
-		});
-		_ajax(url,type,data,function(data){
+			ssid_id:currentNode.id
+		};
+		if(abs_key!=''){
+			$.extend(currentNode,data,{key:abs_key});
+		}else{
+			$.extend(currentNode,data);
+		}
+		currentNode = JSON.stringify(currentNode);
+		_ajax(url,type,currentNode,function(data){
 			if(data.error_code==0){
 				//设置静态数据
 				$('.ssid_name_label').text(ssid_name);
 				$('.abs_band_label').text(band_text);
 				$('.abs_key_label').text(abs_key);
+				loadTree();
 				toast('提示消息','操作成功','success');
 			}else{
 				toast('提示消息',data.error_message,'error');
@@ -1273,8 +1558,8 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 	/*返现新增无线数据*/
 	var loadSsidInfo = function(init){
 		if(init==true){
-			$('input[name="ssid_name"]').val(ssidInfo.ssid_name);
-			setRadioStatus('band',ssidInfo.band);
+			$('input[name="ssid_name"]').val(SSID.ssid_name);
+			setRadioStatus('band',SSID.band);
 		}
 	}
 	
@@ -1300,7 +1585,12 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 			first_ap:first_ap,
 			network_policy_ids:apChecked
 		};
-		$.extend(ssidInfo,result);
+		console.log(result);
+		//分类设置无线网络数据
+		SSID.apInfo = result;
+		
+		//合并全部
+		$.extend(SSID,result);
 	}
 	
 	/*销毁所有关于创建无线网络的窗口*/
@@ -1353,12 +1643,12 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 		var combo = $('.select-user-combotree').combotree('tree');	
 		var res = combo.tree('getChecked');	console.log(res);
    		if(res.length>0){
-   			ssidInfo.white_list_user_group_ids = [];
+   			SSID.white_list_user_group_ids = [];
    			$.each(res,function(index,data){
-   				ssidInfo.white_list_user_group_ids.push(data.id);
+   				SSID.white_list_user_group_ids.push(data.id);
    			});
    		}else{
-   			ssidInfo.white_list_user_group_ids = [];
+   			SSID.white_list_user_group_ids = [];
    		}
 	}
 	
@@ -1366,7 +1656,7 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 	 * 反选访问控制-用户组
 	 * */
 	var setAccessUserGroup = function(){
-		var list = ssidInfo.white_list_user_group_ids;console.log(list);
+		var list = SSID.white_list_user_group_ids;console.log(list);
 		if(list.length>0){
 			 $('.select-user-combotree').combotree('setValues',list);	
 		}
@@ -1379,18 +1669,18 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 	 * 允许访问:              enable_access=1 & enable_portal=0
 	 * */
 	var resetOtherClient = function(){
-		var access = ssidInfo.enable_access;
-		var portal = ssidInfo.enable_portal;
+		var access = SSID.enable_access;
+		var portal = SSID.enable_portal;
 		var name  = 'otherclient';
 		
 		if(access==1 && portal ==1){
-			ssidInfo.otherclient = 1;
+			SSID.otherclient = 1;
 			selectRadio(name,1);
 		}else if(access==0 && portal==0){
-			ssidInfo.otherclient = 2;
+			SSID.otherclient = 2;
 			selectRadio(name,2);
 		}else if(access=1 && portal==0){
-			ssidInfo.otherclient = 3;
+			SSID.otherclient = 3;
 			selectRadio(name,3);
 		}
 	}
@@ -1400,18 +1690,21 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 		var result = getFormValue('#access-network');
 		switch(result.otherclient){
 			case '1':{
-				ssidInfo.enable_access = 1;
-				ssidInfo.enable_portal = 1;
+				SSID.enable_access = 1;
+				SSID.enable_portal = 1;
+				SSID.otherclient = 1;
 				break;
 			}
 			case '2':{
-				ssidInfo.enable_access = 0;
-				ssidInfo.enable_portal = 0;
+				SSID.enable_access = 0;
+				SSID.enable_portal = 0;
+				SSID.otherclient = 2;
 				break;
 			}
 			case '3':{
-				ssidInfo.enable_access = 1;
-				ssidInfo.enable_portal = 0;
+				SSID.enable_access = 1;
+				SSID.enable_portal = 0;
+				SSID.otherclient = 3;
 				break;
 			}
 		}
@@ -1425,26 +1718,26 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
      * 微信认证：auth_mode = 128
 	 * */
 	var setPortalType = function(){
-		var auth = ssidInfo.auth_mode;
+		var auth = SSID.auth_mode;
 		var name = 'portalType';
 		switch (auth){
 			case 4:{
-				ssidInfo.portalType = 1;
+				SSID.portalType = 1;
 				selectRadio(name,1);
 				break;
 			}
 			case 2:{
-				ssidInfo.portalType = 2;
+				SSID.portalType = 2;
 				selectRadio(name,2);
 				break;
 			}
 			case 1:{
-				ssidInfo.portalType = 3;
+				SSID.portalType = 3;
 				selectRadio(name,3);
 				break;
 			}
 			case 128:{
-				ssidInfo.portalType = 4;
+				SSID.portalType = 4;
 				selectRadio(name,4);
 				break;
 			}
@@ -1475,7 +1768,7 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 			   		'background':'#fafbfd'
 			   	});
 			   	//配置
-				if(ssidInfo.initStatus==1){
+				if(SSID.initStatus==1){
 					//反选白名单用户组
 					setAccessUserGroup();
 				}
@@ -1509,19 +1802,19 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 				$(this).parents('.portal-auth').next('.portal-word').next('.portal-voucher').removeClass('none');
 				switch($(this).val()){
 					case '1':{
-						ssidInfo.auth_mode = 4;
+						SSID.auth_mode = 4;
 						break;
 					}
 					case '2':{
-						ssidInfo.auth_mode = 2;
+						SSID.auth_mode = 2;
 						break;
 					}
 					case '3':{
-						ssidInfo.auth_mode = 1;
+						SSID.auth_mode = 1;
 						break;
 					}
 					case '4':{
-						ssidInfo.auth_mode = 128;
+						SSID.auth_mode = 128;
 						break;
 					}
 				}
@@ -1565,17 +1858,17 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 	 * */
 	var setBandMore = function(){
 		//双频
-		var band = ssidInfo.band;
+		var band = SSID.band;
 		var name = 'band';
 		selectRadio(name,band);
 		
 		//隐藏ssid选中
-		var ssid_hide = ssidInfo.ssid_hide;
+		var ssid_hide = SSID.ssid_hide;
 		name = 'ssid_hide';
 		selectCheckBox(name,ssid_hide);
 		
 		//带宽优先级
-		var bandwidth_priority = ssidInfo.bandwidth_priority;
+		var bandwidth_priority = SSID.bandwidth_priority;
 		name = 'bandwidth_priority';
 		selectRadio(name,bandwidth_priority);
 	}
@@ -1588,8 +1881,8 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 	 * */
 	var setTunnelMode = function(){
 		//获取数据
-		var type = ssidInfo.type;
-		var vlan = ssidInfo.vlan;
+		var type = SSID.type;
+		var vlan = SSID.vlan;
 		var name = 'type';
 		if(type==0 && vlan==1){
 			selectRadio(name,1);
@@ -1608,21 +1901,23 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 	 * 开放模式： auth=0，cipher=0
 	 * */
 	var setNetworkMode = function(){
-		var auth = ssidInfo.auth;
-		var cipher = ssidInfo.cipher;
+		var auth = SSID.auth;
+		var cipher = SSID.cipher;
 		var name = 'auth';
 		
 		//选择分支
 		if(auth==6 && cipher==0){
-			ssidInfo.model = 1;
+			SSID.model = 1;
 			selectRadio(name,1);
 		}else if(auth==5 && cipher==5){
-			ssidInfo.model = 2;
+			SSID.model = 2;
 			selectRadio(name,2);
+			$('.win-create-ssid-network input[name="key"]').val(SSID.key);
 		}else if(auth==0 && cipher==0){
-			ssidInfo.model = 3;
+			SSID.model = 3;
 			selectRadio(name,3);
 		}
+		console.log(SSID);
 	}
 	
 	/*
@@ -1632,11 +1927,11 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 		
 		var ids = [];
 		if(tree==apTree){
-			ids = ssidInfo.network_policy_ids;
+			ids = SSID.network_policy_ids;
 		}else if(tree==userTree){
-			ids = ssidInfo.user_group_ids;
+			ids = SSID.user_group_ids;
 		}
-		
+		console.log(ids);
 		if(ids!=undefined){
 			$.each(ids, function(index,data) {
 				if(data == 0){
@@ -1655,13 +1950,13 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 	}
 	
 	/*编辑配置网络收页*/
-	var updateSsid = function(){console.log(ssidInfo);
+	var updateSsid = function(){console.log(SSID);
 		
 		//设置修改状态
-		ssidInfo.initStatus = 1;
+		SSID.initStatus = 1;
 		
 		//设置网络名称
-		$('.win-create-ssid-network input[name="ssid_name"]').val(ssidInfo.ssid_name);
+		$('.win-create-ssid-network input[name="ssid_name"]').val(SSID.ssid_name);
 		
 		//设置高级配置
 		setBandMore();
@@ -1671,6 +1966,130 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 		
 		//设置模式
 		setNetworkMode();
+	}
+	
+	/*插入错误信息*/
+	var toerror = function(ele,msg){
+		var error = $('<div />').addClass('error');
+		error.text(msg);
+		var inputBoxWidth = $('.input-box').width();
+		var leftWidth = $('.input-left').width();
+		ele.parent('.input-box').next('.error').remove();
+		ele.parent('.input-box').after(error);
+		error.css({
+			'margin-left':leftWidth,
+			'color':'red',
+			'margin-top':'2px'
+		});
+		//设置差号
+		ele.css({
+			'background':'url(public/images/error-message.png) no-repeat 98% center',
+			'background-size':'20px'
+		});
+	}
+	/*写入正确信息*/
+	var toright = function(ele,msg){
+		var status = {};
+		//清除错误类
+		ele.parent('.input-box').next('.error').remove();
+		//设置差号
+		ele.css({
+			'background':'url(public/images/true-message.png) no-repeat 98% center',
+			'background-size':'20px'
+		});
+		status.error_code = 0;
+		status.error_message = '';
+		return status;
+	}
+
+	/*验证创建无线窗口表单*/
+	var verifyCreateSsid = function(){
+		
+		//初始聚焦
+		$('input[name="ssid_name"]').focus();
+		
+		//新建网络ssid失交处理
+		$('input[name="ssid_name"]').blur(function(){
+			
+			//验证数据长度
+			if($(this).val().length>0 && $(this).val().length<=32){
+				//验证重名
+				if(checkSsidName($(this).val())){
+					verifyResult.error_code = 1;
+					verifyResult.error_message = 'SSID名称重复错误！';
+					toerror($(this),verifyResult.error_message);
+					return false;
+				}
+				if(!isVerifyName($(this).val())){
+					verifyResult.error_code = 2;
+					verifyResult.error_message = 'SSID名称格式错误！';
+					toerror($(this),verifyResult.error_message);
+					return false;
+				}
+				
+				//正确
+				verifyResult.error_code = 0;
+				verifyResult.error_message = '';
+				return toright($(this),'');
+			}else{
+				verifyResult.error_code = 3;
+				verifyResult.error_message = 'SSID名称错误！';
+				toerror($(this),verifyResult.error_message);
+				return false;
+			}
+		});
+		
+		//验证隧道模式
+		$('#create-ssid-network input[name="vlan"]').blur(function(){
+			
+			var parse = $(this).val();
+			
+			if(isInteger(parse)){
+				if(parse<2 || parse>4000){
+					$(this).addClass('input-error');
+					verifyResult.error_code = 5;
+					verifyResult.error_message = '请输入2-4000的数字';
+					return false; 
+				}else{
+					$(this).addClass('input-right');
+					verifyResult.error_code = 0;
+					verifyResult.error_message = '';
+					return false;
+				}
+			}else{
+				$(this).addClass('input-error');
+				verifyResult.error_code = 5;
+				verifyResult.error_message = '请输入2-4000的数字';
+				return false;
+			}
+		});
+		
+		//验证隧道模式
+		$('#create-ssid-network input[name="key"]').blur(function(){
+			
+			var parse = $(this).val();
+			if(parse.length<8 || parse.length>64){
+				$(this).removeClass('input-right');
+				$(this).addClass('input-error');
+				verifyResult.error_code = 6;
+				verifyResult.error_message = '请输入8-63个字符';
+				return false; 
+			}else{
+				$(this).removeClass('input-error');
+				$(this).addClass('input-right');
+				verifyResult.error_code = 0;
+				verifyResult.error_message = '';
+				return false;
+			}
+		});
+		
+		/*清除模式checkbox验证*/
+		$('.tunnel-mode input[type="radio"]').click(function(){
+			if($(this).val()!=2){
+				$('#create-ssid-network input[name="vlan"]').removeClass('input-right');
+				$('#create-ssid-network input[name="vlan"]').removeClass('input-error');
+			};
+		});
 	}
 	
 	/*创建新增无线窗口*/
@@ -1691,21 +2110,25 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 			resizable:false,
 			modal:true,
 			loadingMessage:'',
-			onLoad:function(){
+			onLoad:function(){console.log(SSID);
 				var self = this;
 				//设置新增状态
-				ssidInfo.initStatus = 0;
-				
 				if(flag==true){
 					$(this).panel('setTitle','配置网络');
 					updateSsid();
+				}else{
+					SSID = {};
+					SSID.initStatus = 0;
+					SSID.network_policy_ids = [0];
 				}
 				//切换显示
 				$('.win-create-ssid-network .link-position').click(function(){
 					if($('.band-content').hasClass('none')){
 						$('.band-content').removeClass('none');
+						$(this).text('简单设置');
 					}else{
 						$('.band-content').addClass('none');
+						$(this).text('高级设置');
 					}
 				});
 				
@@ -1727,6 +2150,7 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 						$('#create-ssid-network input[name="vlan"]').attr('disabled',true);
 					}else{
 						$('#create-ssid-network input[name="vlan"]').attr('disabled',false);
+						$('#create-ssid-network input[name="vlan"]').focus();
 					}
 				});
 				
@@ -1743,43 +2167,36 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 					}
 				});
 				
+				//验证表单
+				verifyCreateSsid();
+				
 				//绑定下一步事件
 				$('.win-create-ssid-network .btn-next-network').click(function(){
 					
+					//表单验证
+					if(verifyResult.error_code>0){
+						return false;
+					}
 					//获取基本信息数据
 					var result = getFormValue('#create-ssid-network');
 					
 					//单独获取下隐藏SSID状态
 					var ssid_hide = $('.ssid_hide').prop('checked');
 					if(ssid_hide==false){
-						ssid_hide = 0;
+						result.ssid_hide = 0;
 					}else{
-						ssid_hide = 1;
+						result.ssid_hide = 1;
 					};
 					
 					//合并基本信息
-					var baseInfo = {
-						ssid_hide:ssid_hide,
-					};
+					var baseInfo = {};
 					$.extend(baseInfo,result,getTunnelValue(result.type),getModeValue(result.auth));
-					console.log(baseInfo);
+					
+					//分类数据
+					SSID.baseInfo = baseInfo;
 					//合并数据
-					$.extend(ssidInfo,baseInfo);console.log(ssidInfo);
-					ssidInfo.baseInfo = baseInfo;
-					console.log(ssidInfo);
-					
-					//验证数据长度
-					if(ssidInfo.ssid_name.length>1 && ssidInfo.ssid_name.length<32){
-						//验证重名
-						if(checkSsidName(ssidInfo.ssid_name)){
-							toast('信息提示','SSID名称重复错误！','error');
-							return false;
-						}
-					}else{
-						toast('信息提示','SSID名称错误！','error');
-						return false;
-					}
-					
+					$.extend(SSID,baseInfo);
+
 					//隐藏当前窗口
 					hideWindow('.win-create-ssid-network');
 					
@@ -1819,7 +2236,7 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 			resizable:false,
 			modal:true,
 			loadingMessage:'',
-			onLoad:function(){console.log(ssidInfo);
+			onLoad:function(){console.log(SSID);
 				var self = this;
 				
 				//加载AP树结构
@@ -1844,12 +2261,12 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 					hideWindow('.win-select-ssid-network');
 					
 					//分支选择
-					if(ssidInfo.model==1){
+					if(SSID.model==1){
 						
 						//打开用户窗口
 						openUserWindow();
 						
-					}else if(ssidInfo.model==2 || ssidInfo.model==3){
+					}else if(SSID.model==2 || SSID.model==3){
 						
 						//打开安全控制页面
 						openAccessControl();
@@ -1920,7 +2337,7 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 			resizable:false,
 			modal:true,
 			loadingMessage:'',
-			onLoad:function(){console.log(ssidInfo);
+			onLoad:function(){console.log(SSID);
 				var self = this;
 				
 				//加载用户树结构
@@ -1955,7 +2372,7 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 			resizable:false,
 			modal:true,
 			loadingMessage:'',
-			onLoad:function(){console.log(ssidInfo);
+			onLoad:function(){console.log(SSID);
 				var self = this;
 				
 				
@@ -1968,10 +2385,9 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 					hideWindow('.win-select-user-network');
 					
 					//分支选择
-					if(ssidInfo.model==1){
+					if(SSID.model==1){
 						//进选择网络窗口
 						openSelectSsid();
-						
 					}else{
 						//进Portal设置窗口
 						openPortal();
@@ -1992,7 +2408,11 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 						first_user:first_user,
 						user_group_ids:userChecked
 					};
-					$.extend(ssidInfo,result);
+					
+					SSID.userInfo = result;
+					
+					//合并所有
+					$.extend(SSID,result);
 					
 					//隐藏当前窗口
 					hideWindow('.win-select-user-network');
@@ -2037,7 +2457,7 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 				//设置配置的访问策略
 				setAccessPolicy();
 			},
-			onLoad:function(){console.log(ssidInfo);
+			onLoad:function(){console.log(SSID);
 				var self = this;
 				//写入获取数据展示
 				setConfigInfo();
@@ -2051,10 +2471,10 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 					hideWindow('.win-config-network');
 					
 					//分支选择4条路线
-					if(ssidInfo.model==1){
+					if(SSID.model==1){
 						//进入选择用户
 						openUserWindow();
-					}else {console.log(ssidInfo);
+					}else {console.log(SSID);
 						//进入访问控制
 						openAccessControl();
 					}
@@ -2098,7 +2518,7 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 			resizable:false,
 			modal:true,
 			loadingMessage:'',
-			onLoad:function(){console.log(ssidInfo);
+			onLoad:function(){console.log(SSID);
 				var self = this;
 				
 				//初始化
@@ -2147,11 +2567,11 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 			resizable:false,
 			modal:true,
 			loadingMessage:'',
-			onLoad:function(){console.log(ssidInfo);
+			onLoad:function(){console.log(SSID);
 				var self = this;
 				
 				//配置
-				if(ssidInfo.initStatus == 1){
+				if(SSID.initStatus == 1){
 					setPortalType();
 				}
 				
@@ -2176,7 +2596,7 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 					var result = getFormValue('#portal-network');
 					
 					//合并数据
-					$.extend(ssidInfo,result);
+					$.extend(SSID,result);
 					
 					//设置模板ID;
 					setPortalTemplateId();
@@ -2193,12 +2613,12 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 						return false;
 					}
 					
-					console.log(ssidInfo);
+					console.log(SSID);
 					//隐藏窗口
 					hideWindow('.win-portal-network');
 					
 					//选择分支
-					if(ssidInfo.portalType==1){
+					if(SSID.portalType==1){
 						//进入选择用户
 						openUserWindow();
 					}else{
@@ -2236,11 +2656,11 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 			resizable:false,
 			modal:true,
 			loadingMessage:'',
-			onLoad:function(){console.log(ssidInfo);
+			onLoad:function(){console.log(SSID);
 				var self = this;
 				
 				//配置
-				if(ssidInfo.initStatus==1){
+				if(SSID.initStatus==1){
 					//反选其他终端
 					resetOtherClient();
 				}
@@ -2274,12 +2694,12 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 					console.log(result);
 					
 					//合并数据
-					$.extend(ssidInfo,result);
+					$.extend(SSID,result);
 					
 					//隐藏当前窗口
 					hideWindow('.win-access-control-network');
 					
-					if(ssidInfo.otherclient==1){
+					if(SSID.otherclient==1){
 						//进入portal设置
 						openPortal();
 					}else{
@@ -2321,7 +2741,7 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 				var self = this;
 				
 				//获取节点数据
-				ssidInfo = node;
+				SSID = node;
 				
 				//初始化radio
 				initRadio();
@@ -2393,8 +2813,8 @@ define(['jquery','echarts','functions'],function($,echarts,_f){
 				var url = _IFA['network_detail_ssids']+selected.id;
 				var data = '';
 				_ajax(url,type,data,function(data){
-					ssidInfo = data;
-					ssidInfo.update_id = selected.id;
+					SSID = data;
+					SSID.update_id = selected.id;
 					openCreateSsid(true);
 				});
 			}else{

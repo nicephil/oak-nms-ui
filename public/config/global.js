@@ -135,6 +135,12 @@ _IFA['network_update_ssids'] = _HOST+'config/network/ssids/';//{id}
 //删除SSID-DELETE
 _IFA['network_delete_ssids'] = _HOST+'config/network/ssids/';//{id}
 
+//流量统计-GET
+_IFA['network_flow_ssids'] = _HOST+'stat/network/ssids/';//{id}/flow
+
+//终端统计-GET
+_IFA['network_client_ssids'] = _HOST+'stat/network/ssids/';//{id}/client
+
 //检查设备SSID-POST
 _IFA['network_check_ssids'] = _HOST+'config/network/ssids/check/devices';
 

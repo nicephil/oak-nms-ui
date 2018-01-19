@@ -138,8 +138,8 @@
 									<div class="equipment-left-dhcp">
 										<span class="ap-dhcp">DHCP:</span>
 										<select class="ap-dhcp-label">
-											<option value="">启用</option>
-											<option value="">静态</option>
+											<option value="0">启用</option>
+											<option value="1">静态</option>
 										</select>
 									</div>
 									<div class="equipment-left-mark">
@@ -169,7 +169,7 @@
 									</div>
 									
 									<div class="equipment-dns2">
-										<span class="ap-dns2">DNS2S:</span>
+										<span class="ap-dns2">DNS2:</span>
 										<input type="text" name="ap-dns2-label" id="ap-dns2-label" value="" />
 									</div>
 								</div>
@@ -275,8 +275,8 @@
 									<div class="left-channel">
 										<span class="left-title">信道:</span>
 										<select class="left-channel-select" name="r24_status">
-											<option value="1" >默认</option>
-											<option value="0">关闭</option>
+											<!--<option value="1" >默认</option>
+											<option value="0">关闭</option>-->
 										</select>
 									</div>
 									<div class="left-agreement">
@@ -337,7 +337,7 @@
 									</div>
 									<div class="left-terminal">
 										<span class="left-title">最大终端数:</span>
-										<input type="text" name="r24_maxclients" id="left-terminal-select" value="30" />
+										<input type="text" name="r24_maxclients" class="left-terminal-select xxx" value="30" />
 									</div>
 								</div>
 								<div class="small-box-right">5G</div>
@@ -345,8 +345,17 @@
 									<div class="right-channel">
 										<span class="right-title">信道:</span>
 										<select class="right-channel-select" name="r5_status">
-											<option value="1">默认</option>
-											<option value="0">关闭</option>
+											<option value="-1">关闭</option>
+											<option value="0">自动</option>
+											<option value="36">36</option>
+											<option value="40">40</option>
+											<option value="44">44</option>
+											<option value="48">48</option>
+											<option value="149">149</option>
+											<option value="153">153</option>
+											<option value="157">157</option>
+											<option value="161">161</option>
+											<option value="165">165</option>
 										</select>
 									</div>
 									<div class="right-agreement">
@@ -410,7 +419,7 @@
 									</div>
 									<div class="right-terminal">
 										<span class="right-title">最大终端数:</span>
-										<input type="text" name="r5_maxclients" id="right-terminal-select" value="30" />
+										<input type="text" name="r5_maxclients" class="right-terminal-select" value="30" />
 									</div>
 								</div>
 							</div>

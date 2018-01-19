@@ -6,7 +6,7 @@
 				<div class="input-box">
 					<div class="input-left">SSID：</div>
 					<input type="text" name="ssid_name" placeholder="1-32个字符支持中文、英文、数字及下划线" class="input-text03 input-selected"/>
-					<a href="javascript:;" class="link link-position">简单设置</a>
+					<a href="javascript:;" class="link link-position">高级设置</a>
 				</div>
 				<div class="band-content none" style="margin-top:5px;">
 					<div class="input-box">
@@ -94,7 +94,7 @@
 						<div class="radio-wrap">
 							<span class="normal-radio"><input type="radio" value="2" name="type" /></span>
 							<label class="radio-label">VLAN ID</label>
-							<input type="text" name="vlan" class="normal-input" style="position: absolute;left:90px;"/>
+							<input type="text" name="vlan" placeholder="2-4000" class="normal-input" style="position: absolute;left:90px;"/>
 						</div>
 					</li>
 					<li class="tunnel-choice">
@@ -127,7 +127,9 @@
 								<label class="radio-label">WPA/WPA2共享密码，所有用户使用同一个加密密码来访问网络</label>
 						</div>
 						<div class="wpa" style="margin-left:24px;">所有用户使用同一个加密密码来访问网络，模式为WPA/WPA2，加密方式为TKIP/CCMP</div>
-						<div class="pattern-word03 normal-div wpa" style="margin-left:24px;">密码：<input type="text" name="key" value="12345678" placeholder="8-63个字符" class="normal-input"/></div>
+						<div class="pattern-word03 normal-div wpa" style="margin-left:24px;">
+							密码：<input type="text" name="key" value="12345678" placeholder="8-63个字符" class="normal-input"/>
+						</div>
 					</li>
 					<li class="pattern-choice">
 						<div class="normal-div">
@@ -139,7 +141,6 @@
 					</li>
 				</ul>
 			</div>
-
 		</div>
 	</div>
 	<div class="network-footer">

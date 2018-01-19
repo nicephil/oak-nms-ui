@@ -28,7 +28,7 @@ define(['jquery','functions'],function($,_f){
 	var _groupid = '';
 	/*var result = '';*/
 	var setPage = {};
-	
+	var sortOrder = '';//排序条件
 	
 	
 	
@@ -58,7 +58,18 @@ define(['jquery','functions'],function($,_f){
 
         {field:'location',title:'位置',sortable:true,align:'center'},
 
-        {field:'flow',title:'总流量',sortable:true,align:'center'},
+        {field:'total_bytes',title:'总流量',sortable:true,align:'center',formatter:function (value,row,index){
+        		if(value<1024){
+        			return value
+        		}else if(value > 1024 && value<1024*1024){
+				return value = (value/1024).toFixed(1) + 'K';
+			}else if(value >1024*1024 && value <1024*1024*1024){
+                return value = (value/1024/1024).toFixed(1) + 'M';
+			}else if(value > 1024*1024*1024){
+                return value = (value/1024/1024/1024).toFixed(1) + 'G';
+			}
+       	}},
+        
 
         {field:'client_number',title:'终端',sortable:true,align:'center'},
     ]];
@@ -76,10 +87,19 @@ define(['jquery','functions'],function($,_f){
 			}
         }},
         {field:'timestamp',title:'发生时间',sortable:true,align:'center',formatter:function (value,row,index){
-        	var timestamp = value;
+        	/*var timestamp = value;
 			var newDate = new Date();
 			timestamp = newDate.toLocaleDateString();
-			return timestamp;
+			return timestamp;*/
+			console.log(value)
+			var d = new Date(value);    //根据时间戳生成的时间对象
+			var date = (d.getFullYear()) + "-" + 
+	           (d.getMonth() + 1) + "-" +
+	           (d.getDate()) + " " + 
+	           (d.getHours()) + ":" + 
+	           (d.getMinutes()) + ":" + 
+	           (d.getSeconds());
+	           return date;
         }},
 
         {field:'description',title:'日志',sortable:true,align:'center'}
@@ -263,11 +283,8 @@ define(['jquery','functions'],function($,_f){
 	/*获取用户*/
 	var getUser = function(options,callback){
 		var _group_ids = options.group_ids;
-		if(_group_ids == undefined){
-			_group_ids = 29
-		}
 		if(_group_ids == 0){
-			_group_ids = 29
+			delete options.group_ids;
 		}
 		var url = _IFA['ap_table_list'];
 		var type = 'GET';
@@ -408,7 +425,7 @@ define(['jquery','functions'],function($,_f){
 				    res += str[i];
 				    if(i < len -2 ){
 					    if(i % 2 == 1) {
-					    		 res = res + ':';
+					    		 res = res + '-';
 					    };
 				    };
 				};
@@ -442,6 +459,13 @@ define(['jquery','functions'],function($,_f){
 						onTableSuccess(data,options);
 					},
 					onSortColumn:function(sort, order){
+						sortOrder = sort+' '+order;
+						var opt ={
+							sort:sortOrder,
+							page:options.page,
+							page_size:options.page_size
+						}
+						loadTable(opt);
 					},
 					onCheck:function(rowIndex,rowData){
 						var panel = $(this).datagrid('getPanel');
@@ -533,7 +557,7 @@ define(['jquery','functions'],function($,_f){
 		var appLeft = $('#app-ap-layout .app-left').layout('panel','center');
 		var height = $(appLeft).panel('options').height;
 		obj.css({
-				'height':height-140+'px',
+				'height':height-74+'px',
 			    'overflow-y': 'auto',
 			    'overflow-x': 'hidden'
 		});
@@ -559,13 +583,15 @@ define(['jquery','functions'],function($,_f){
 		    pageNumber:pageNumber,
 		    pageSize:pageSize,
 		    pageList:pageList,
+		    links:7,
 		    displayMsg:'共{total}条记录',
 		    layout:['first','prev','links','next','last','sep','list','info','sep','refresh'],
 		    onSelectPage:function(pageNumber, pageSize){
 		    	$(this).pagination('loading');
 		    	var opt = {
 					pageNumber:pageNumber,
-					pageSize:pageSize
+					pageSize:pageSize,
+					sort:sortOrder,
 				}
 				loadTable(opt);
 				$(this).pagination('loaded');
@@ -578,7 +604,7 @@ define(['jquery','functions'],function($,_f){
 		//插入分页文件
 		$('#app-ap-layout .pagination-page-list').before('每页显示数');
 	}
-	
+  
 	/*加载日志分页*/
 	var loadPagination1 = function(options){
 		console.log(options)
@@ -592,6 +618,7 @@ define(['jquery','functions'],function($,_f){
 		    total:total,
 		    pageNumber:pageNumber,
 		    pageSize:pageSize,
+		    links:7,
 		    pageList:pageList,
 		    displayMsg:'共{total}条记录',
 		    layout:['first','prev','links','next','last','sep','list','info','sep','refresh'],
@@ -1044,7 +1071,6 @@ define(['jquery','functions'],function($,_f){
 			onOpen:function(){
 				
 				var url = _IFA['ap_update_able_list']+row.id;
-				console
 				_ajax(url,'GET','',function(data){
 					$('.save .text-checkbox').prop('checked',true);
 					console.log(data)
@@ -1331,13 +1357,12 @@ define(['jquery','functions'],function($,_f){
 	    		var mac_address = $(this).find('input[name="mac_address"]');
 	    		var ap_name = $(this).find('input[name="ap_name"]');
 	    		var ap_location = $(this).find('input[name="ap_location"]');
-
+			
 	    		//验证空值  	
 	    		if(mac_address.val()==''){
 	    			flag = false;
 	    			toast('提示信息','mac地址为必填项！','warning');
 	    			mac_address.focus();
-	    			
 	    		}else if(mac_address.val()!=''){//验证MAC地址
 	    			if(!isMac(mac_address.val())){
 	    				flag = false;
@@ -1350,14 +1375,10 @@ define(['jquery','functions'],function($,_f){
 	    				return;
 	    			}*/
 	    		}
-	    			
-	    		
-	    		
-	    		
 	    });
 		    if(flag== true){
-	    		addapInfo('.ap-add-batch-equipment .user-list');
-	    	}
+	    			addapInfo('.ap-add-batch-equipment .user-list');
+	    		}
 		    
 			$('.ap-add-batch-equipment .batch-delete').click(function(index){
 			    	if($('.ap-add-batch-equipment .user-list .batch-inputBox').length>1){
@@ -1376,6 +1397,13 @@ define(['jquery','functions'],function($,_f){
 	/*mac地址输入格式*/
 	var onKeydownMac = $(document).on('keydown','.ap-add-batch-equipment .mac_address',function(){
 		verificationMac($(this));
+		
+	});
+	/*mac地址输入格式转换*/
+	var convertMac = $(document).on('blur','.ap-add-batch-equipment .mac_address',function(){
+		console.log($(this));
+		var ss= convetMac($(this).val());
+		$(this).val(ss);
 	});
 	/*添加无线接入点-----保存*/
 	var createApMac = function(){
@@ -1485,8 +1513,14 @@ define(['jquery','functions'],function($,_f){
 	 var btnApNotice = $('.ap-region-center .btn-notice-ap').click(function(){
 	 	//获取选中的记录
 	 	var row = $(tree).tree('getSelected');
-	 	console.log(row)
 		var checked = getChecked();
+		//点击切换状态
+	 	console.log(checked)
+	 	//重启切换状态
+	 	$.each(checked, function(index,data) {
+	 		
+	 	});
+	 	//判断是多条还是单条
 		if(checked.length==0){
 			toast('提示消息','请选择要重启的设备','warning');
 			return ;
@@ -1519,7 +1553,8 @@ define(['jquery','functions'],function($,_f){
 	 
 	/*AP迁移功能*/
 	var btnApMigration = $('.ap-region-center .btn-disable-ap').click(function(){
-			/*var row = $(tree).tree('getSelected');*/
+			var row = $(tree).tree('getSelected');
+			
 			var checked = getChecked();
 			if(checked.length==0){
 				toast('提示消息','请选择要迁移的设备','warning');
@@ -1529,7 +1564,7 @@ define(['jquery','functions'],function($,_f){
 			$('.win-export-migration-window').window({
 				width:650,
 				height:422,
-				title:'导出用户',
+				title:'无线接入点迁移',
 				href:'ap/win-export-migration.html',
 				headerCls:'sm-header',
 				collapsible:false,
@@ -1544,16 +1579,26 @@ define(['jquery','functions'],function($,_f){
 					_ajax(url_groups,'GET','',function(data){
 						if(data.error_code==0){
 							data = data.list[0];
+							data.children[0].text = data.children[0].text=='default'?'默认':data.children[0].text;
+							//data[0].children[0].name = data[0].children[0].name=='default'?'默认':data[0].children[0].name;
 							$('#tree-export-ap').tree({
 								data:[data],
-								checkbox:true,
+								checkbox:false,
 								lines:false,
 								onLoadSuccess:function(node,data){
+									console.log(data)
 									$('#tree-export-ap>li>ul>li:first-child .tree-icon').addClass('tree-file-default');
 								}
 							});
 						}
 					});
+					
+				},
+				onLoad:function(){
+					//迁移保存
+					saveApMigration();
+					//迁移取消
+					cancelApMigration();
 				},
 				onClose:function(){
 					$(this).window('destroy')
@@ -1564,8 +1609,12 @@ define(['jquery','functions'],function($,_f){
 	});
 	
 	/*AP迁移功能---保存*/
-	var saveApMigration = $('.win-export-migration .but-conserve').click(function(){
+	var saveApMigration = function(){
+		$('.win-export-migration-window .but-conserve').click(function(){
 		var row = $('#tree-export-ap').tree('getSelected');
+		var treeSelected = $(tree).tree('getSelected');
+		
+		console.log(row);
 		var checked = getChecked();
 		if(checked.length>0){
 			var url = _IFA['ap_bulk_update_device_conﬁg'];
@@ -1579,30 +1628,31 @@ define(['jquery','functions'],function($,_f){
 				'group_id':row.id
 			});
 		
-		}
+		};
 		_ajax(url,type,data,function(data){
 			if(data.error_code==0){
 				toast('提示消息','操作成功','success');
 				refresh();
-				closeWindow('.win-export-ap');
-				loadTable()
+				closeWindow('.win-export-migration-window');
+				loadTable();
 			}else{
 				toast('提示消息',data.error_message,'error');
-				closeWindow('.win-export-ap');
+				closeWindow('.win-export-migration-window');
 			}
 		});
-	});
-	/*AP迁移功能---保存*/
-	var saveApMigration = $('.win-export-ap .but-conserve').click(function(){
-		closeWindow('.win-export-ap');
-	});
-	
+		});
+	}
+	/*AP迁移功能---取消*/
+	var cancelApMigration = function(){
+		$('.win-export-migration-window .but-cancel').click(function(){
+			$('.win-export-migration-window').window('destroy');
+		});
+	};
 	//关闭桌面AP应用
 	var closeApWindow = function(appclass){
 		var app_id = $(appclass).parent('li').attr('app_id');
 		$('div[w_id="'+app_id+'"]').window('close');
 	}
-	
 	//AP右侧箭头----进入详情
 	var rightParticulars = $('#app-ap-layout .right-cion').click(function(){
 			
@@ -1644,6 +1694,16 @@ define(['jquery','functions'],function($,_f){
 					analyze();
 					//日志导出				
 					btnExportAp();
+					//设备联动
+					linkage();
+					//射频2.4G联动
+					agreement_24G();
+					//射频5G联动
+					agreement_5G();
+					//2.4G信道添加
+					addChannel_24();
+					//5G信道添加
+//					addChannel_5();
 					$('#ap-tabs').tabs({
 						onSelect:function(title,index){
 							switch(index){
@@ -1693,7 +1753,22 @@ define(['jquery','functions'],function($,_f){
 		if(setPage.page==undefined){
 			setPage.page =1;
 		}
+		var root = getRoot(tree);
+		var node  = $(tree).tree('getSelected');
+		if(node !=null){
+			if(node.parent == -1){
+				_groupid = '';
+			}else{
+				_groupid = node.id;
+			}
+		}else{
+			_groupid = '';
+		}
+		
+		
+		console.log(_groupid)
 		var url = _IFA['ap_get_device_list']+'?org_ids='+getOrg(target.data('org')).id+'&group_ids='+_groupid+'&page='+setPage.page;
+			console.log(url)
 			_ajax(url,'GET','',function (data) {
 	            console.log(data);
 				$('.number-total').text(data.total)
@@ -1746,10 +1821,145 @@ define(['jquery','functions'],function($,_f){
 			$('#ap-tabs .equipment-box-none').show();
 			$('#ap-tabs .equipment-compile').show();
 			$('#ap-tabs .equipment-icon').hide();
+			//隐藏内容   名称
+			$('#ap-input-none').val('');
+			//隐藏内容   位置
+			$('#ap-location-label-none').val('');
+			//隐藏内容    dhcp
+			$('#ap-tabs .ap-dhcp-label').val('');
+
+			//隐藏内容   ip
+			$('.ap-ip-label-none').text('');
+			//隐藏内容   掩码
+			$('.ap-mark-label').text('');
+			//隐藏内容   网关
+			$('.ap-gateway-label').text('');
+
+			//隐藏内容   ip
+			$('#ap-tabs .ap-ip-input').val('');
+			//隐藏内容   掩码
+			$('#ap-tabs .ap-mark-input').val('');
+			//隐藏内容   网关
+			$('#ap-tabs .ap-gateway-input').val('');
 			
+			//隐藏内容   dns1
+			$('#ap-dns1-label').text('');
+			//隐藏内容   dns2
+			$('#ap-dns2-label').text('');
+			//读取设备缓存
+			var dataMonitor = getCache('#ap-tabs .equipment');
+			console.log(dataMonitor);
+			if(_id == undefined){
+				_id = $('.group-list-particulars').find('li').first().attr('a');
+			}
+			var _id = $('.list-select').attr('a');
+			var url = _IFA['ap_get_device_config_detail']+_id;
+			console.log(url)
+			_ajax(url,'GET','',function(data){
+				console.log(data)
+				if(data.error_code == 0){
+					//隐藏内容   名称
+					$('#ap-input-none').val(data.device_name);
+					//隐藏内容   位置
+					$('#ap-location-label-none').val(data.location);
+					//隐藏内容    dhcp
+					$('#ap-tabs .ap-dhcp-label').val(data.ip_type);
+					if(data.ip_type == 0){//启用
+						//隐藏内容   ip
+						$('.ap-ip-label-none').text(dataMonitor.ip);
+						//隐藏内容   掩码
+						$('.ap-mark-label').text(dataMonitor.netmask);
+						//隐藏内容   网关
+						$('.ap-gateway-label').text(dataMonitor.gateway);
+					}else if(data.ip_type == 1){//静态
+						//隐藏内容   ip
+						$('#ap-tabs .ap-ip-input').val('');
+						//隐藏内容   掩码
+						$('#ap-tabs .ap-mark-input').val('');
+						//隐藏内容   网关
+						$('#ap-tabs .ap-gateway-input').val('');
+					}
+					//隐藏内容   dns1
+					$('#ap-dns1-label').text(data.dns1);
+					//隐藏内容   dns2
+					$('#ap-dns2-label').text(data.dns2);
+					//验证ip地址
+					ipVerify();
+					//验证掩码
+					maskVerify();
+					//验证网关
+					gatewayVerify();
+					
+				}
+			})
 		});
 	};
-	
+	//设备联动
+	var linkage = function(){
+		$('.ap-dhcp-label').change(function(){
+			if($('.ap-dhcp-label').val()==0){//启用
+				//IP联动
+				$('#ap-tabs .ap-ip-label-none').show();
+				$('#ap-tabs .ap-ip-input').hide();
+				//掩码联动
+				$('.ap-mark-label').show();
+				$('.ap-mark-input').hide();
+				//网关联动
+				$('.ap-gateway-label').show();
+				$('.ap-gateway-input').hide();
+			}else if($('.ap-dhcp-label').val()==1){//静态
+				//IP联动
+				$('#ap-tabs .ap-ip-label-none').hide();
+				$('#ap-tabs .ap-ip-input').show();
+				//掩码联动
+				$('.ap-mark-label').hide();
+				$('.ap-mark-input').show();
+				//网关联动
+				$('.ap-gateway-label').hide();
+				$('.ap-gateway-input').show();
+				
+			};
+		});
+	};
+	//验证ip地址
+	var ipVerify = function(){
+		$('#ap-tabs .ap-ip-input').blur(function(){
+			var ip_madress = $('#ap-tabs .ap-ip-input').val();
+			//验证空值  	
+	    		if(ip_madress==''){
+//	    			flag = false;
+	    			toast('提示信息','ip地址为必填项！','warning');
+//	    			ip_madress.focus();
+	    			return;
+	    		}else if(ip_madress!=''){//验证MAC地址
+	    			if(!isIp(ip_madress)){
+//	    				flag = false;
+	    				toast('提示信息','ip地址格式错误！','error');
+	    				return;
+	    			};
+	    		}
+		});
+	};
+	//验证掩码
+	var maskVerify = function(){
+		$('#ap-tabs .ap-mark-input').blur(function(){
+			var mask_val = $('#ap-tabs .ap-mark-input').val();
+			if (mask_val == ''){
+				toast('提示信息','掩码地址为必填项！','warning');
+				return;
+			};
+		});
+	};
+	//验证网关
+	var gatewayVerify = function(){
+		$('#ap-tabs .ap-gateway-input').blur(function(){
+			var gateway_val = $('#ap-tabs .ap-gateway-input').val();
+			if (gateway_val == ''){
+				toast('提示信息','掩码地址为必填项！','warning');
+				return;
+			};
+		});
+	};
 	//设备保存
 	var saveEquipment = function(){
 		$('#ap-tabs .equipment-compile').click(function(){
@@ -1758,105 +1968,74 @@ define(['jquery','functions'],function($,_f){
 			$('#ap-tabs .equipment-box-none').hide();
 			$('#ap-tabs .equipment-compile').hide();
 			$('#ap-tabs .equipment-icon').show();
+			
+			
 			//获取设备信息
-			var name = $('#ap-input-none').val();
+			var name = $('#ap-tabs #ap-input-none').val();
 			//获取位置信息
-			var location  = $('#ap-location-label-none').val();
+			var location  = $('#ap-tabs #ap-location-label-none').val();
 			//获取dhcp信息
-			var dhcp = $('.ap-dhcp-label').val();
-			//获取ip信息
-			var ip = $('.ap-ip-label-none').text();
-			//获取掩码信息
-			var mark = $('.ap-mark-label').text();
-			//获取网关信息
-			var getways = $('.ap-gateway-label').text();
+			var dhcp = $('#ap-tabs .ap-dhcp-label').val();
+			
 			//获取dns1信息
 			var dns1 = $('#ap-dns1-label').val();
+			
 			//获取dns2信息
 			var dns2 = $('#ap-dns2-label').val();
+			//隐藏内容   ip
+			var ip = $('#ap-tabs .ap-ip-input').val();
+			if(dhcp == 1){
+				if(ip == ''){
+					toast('提示信息','ip地址为必填项！','warning');
+					return;
+				};
+			};
+			//隐藏内容   掩码
+			var mark = $('#ap-tabs .ap-mark-input').val();
+			if(dhcp == 1){
+				if(mark == ''){
+					toast('提示信息','掩码地址为必填项！','warning');
+					return;
+				};
+			};
+			//隐藏内容   网关
+			var gateway = $('#ap-tabs .ap-gateway-input').val();
+			if(dhcp == 1){
+				if(gateway == ''){
+					toast('提示信息','网关地址为必填项！','warning');
+					return;
+				};
+			};
 			var _id = $('.list-select').attr('a')
 			console.log(_id)
 			var url =_IFA['ap_update_device_config']+_id;
 			var type = 'PUT';
-			var data = JSON.stringify({
-			'radios':{
-				'r24_status':name,
-				'r24_channel':location,
-				'r24_mode':dhcp,
-				'r24_bandwidth':ip,
-				'r24_power':mark,
-				'r24_maxclient':getways,
-				'r5_status':dns1,
-				'r5_channel':dns2
-				}
-			});
+			var data = {
+				'device_name':name,
+				'location':location,
+				'ip_type':dhcp,
+				'ipv4':ip,
+				'netmask':mark,
+				'gateway':gateway,
+				'dns1':dns1,
+				'dns2':dns2
+			};
+			if(dhcp == 0){//启用
+				delete data.ipv4;
+				delete data.netmask;
+				delete data.gateway;
+			}else if(dhcp == 1){//静态
+				
+			};
+			if(dns1 == ''){
+				delete data.dns1;
+			};
+			if(dns2 == ''){
+				delete data.dns2;
+			};
 			console.log(data);
-//			_ajax(url,type,data,function(data){
-//				if(data.error_code==0){
-//					toast('提示消息','操作成功','success');
-//					loadTree();
-//				}else{
-//					toast('提示消息',data.error_message,'error');
-//				}
-//			});
-		});
-	};
-	//总览---射频修改
-	var amendFrequency = function(){
-		$('#ap-tabs .frequency-icon').click(function(){
-			$('#ap-tabs .frequency-compile').show();
-			$('#ap-tabs .frequency-icon').hide();
-			$('#ap-tabs .ap-show').hide();
-			$('#ap-tabs .ap-hide').show();
-		});
-	};
-	//总览---射频保存
-	var saveFrequency = function(){
-		$('#ap-tabs .frequency-compile').click(function(){
-			$('#ap-tabs .frequency-compile').hide();
-			$('#ap-tabs .frequency-icon').show();
-			$('#ap-tabs .ap-show').show();
-			$('#ap-tabs .ap-hide').hide();
-			//信道value
-		var r24_status = $('#ap-tabs .left-channel-select').val();
-		var r5_status = $('#ap-tabs .right-channel-select').val();
-		
-		//协议value
-		var r24_mode = $('#ap-tabs .left-agreement-select').val();
-		var r5_mode = $('#ap-tabs .left-agreement-select').val();
-		
-		//功率value
-		var r24_power = $('#ap-tabs .left-power-select').val();
-		var r5_power = $('#ap-tabs .right-power-select').val();
-		
-		//最大终端数value
-		var r24_maxclients = $('#ap-tabs .left-terminal-selectl').val();
-		var r5_maxclients = $('#ap-tabs .right-terminal-selectl').val();
-		
-		var _id = $('.list-select').attr('a')
-		console.log(_id)
-		var url =_IFA['ap_update_device_config']+_id;
-		var type = 'PUT';
-		var r2 = getFormValue('#ap-tabs #equipment-form');
-		console.log(url)
-		var data = JSON.stringify({
-			'rf_config':{
-				'r24_status':r2.r24_status,
-				'r24_channel':0,
-				'r24_mode':r2.r24_mode,
-				'r24_bandwidth':r2.r24_bandwidth,
-				'r24_power':r2.r24_power,
-				'r24_maxclient':r2.r24_maxclients,
-				'r5_status':r2.r5_status,
-				'r5_channel':0,
-				'r5_mode':r2.r5_mode,
-				'r5_bandwidth':r2.r5_bandwidth,
-				'r5_power':r2.r5_power,
-				'r5_maxclient':r2.r5_maxclients
-			}
-		});
-		console.log(data);
-		_ajax(url,type,data,function(data){
+			data = JSON.stringify(data);
+			_ajax(url,type,data,function(data){
 				if(data.error_code==0){
 					toast('提示消息','操作成功','success');
 					loadTree();
@@ -1866,11 +2045,246 @@ define(['jquery','functions'],function($,_f){
 			});
 		});
 	};
+	
+	//总览---射频---2.4G信道获取
+	var addChannel_24 = function(){
+		$('#ap-tabs .left-channel-select').append(
+			'<option value="-1">'+'关闭'+'</option>'
+			+'<option value="0">'+'自动'+'</option>'
+		);
+		for(var i = 1;i < 14;i++){
+			$('#ap-tabs .left-channel-select').append(
+				'<option value='+i+'>'+i+'</option>'
+			);
+		};
+	};
+	//5G信道添加
+//	var 	addChannel_5 = function(){
+//		$('#ap-tabs .right-channel-select').append(
+//			'<option value="-1">'+'关闭'+'</option>'
+//			+'<option value="0">'+'自动'+'</option>'
+//		);
+//		for(var i = 1;i < 126;i++){
+//			$('#ap-tabs .right-channel-select').append(
+//				'<option value='+i+'>'+i+'</option>'
+//			);
+//		};
+//	};
+//  //设置缓存
+//  var setCache = function(cls,key,val){
+//  	   $(cls).data(key,val);
+//  }
+//  //获取缓存
+//  var getCache = function(cls,key){
+//  		return $(cls).data(key);
+//  }
+	//总览---射频修改
+	var amendFrequency = function(){
+		$('#ap-tabs .frequency-icon').click(function(){
+			$('#ap-tabs .frequency-compile').show();
+			$('#ap-tabs .frequency-icon').hide();
+			$('#ap-tabs .ap-show').hide();
+			$('#ap-tabs .ap-hide').show();
+			if(_id == undefined){
+				_id = $('.group-list-particulars').find('li').first().attr('a');
+			};
+			var _id = $('.list-select').attr('a');
+			var url = _IFA['ap_get_device_config_detail']+_id;
+			console.log(url);
+			_ajax(url,'GET','',function(data){
+				if(data.error_code == 0){
+					//data.data.rf_config转成data.rf_config
+					var data = data.rf_config;
+					console.log(data);
+					//通过返回值渲染里面数据
+					//2.4G信道
+					if(data.r24_status == 0){
+						$('#ap-tabs .left-channel-select').val(-1);
+					}else if(data.r24_status == 1){
+						$('#ap-tabs .left-channel-select').val(data.r24_channel);
+					};
+					//2.4G协议
+					$('#ap-tabs .left-agreement-select').val(data.r24_mode);
+					//2.4G带宽
+					if(data.r24_mode == 4){
+						$('#ap-tabs .left-bandwidth-select').show();
+						$('#ap-tabs .left-bandwidth-select-bottom').hide();
+						$('#ap-tabs .left-bandwidth-select').val(data.r24_bandwidth)
+					}else if(data.r24_mode == 12){
+						$('#ap-tabs .left-bandwidth-select').hide();
+						$('#ap-tabs .left-bandwidth-select-bottom').show();
+						$('#ap-tabs .left-bandwidth-select-bottom').val(data.r24_bandwidth);
+					};
+					//2.4G功率
+					$('#ap-tabs .left-power-select').val(data.r24_power);
+					//2.4G最大终端数
+					$('#ap-tabs .left-terminal-select').val(data.r24_maxclient);
+					
+					//5G信道
+					if(data.r5_status==1){
+						$('#ap-tabs .right-channel-select').val(data.r5_channel);
+					}else if(data.r5_status == 0){
+						$('#ap-tabs .right-channel-select').val(-1);
+					};
+					
+					//5G协议
+					$('#ap-tabs .right-agreement-select').val(data.r5_mode);
+					//5G带宽
+					if(data.r5_mode == 9){
+						$('#ap-tabs .right-bandwidth-select').show();
+						$('#ap-tabs .right-bandwidth-select-bottom').hide();
+						$('#ap-tabs .right-bandwidth-select').val(data.r5_bandwidth)
+					}else if(data.r5_mode == 16){
+						$('#ap-tabs .right-bandwidth-select').hide();
+						$('#ap-tabs .right-bandwidth-select-bottom').show();
+						$('#ap-tabs .right-bandwidth-select-bottom').val(data.r5_bandwidth)
+					};
+					
+					//5G功率
+					$('#ap-tabs .right-power-select').val(data.r5_power);
+					//5G最大终端数
+					$('#ap-tabs .right-terminal-select').val(data.r5_maxclient);
+					//设置缓存
+					setCache('#ap-tabs .frequency','r5_channel',data.r5_channel);
+					setCache('#ap-tabs .frequency','r24_channel',data.r24_channel);
+					
+				};
+			});
+		});
+	};
+	//总览---射频保存
+	var saveFrequency = function(){
+		$('#ap-tabs .frequency-compile').click(function(){
+			$('#ap-tabs .frequency-compile').hide();
+			$('#ap-tabs .frequency-icon').show();
+			$('#ap-tabs .ap-show').show();
+			$('#ap-tabs .ap-hide').hide();
+			//获取缓存
+			var channel_r5_get = getCache('#ap-tabs .frequency',r5_channel);
+			var channel_r24_get = getCache('#ap-tabs .frequency',r24_channel);
+			console.log(channel_r5_get);
+			console.log(channel_r24_get);
+			//2.4G信道++   status
+			var r24_status = '';
+			var r24_channel = $('#ap-tabs .left-channel-select').val();
+			if(r24_channel >=0 ){
+				r24_status = 1;//开启状态
+			}else if(r24_channel == -1){
+				r24_status = 0;//关闭状态
+				r24_channel = channel_r24_get.r24_channel;
+			}
+			//5G信道++   status
+			var r5_status = '';
+			var r5_channel = $('#ap-tabs .right-channel-select').val();
+			if(r5_channel >=0){
+				r5_status = 1;  //开启状态
+			}else if(r5_channel == -1){
+				r5_status = 0;//关闭状态
+				r5_channel = channel_r5_get.r5_channel;
+			}
+			
+			
+			//协议value
+			var r24_mode = $('#ap-tabs .left-agreement-select').val();
+			var r5_mode = $('#ap-tabs .right-agreement-select').val();
+			
+			//2，4G带宽
+			var r24_bandwidth = '';
+			if(r24_mode == 4){
+				r24_bandwidth = $('#ap-tabs .left-bandwidth-select').val();
+			}else if(r24_mode == 12){
+				r24_bandwidth = $('#ap-tabs .left-bandwidth-select-bottom').val();
+			}
+			//5G带宽
+			var r5_bandwidth = '';
+			if(r5_mode == 9){
+				r5_bandwidth = $('#ap-tabs .right-bandwidth-select').val();
+			}else if(r5_mode == 16){
+				r5_bandwidth = $('#ap-tabs .right-bandwidth-select-bottom').val();
+			}
+			//功率value
+			var r24_power = $('#ap-tabs .left-power-select').val();
+			var r5_power = $('#ap-tabs .right-power-select').val();
+			
+			//最大终端数value
+			var r24_maxclients = $('#ap-tabs .left-terminal .left-terminal-select').val();
+			var r5_maxclients = $('#ap-tabs .right-terminal-select').val();
+			console.log(r24_maxclients)
+//			console.log($('input[name="r24_maxclients"]'))
+			var _id = $('.list-select').attr('a')
+			console.log(_id)
+			var url =_IFA['ap_update_device_config']+_id;
+			var type = 'PUT';
+	//		var r2 = getFormValue('#ap-tabs #equipment-form');
+			console.log(url)
+			var data = JSON.stringify({
+				'rf_config':{
+					'r24_status':r24_status,
+					'r24_channel':r24_channel,
+					'r24_mode':r24_mode,
+					'r24_bandwidth':r24_bandwidth,
+					'r24_power':r24_power,
+					'r24_maxclient':r24_maxclients,
+					'r5_status':r5_status,
+					'r5_channel':r5_channel,
+					'r5_mode':r5_mode,
+					'r5_bandwidth':r5_bandwidth,
+					'r5_power':r5_power,
+					'r5_maxclient':r5_maxclients
+				}
+			});
+			console.log(data);
+			_ajax(url,type,data,function(data){
+				if(data.error_code==0){
+					toast('提示消息','操作成功','success');
+					loadTree();
+				}else{
+					toast('提示消息',data.error_message,'error');
+				}
+			});
+		});
+	};
+	//射频协议联动---2.4G
+	var agreement_24G  = function(){
+		$('#ap-tabs .left-agreement-select').change(function(){
+			if($('#ap-tabs .left-agreement-select').val()==4){
+				$('#ap-tabs .left-bandwidth-select').show();
+				$('#ap-tabs .left-bandwidth-select-bottom').hide();
+			}else if($('#ap-tabs .left-agreement-select').val()==12){
+				$('#ap-tabs .left-bandwidth-select').hide();
+				$('#ap-tabs .left-bandwidth-select-bottom').show();
+			}
+		});
+	};
+	//射频协议联动---5G
+	var agreement_5G = function(){
+		$('#ap-tabs .right-agreement-select').change(function(){
+			if($('#ap-tabs .right-agreement-select').val() ==9){
+				$('#ap-tabs .right-bandwidth-select').show();
+				$('#ap-tabs .right-bandwidth-select-bottom').hide();
+			}else if($('#ap-tabs .right-agreement-select').val() ==16){
+				$('#ap-tabs .right-bandwidth-select').hide();
+				$('#ap-tabs .right-bandwidth-select-bottom').show();
+			};
+		});
+	};
 	//ap详情点击
 	var leftClick = function(){
 		$('.win-ap-particulars .group-list-particulars li').click(function(){
 			$(this).addClass('list-select').siblings().removeClass('list-select');
 			getList();
+			//设备清空数据
+		
+			console.log($('#ap-tabs .equipment-box .left-equipment>div>span:nth-child(2)').text())
+			$('#ap-tabs .equipment-box .left-equipment>div>span:nth-child(2)').addClass('aaa');
+			$('#ap-tabs .left-equipment>div>input').addClass('bbb');
+			$('#ap-tabs .right-equipment>div>span:nth-child(2)').addClass('aaa');
+			$('#ap-tabs .right-equipment>div>input').addClass('bbb');
+			//射频清空数据
+			$('#ap-tabs .cont-box02-left>div>span:nth-child(2)').addClass('aaa');
+			$('#ap-tabs .cont-box02-right>div>span:nth-child(2)').addClass('aaa');
+			$('.aaa').text('');
+			$('.bbb').val('');
 			//获取日志记录
 			var tab = $('#ap-tabs').tabs('getSelected');
 			var index = $('#ap-tabs').tabs('getTabIndex',tab);
@@ -1896,7 +2310,9 @@ define(['jquery','functions'],function($,_f){
 		}
 		var _id = $('.list-select').attr('a');
 		var url = _IFA['ap_get_device_detail']+_id;
+		console.log(url)
 		_ajax(url,'GET','',function (data) {
+			console.log(data)
 	            if(data.error_code == 0){
 	           	 	//名称	
 					$('#ap-input').val(data.device_name);
@@ -1909,7 +2325,7 @@ define(['jquery','functions'],function($,_f){
 					    res += str[i];
 					    if(i < len -2 ){
 						    if(i % 2 == 1) {
-						    		 res = res + ':';
+						    		 res = res + '-';
 						    };
 					    };
 					};
@@ -1928,12 +2344,10 @@ define(['jquery','functions'],function($,_f){
 					$('.ap-cpu-label').text(data.cpu_load);
 					//内存
 					$('.ap-internal-label').text(data.mem_load);
-					//隐藏内容   名称
-					$('#ap-input-none').val(data.device_name);
-					//隐藏内容   位置
-					$('#ap-location-label-none').val(data.location);
-					//隐藏内容   ip
-					$('.ap-ip-label-none').text(data.ipv4);
+					//设置缓存
+					setCache('#ap-tabs .equipment','ip',data.ipv4);//ipv4
+					setCache('#ap-tabs .equipment','netmask',data.netmask);//掩码
+					setCache('#ap-tabs .equipment','gateway',data.gateway);//网关
 					//2.4G信道
 					console.log(data);
 					
@@ -2442,6 +2856,12 @@ define(['jquery','functions'],function($,_f){
 		var ss = date.getSeconds();
 		return yy+'-'+mm+'-'+dd+' '+hh+':'+mm+':'+ss;
 	}
+	/*日志导出获取时间*/
+	var getLogTimer = function(){
+		var date = new Date();
+		var str = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
+		return str;
+	}
 	/*打开日志导出窗口*/
 	var btnExportAp = function(){
 		$('.export-record').click(function(){
@@ -2463,8 +2883,8 @@ define(['jquery','functions'],function($,_f){
 				//console.log(getNowTimer());
 				initDateTimer(['.ap-start-timer']);
 				initDateTimer(['.ap-end-timer']);
-				$('.win-export-ap-abc .ap-start-timer').datetimebox('setValue', getNowTimer());
-				$('.win-export-ap-abc .ap-end-timer').datetimebox('setValue', getNowTimer());
+				$('.win-export-ap-abc .ap-start-timer').datebox('setValue', getLogTimer());
+				$('.win-export-ap-abc .ap-end-timer').datebox('setValue', getLogTimer());
 				btnSubmitExportAp();
 				btnConcelAp();
 			},

@@ -1332,7 +1332,13 @@ hr{
 	margin-left: 10px;
 	box-sizing: border-box;
 }
-
+#ap-tabs .ap-ip-input,#ap-tabs .ap-mark-input,#ap-tabs .ap-gateway-input{
+	width: 180px;
+	height: 20px;
+	float: left;
+	margin-left: 10px;
+	box-sizing: border-box;
+}
 /*射频显示样式*/
 #ap-tabs .ap-show .cont-box02-left>div,#ap-tabs .ap-show .cont-box02-right>div{
 	height: 20px;

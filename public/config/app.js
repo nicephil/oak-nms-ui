@@ -7,11 +7,11 @@
 	"taskIcon" : "network/images/task-icon-network.png",
 	"headIcon":"app-icon-network",
 	"height":"550",
-	"width":"1000"
+	"width":"1030"
 },{
 	"id" : "3",
 	"class":"app-ap-tip",
-	"title" : "AP",
+	"title" : "无线接入点",
 	"href":"ap/index.html",
 	"icon" : "ap/images/app-ap.png",
 	"taskIcon" : "ap/images/task-icon-ap.png",
