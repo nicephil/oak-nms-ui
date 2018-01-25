@@ -1,0 +1,1427 @@
+.clear{
+	clear: both;
+}
+.app-icon-client{
+	background: url(../images/win-icon-client.png) no-repeat center center;
+	height: 25px;
+	margin-top: -11px;
+}
+.win-client-user .head-title-img{
+	vertical-align: middle;
+	display: inline-block;
+}
+.win-client-user .nav-home-title{
+	margin:10px 0 5px;
+}
+.win-client-user .tree-indent{
+	display: none;
+}
+.win-client-user .tree-node{
+	padding-left:5px;
+}
+.win-client-user .tree li ul li ul li div{
+	padding-left: 42px;
+}
+.win-client-user .tree li ul li ul li ul li div{
+	padding-left: 59px !important;
+}
+.win-client-user .tree li ul li ul li div .tree-hit{
+	margin-left: -16px;
+}
+.win-client-user .tree-title{
+	padding-left: 30px;
+}
+.win-client-user  .tree-icon{
+	background: url(../images/client_zu.png) no-repeat center center;
+}
+.client_user_list li{
+	margin-bottom: 5px;
+}
+.win-client-user .tree li ul li:last-child ul li ul li>div .tree-icon{
+	background: url(../images/client_yh.png) no-repeat center center;
+}
+.sm-header .panel-title{
+	font-weight: bold;
+}
+.client-adress-left .tree li ul li ul li>div .tree-icon{
+	background: url(../images/address_icon.png) no-repeat center center;
+}
+.client-adress-left .tree li ul li:last-child ul li ul li>div .tree-icon{
+	background: url(../images/address_icon.png) no-repeat center center;
+}
+/*终端布局*/
+#app-client-layout{
+	padding:0px;
+	margin:0px;
+	height:100%;
+	width:100%;
+	border: 0px;
+}
+
+#app-client-layout .client-region-west{
+	width:320px;
+	min-width:320px;
+	border-right:1px solid #e2e2e3;
+	height:100%;
+	box-sizing: border-box;
+}
+#app-client-layout .client-region-center{
+}
+/*/终端布局*/
+
+/*/左侧布局*/
+#app-client-layout .client_nav_left{
+	width:70px;
+	border-right:1px solid #ddd;
+	padding-top:20px;
+}
+#app-client-layout .client_nav_left ul li{
+	width: 32px;
+	height: 32px;
+	background: url(../images/client_pc.png) no-repeat;
+	background-size: 100% 100%;
+	margin-bottom: 18px;
+	cursor: pointer;
+}
+#app-client-layout .client_nav_left ul li.client_user{
+	background: url(../images/client_user.png) no-repeat;
+}
+#app-client-layout .client_nav_left .client-region-center{
+	width:100%;
+}
+#app-client-layout .client_nav_right .right_nav_title{
+	overflow: hidden;
+	padding-top:22px;
+}
+#app-client-layout .client_nav_right .nav-segment {
+    width: 100%;
+    height: 1px;
+    background: #ddd;
+    margin-top: 19px;
+    margin-bottom: 7px;
+}
+#app-client-layout .client_nav_right .right_nav_title .nav_title_left{
+	float: left;
+	cursor: pointer;
+}
+#app-client-layout .client_nav_right .right_nav_title .nav_title_left span{
+	display: inline-block;
+	width:16px;
+	height: 14px;
+	background: url(../images/client_gl.png) no-repeat;
+	background-size: 100% 100%;
+	vertical-align: middle;
+	margin:0 5px 2px 0;
+}
+#app-client-layout .client_nav_right .right_nav_title .nav_title_right{
+	float: right;
+	color:#579cc8;
+	cursor: pointer;
+}
+#app-client-layout .client_nav_right .nav_group_list .panel-tool{
+	display: none;
+}
+#app-client-layout .client_nav_right .nav_group_list .panel-icon{
+	left: 5px;
+    width: 16px;
+    height: 18px;
+    background: url(../images/tree_arrow.png) no-repeat -4px 0px;
+}
+#app-client-layout .client_nav_right .nav_group_list .accordion .accordion-header{
+	background: #fff;
+}
+#app-client-layout .client_nav_right .nav_group_list .accordion .panel-header{
+	padding:0;
+}
+#app-client-layout .client_nav_right .nav_group_list .accordion .panel-title{
+	color:#4f5358;
+	font-weight: normal;
+	font-size: 14px;
+	text-align: left;
+	padding-left: 20px;
+	border-bottom: 1px solid #ddd;
+}
+#app-client-layout .client_nav_right .nav_group_list .accordion .panel-last .panel-title{
+	border-bottom: 0;
+}
+#app-client-layout .client_nav_right .nav_group_list .accordion .accordion-header-selected .panel-title{
+	color:#4f5358;
+	font-weight: normal;
+	font-size: 14px;
+	text-align: left;
+	padding-left: 20px;
+}
+#app-client-layout .client_nav_right .nav_group_list .accordion .client_group_list{
+	height:35px;
+	cursor: pointer;
+	line-height: 36px;
+}
+#app-client-layout .client_nav_right .nav_group_list .accordion .client_group_list span{
+	font-size: 14px;
+	color:#4F5258;
+}
+#app-client-layout .client_nav_right .nav_group_list .datagrid-cell-check{
+	display: inline-block;
+	vertical-align: middle;
+	margin:0 0 3.5px 0;
+}
+/*右侧布局*/
+#app-client-layout .client-region-center .win-content{
+	margin:0px;
+	padding:0px;
+	vertical-align: top;
+	position: relative;
+	height:100%;
+	width:100%;
+}
+#app-client-layout .client-region-center .win-content .right-menu{
+	width:auto;
+	height:50px;
+	position: relative;
+	padding-top: 10px;
+}
+#app-client-layout .client-region-center .win-content .right-menu .btn-group{
+	width:70px;
+	height:30px;
+	float:left;
+	position: relative;
+}
+#app-client-layout .client-region-center .win-content .right-menu .btn-edit{
+	float:left;
+}
+#app-client-layout .client-region-center .win-content .input-search{
+	width:200px;
+	height:28px;
+	line-height:28px;
+	position: absolute;
+	right:0px;
+	border: 1px solid #e2e2e3;
+	border-radius: 5px;
+	text-indent: 26px;
+}
+#app-client-layout .client-region-center .win-content .icon-magnifier{
+	height:30px;
+	width:26px;
+	display: inline-block;
+	position: absolute;
+	right:174px;
+	background: url(../../public/images/icon-magnifier.png) no-repeat 4px center; 
+}
+#app-client-layout .client-region-center .win-content .icon-magnifier:hover{
+	cursor: pointer;
+}
+
+#app-client-layout .client-region-center .win-content .dropdown-menu{
+	min-width:100px;
+	padding:0px;
+	margin-left: 0px;
+	border:1px solid #e2e2e3;
+}
+#app-client-layout .client-region-center .win-content .dropdown-menu li{
+	height: 30px;
+	line-height: 30px;
+	text-align: center;
+	border-bottom: 1px solid #dee5ea;
+}
+#app-client-layout .client-region-center .win-content .btn-group a{
+	margin-left:0px;
+}
+#app-client-layout .client-region-center .win-content .dropdown-menu li:hover{
+	cursor: pointer;
+	background: #eff4f5;
+	color: #6badd8;
+}
+#app-client-layout .client-region-center .win-content .dropdown-menu li.last{
+	border-bottom: 0px solid #dee5ea;
+}
+#app-client-layout .client-region-center .win-content .dropdown-menu li.last:hover{
+	border-bottom: 0px solid #dee5ea;
+}
+#app-client-layout .client-region-center .win-content .app-page{
+    position: relative;
+    height: 70px;
+}
+#app-client-layout .client-region-center .win-content .app-page .pagination{
+	display: inline-block;
+    padding-left: 0;
+    border-radius: 4px;
+    position: absolute;
+    margin-top:19px;
+}
+
+#app-client-layout .client-region-center .win-content .app-page .pagination>li{
+	display: inline;
+}
+#app-client-layout .client-region-center .datagrid-header{
+	/*height: 55px !important;*/
+    /*overflow: auto;*/
+}
+
+.datagrid-btable tr td:nth-child(1){
+	width: auto;
+}
+.datagrid-htable tr td:nth-child(1) div{
+	margin:0 10px;
+}
+.datagrid-btable td:nth-child(1) div{
+	margin:0 10px;
+}
+.datagrid-htable tr td:nth-child(2){
+	width:43px;
+	border-right: 1px solid #ddd;
+}
+#app-client-layout .client-region-center .datagrid-header td:nth-child(2){
+	border-right:1px solid #ddd;
+	width:auto;
+}
+#app-client-layout .client-region-center .datagrid-header .datagrid-cell, .datagrid-header .datagrid-cell-group{
+	margin:0 auto;
+}
+#app-client-layout .client-region-center td:last-child .datagrid-sort .datagrid-sort-icon{
+	display:block;
+	width:20px;
+	height: 20px;
+	background: url(../images/client_menu.png) no-repeat;
+	margin-left:6px;
+	cursor: pointer;
+}
+.tooltip {
+  position: absolute;
+  display: none;
+  z-index: 9900000;
+  outline: none;
+  opacity: 1;
+  filter: alpha(opacity=100);
+  padding: 3px 5px;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 3px;
+  -moz-border-radius: 3px 3px 3px 3px;
+  -webkit-border-radius: 3px 3px 3px 3px;
+  border-radius: 3px 3px 3px 3px;
+}
+.tooltip-arrow-outer,
+.tooltip-arrow {
+  position: absolute;
+  width: 0;
+  height: 0;
+  line-height: 0;
+  font-size: 0;
+  border-style: solid;
+  border-width: 6px;
+  border-color: transparent;
+  _border-color: tomato;
+  _filter: chroma(color=tomato);
+}
+.datagrid-btable tr td:nth-child(2){
+	padding-left: 0;
+	/*width:50px;
+	max-width:50px;*/
+}
+img.icon-row-disable{
+	width:22px;
+}
+.datagrid-btable tr td:nth-child(2) div{
+	position: relative;
+	text-align: left !important;
+}
+#app-client-layout .client-region-center .tips{
+	position: absolute;
+	top:5px;
+	right:2px;
+	width:10px;
+	height: 10px;
+	border-radius: 50%;
+	background: #ff7800;
+	margin: 0 0px 1px 3px;
+}
+
+#app-client-layout .client-user-admin .tips {
+	display: none;
+}
+#app-client-layout .menu_down{
+	position: absolute;
+    width: 140px;
+    z-index: 9999;
+    right: 0;
+    /* top: 0; */
+    margin-top: 35px;
+    border:1px solid #ddd;
+    border-bottom:0;
+    background: #fff;
+}
+#app-client-layout .menu_down ul li{
+	border-bottom: 1px solid #ddd;
+	padding:5px 15px;
+	font-size: 12px;
+	cursor: pointer;
+}
+#app-client-layout .menu_down ul li span{
+	font-size: 12px;
+}
+#app-client-layout .menu_down ul li .datagrid-cell-check{
+	display: inline-block;
+	vertical-align: middle;
+	margin-bottom: 3px;
+}
+/*左侧图标*/
+#app-client-layout .client-region-west .client-tab .client-tab-left{
+	height: 50px;
+	width: 122px;
+	float: left;
+	background: #eff4fa;
+}
+#app-client-layout .client-region-west .client-tab .client-tab-right{
+	height: 50px;
+	width: 122px;
+	float: left;
+	background: #fff;
+	border-left: 1px solid #eff4fa;
+}
+#app-client-layout .client-region-west .client-tab .client-tab-left .client-tab-left-icon{
+	width: 16px;
+	height: 20px;
+	float: left;
+	background: url(../images/left-blue.png) no-repeat;
+	margin-left: 53px;
+    margin-top: 14px;
+}
+#app-client-layout .client-region-west .client-tab .client-tab-right .client-tab-right-icon{
+	width: 20px;
+	height: 20px;
+	float: left;
+	background: url(../images/right-gray.png) no-repeat;
+	margin-left: 53px;
+    margin-top: 14px;
+}
+
+/*右侧布局*/
+/*逐条新增*/
+.error-name{
+	display: none;
+	position: absolute;
+    left: 114px;
+    top: 105px;
+    font-size: 12px;
+    color: red;
+    background: url(../images/error-message.png) no-repeat 0px 2px;
+	background-size: 12px 12px;
+	text-indent: 14px;
+}
+.error-email{
+	display: none;
+	color: red;
+	position: absolute;
+    left: 114px;
+    top: 160px;
+    font-size: 12px;
+	background: url(../images/error-message.png) no-repeat 0px 2px;
+	background-size: 12px 12px;
+	text-indent: 14px;
+}
+/* 用户-新增用户 */
+.client_yh .client-box{ width:650px;background:#ffffff; border-radius:4px; position: absolute; left: 50%; margin: 0px -325px; z-index:10;}
+.client_yh .client-box .title{ padding:0 20px; height:40px; border-radius: 10px 10px 0 0; background: #f0f4f8; text-align: center; line-height: 40px; font-size: 20px; color: #4f5358;border-bottom: 1px solid #e6eaee;}
+.client_yh .client-box .cont-box{ width: 100%; overflow: hidden;}
+.client_yh .client-box .cont-box .cont-title{ padding: 0 50px; height: 50px; line-height: 50px; font-size: 14px;}
+.client_yh .client-box .cont-box .cont-cont{padding: 0 50px; overflow: hidden;}
+.client_yh .client-box .cont-box .mbdz{padding: 0 50px; overflow: hidden; margin-bottom: 20px;}
+.client_yh .client-box .panel-header .panel-icon{
+	width: 16px;
+    height: 18px;
+    background: url(../images/tree_arrow.png) no-repeat -4px 0px;
+}
+.client_yh .cont-cont .input-box .input-text{
+	padding:0 10px;
+}
+.client_yh .client-box .cont-box .mbdz>div{
+	 border-radius:4px;
+	 padding:5px 10px 15px 10px;
+	 background:#fafbfd;    
+	 height: 159px;
+    overflow-y: auto;
+}
+.client_yh .client-box  .panel-tool{
+	display: none;
+}
+.client_yh .client-box  .panel-title{
+ 	text-align: left;
+ 	color:#4f5358;
+ 	font-size: 14px;
+ 	font-weight: normal;
+ 	padding-left:50px;
+ 	background: url(../images/client_zdy.png) 25px center no-repeat;
+ }
+.client_yh .client-box .dz_list{
+	background: url(../images/client_sb.png) 22px center no-repeat;
+	padding-left: 50px;
+	cursor: pointer;
+	line-height: 40px;
+ }
+.client_yh .client-box .dz_list:hover{
+ 	background: url(../images/client_sb.png) #E6F5FF 22px center no-repeat;
+ }
+ .client_yh .client-box .dz_list.current{
+ 	background: url(../images/client_sb.png) #E6F5FF 22px center no-repeat;
+ 	color:#333;
+ }
+.client_yh .client-box .accordion .accordion-header{
+ 	background:#fafbfd;
+ 	padding:0;
+ }
+.client_yh .client-box .accordion .accordion-header-selected{
+ 	background:#fafbfd;
+ }
+.client_yh .client-box .accordion .panel-last > .accordion-body{
+ 	background:#fafbfd;
+ 	padding-left: 26px;
+ }
+.client_yh .client-box .client_userlist{
+	 padding:0 50px;
+	 position: relative;
+	 height: 30px;
+	 margin-bottom: 30px;
+ }
+.client_yh .client-box .client_userlist .input-text{
+ 	width: 532px;
+    height: 30px;
+    border: 1px solid #ededed;
+    border-radius: 4px;
+    float: left;
+    background-color: #fafbfd;
+    padding:0 10px;
+ }
+.client_yh .client-box .client_userlist .arrow_down{
+  	width: 16px;
+    height: 18px;
+    background: url(../images/tree_arrow.png) no-repeat -4px 0px;
+    position: absolute;
+    top: 8px;
+    right: 50px;
+    cursor: pointer;
+}
+.client_yh .open{
+	box-shadow: none;
+}
+.client_yh .client-box .client_userlist .dropdown-menu{
+	width: 552px;
+	left:50px;
+	top:30px;
+	border-top:0;
+	border-radius: 0;
+	border:1px solid #ededed;
+	overflow-y:auto;
+	height: 70px;
+}
+.client_yh .client-box .client_userlist .dropdown-menu li{
+	padding:0 10px;
+	line-height: 30px;
+}
+.client_yh .client-box .cont-box .accordion .accordion-header-selected .panel-title{color:#4f5358;text-align:left;}
+.client_yh .client-box .cont-box .cont-cont .input-box{ width: 100%; }
+.client_yh .cont-cont .input-box .input-left{width: 62px;  height: 30px; line-height: 30px; float: left;}
+.client_yh .cont-cont .input-box .input-left01{width: 100px;  height: 30px; line-height: 30px; float: left;}
+.client_yh .cont-cont .input-box .input-text{ width: 532px; height: 30px; border: 1px solid #ededed; border-radius: 4px; float: left; background-color: #fafbfd;}
+.client_yh .cont-cont .input-box .input-text01{ width: 398px; height: 28px; border: 1px solid #ededed; border-radius: 4px;  float: left; background-color: #fafbfd;}
+.client_yh .cont-cont .input-box .input-selected{border: 1px solid #9bcce6;}
+.client_yh .cont-cont .input-box .input-boxBox .input-error{border: 1px solid #eca8a5;}
+.client_yh .cont-cont .input-box .error-prompt{ padding-left: 82px; margin:4px 0 0 0; background: url(../images/user-error.png) no-repeat 60px center; color: #de6d6d;}
+.client_yh .cont-cont .input-box .input-boxBox01 .select-box{ width:68px; height: 30px;border: 1px solid #ededed; border-radius: 4px;appearance:none;text-indent:10px;/*将默认的select选择框样式清除*/-moz-appearance:none;-webkit-appearance:none; float: left; margin-right: 20px; background:url(../images/mask-select.png); background-color: #fafbfd; background-repeat: no-repeat; background-position: 48px center;}
+.client_yh .cont-cont .input-box .input-boxBox01{ width: 488px; height: 30px; overflow: hidden; float: left;}
+.client_yh .cont-cont .input-box .input-boxBox02{ width: 450px; height: 30px; overflow: hidden; float: left;}
+.client_yh .cont-cont .input-box .refresh{ width: 24px; height: 30px; margin-left:30px; background: url(../images/mask-refresh.png) no-repeat center center; float: left; cursor: pointer;}
+.client_yh .cont-cont .input-box .select-box01{ width:488px; height: 30px;border:1px solid #ededed; border-radius: 4px;appearance:none;/*将默认的select选择框样式清除*/-moz-appearance:none;-webkit-appearance:none; float: left; background:url(../images/mask-select.png);background-color: #fafbfd; background-repeat: no-repeat; background-position: 468px center;}
+.client_yh .cont-cont .input-box .choice{ display: inline-block; height: 30px; line-height: 30px; float: left;  margin-left: 18px;}
+.client_yh .select-div{ display: inline-block; height: 28px; border: 1px solid #ededed; border-radius: 4px; background: url(../images/calendar-bg.png); overflow: hidden;}
+.win-export-client .select-div .select-date{ width: 20px; height: 20px; background: url(../images/mask-date.png) no-repeat; float: left;margin: 4px 10px;}
+.win-export-client .select-date{
+	display: none;
+}
+.win-export-client .select-div .textbox>.textbox-text{
+	padding-left:10px;
+}
+.win-export-client .select-div .textbox{
+	margin-top: 0;
+}
+.win-export-client .select-div .select-time{ height: 30px; line-height: 30px; display: none; border:none;outline:none;float: left; padding-right: 20px; background: url(../images/mask-select01.png) no-repeat right center; margin-right: 10px;}
+.client-footer{padding: 0 50px; height: 55px; overflow: hidden;border-top: 1px solid #ededed; background:#f0f4f8; border-radius: 0 0 4px 4px; }
+.client-footer .but-cancel{font-size: 14px;display: inline-block; padding: 0 28px; height: 30px; border: 1px solid #ced0da; border-radius: 4px; background: url(../images/but-gray-noselected.png); line-height: 28px; cursor: pointer;margin-top: 12px;}
+.client-footer .cancel-hover:hover{ background: url(../images/but-gray-selected.png); }
+.client-footer .but-update{font-size: 14px; margin-left: 20px;color: #fff; display: inline-block; padding: 0 14px; height: 30px; border: 1px solid #85c8a7; border-radius: 4px; background: url(../images/but-green-noselected.png); line-height: 28px; cursor: pointer; margin-top: 12px;}
+.client-footer .update-hover:hover{background: url(../images/but-green-selected.png);}
+.client-footer .but-conserve{font-size: 14px;margin-left: 20px;  color: #fff; display: inline-block; padding: 0 28px; height: 30px; border: 1px solid #5497c1; border-radius: 4px; background: url(../images/but-blue-noselected.png); line-height: 28px; cursor: pointer;margin-top: 12px;margin-right: 20px;}
+.client-footer .conserve-hover:hover{background: url(../images/but-blue-selected.png);}
+.client-footer .but-conserve01{font-size: 14px;margin-left: 20px;  color: #fff; display: inline-block; padding: 0 14px; height: 30px; border: 1px solid #5497c1; border-radius: 4px; background: url(../images/but-blue-noselected.png); line-height: 28px; cursor: pointer;margin-top: 12px;}
+.client-footer .conserve01-hover:hover{background: url(../images/but-blue-selected.png);}
+.select-radio{margin-top: 10px;display: block;float: left;margin-right: 5px;}
+
+.client-footer .button{font-size: 14px;display: inline-block; padding: 0 28px; height: 30px; border: 1px solid #ced0da; border-radius: 4px; background: url(../images/but-gray-noselected.png); line-height: 28px; cursor: pointer;margin-top: 12px;}
+.client-footer .button:hover{ background: url(../images/but-gray-selected.png); }
+.client-footer .btn-next{margin-left:20px;}
+.client-footer .btn-pre{padding:0px 20px;	padding:0px 20px}
+.client_yh .client-box .mu_dzb{
+	padding:0 50px;
+}
+.client_yh .client-box .mu_dzb ul li{
+	margin-bottom:10px;
+}
+.client_yh .client-box .mu_dzb ul li .client_dj_time input{
+	width:58px;
+	height: 30px;
+	border-radius: 4px;
+	border:1px solid #ededed;
+	padding:0 10px;
+}
+.client_yh .client-box .mu_dzb ul li .client_dj_time span{
+	margin:0 10px;
+}
+.client_yh .client-box .client_dj_time{
+	padding-left:25px;
+	margin-top:8px;
+}
+.client_yh .client-box .wl_xs{
+	padding:0 50px;
+}
+.client_yh .client-box .wl_xs ul li{
+	margin-bottom: 15px;
+}
+.client_yh .client-box .wl_xs ul li:last-child{
+	margin-bottom: 0;
+}
+.client_yh .client-box .wl_xs ul li>div{
+	display: inline-block;
+	vertical-align: middle;
+	margin-bottom: 2px;
+}
+.client_yh .client-box .wl_xs:last-child{
+	margin-bottom: 18px;
+}
+.client_yh .client-box .wl_xs ul li .input-text{
+	width: 178px;
+	height: 30px;
+	border-radius: 4px;
+	border:1px solid #ededed;
+	padding:0 10px;
+}
+.client_yh .client-box .wl_xs ul li span{
+	margin:0 5px;
+}
+.icon-add{
+	background: url(../images/win-icon-client.png) no-repeat center center;
+	height: 25px;
+	margin-top: -11px;
+}
+.client_yh .client-box  .remove_cont{
+	padding:50px 60px;
+	overflow:hidden;
+}
+.client_yh .client-box  .remove_cont .remove_icon{
+	float: left;
+	margin-top: 10px;
+}
+.client_yh .client-box  .remove_cont .remove_text{
+	float: left;
+	width:450px;
+	margin-left: 20px;
+	line-height:40px;
+	font-size: 16px;
+	color:#4f5358;
+}
+.client-div-left .left-menu{
+	padding-top: 22px;
+}
+.client-div-left .left-menu .btn{
+	float: left;
+}
+.client-div-left .left-menu .btn-group{
+	margin-left: 15px;
+    position: relative;
+    width: 70px;
+    float: left;
+}
+.win-addressAdd-client .client-box .cont-box .cont-cont{
+	margin-bottom: 30px;
+}
+.win-editAdd-client .client-box .cont-box .cont-cont{
+	margin-bottom: 30px;
+}
+.client-div-left .dropdown-menu{
+	min-width:100px;
+	padding:0px;
+	margin-left: 0px;
+	border:1px solid #e2e2e3;
+}
+.client-div-left .dropdown-menu li{
+	height: 30px;
+	line-height: 30px;
+	text-align: center;
+	border-bottom: 1px solid #dee5ea;
+}
+.client-div-left .btn-group a{
+	margin-left:0px;
+}
+.client-div-left .dropdown-menu li:hover{
+	cursor: pointer;
+	background: #eff4f5;
+	color: #6badd8;
+}
+.client-div-left .dropdown-menu li.last{
+	border-bottom: 0px solid #dee5ea;
+}
+.client-div-left .dropdown-menu li.last:hover{
+	border-bottom: 0px solid #dee5ea;
+}
+.client-adress-left .tree{
+	height:320px !important;
+}
+/*用户终端管理*/
+.client-user .client_company{
+	padding-top: 22px;
+}
+.client-user .client_company img{
+	vertical-align: middle;    
+	margin: 0 0 2px 0;
+}
+.client-user .client-div-left .client_company{
+	padding-top:15px;
+}
+.win-add-blacklist .add-title-group{
+	margin: 0 0 20px 0;
+	float: left;
+}
+.win-add-blacklist #select-add-ap-group{
+	margin-left: 20px;
+	float: right;
+}
+.win-add-blacklist .batch-word-address{
+	width: 199px;
+	height: 38px;
+	line-height: 38px;
+	text-align: center;
+	float: left;
+	background: #fafbfd;
+}
+.win-add-blacklist .batch-word-name{
+	width: 150px;
+	height: 38px;
+	line-height: 38px;
+	text-align: center;
+	float: left;
+	background: #fafbfd;
+}
+.win-add-blacklist .batch-word-location{
+	width: 150px;
+	height: 38px;
+	line-height: 38px;
+	text-align: center;
+	float: left;
+	background: #fafbfd;
+}
+.win-add-blacklist .batch-word-img{
+	width: 75px;
+	height: 38px;
+	line-height: 38px;
+	text-align: center;
+	float: left;
+	background: #fafbfd;
+}
+.win-add-blacklist .cont-box02{
+	padding: 0px 37px;
+	height: 50px;
+	line-height: 50px;
+}
+.win-add-blacklist .batch-box{
+	padding: 0px;
+	margin-top: 0;
+}
+.win-add-blacklist .blacklist_type{
+	padding:0 50px;
+	margin-bottom: 30px;
+}
+.win-add-blacklist .blacklist_type ul li {
+    margin-bottom: 10px;
+}
+.win-add-blacklist .blacklist_type ul li .client_dj_time input {
+    width: 58px;
+    height: 30px;
+    border-radius: 4px;
+    border: 1px solid #ededed;
+    padding: 0 10px;
+}
+.win-add-blacklist .blacklist_type ul li .client_dj_time span {
+    margin: 0 10px;
+}
+.win-equipment-blacklist .add-title-group{
+	margin: 0 0 20px 0;
+	float: left;
+}
+.win-equipment-blacklist #select-add-ap-group{
+	margin-left: 20px;
+	float: right;
+}
+.win-equipment-blacklist .batch-word-address{
+	width: 199px;
+	height: 38px;
+	line-height: 38px;
+	text-align: center;
+	float: left;
+	background: #fafbfd;
+}
+.win-equipment-blacklist .batch-word-name{
+	width: 320px;
+	height: 38px;
+	line-height: 38px;
+	text-align: center;
+	float: left;
+	background: #fafbfd;
+}
+.win-equipment-blacklist .batch-word-location{
+	width: 150px;
+	height: 38px;
+	line-height: 38px;
+	text-align: center;
+	float: left;
+	background: #fafbfd;
+}
+.win-equipment-blacklist .batch-word-img{
+	width: 75px;
+	height: 38px;
+	line-height: 38px;
+	text-align: center;
+	float: left;
+	background: #fafbfd;
+}
+.win-equipment-blacklist .cont-box02{
+	padding: 0px 37px;
+	height: 50px;
+	line-height: 50px;
+}
+.win-equipment-blacklist .batch-box{
+	padding: 0px;
+	margin-top: 0;
+}
+.win-equipment-blacklist .blacklist_type{
+	padding:0 50px;
+	margin-bottom: 30px;
+}
+.win-equipment-blacklist .blacklist_type ul li {
+    margin-bottom: 10px;
+}
+.win-equipment-blacklist .blacklist_type ul li .client_dj_time input {
+    width: 58px;
+    height: 30px;
+    border-radius: 4px;
+    border: 1px solid #ededed;
+    padding: 0 10px;
+}
+.win-equipment-blacklist .blacklist_type ul li .client_dj_time span {
+    margin: 0 10px;
+}
+.win-equipment-blacklist .box{
+	background: #fafbfd;
+}
+
+
+.win-edit-client .add-title-group{
+	margin: 0 0 20px 0;
+	float: left;
+}
+.win-edit-client #select-add-ap-group{
+	margin-left: 20px;
+	float: right;
+}
+.win-edit-client .batch-word-address{
+	width: 199px;
+	height: 38px;
+	line-height: 38px;
+	text-align: center;
+	float: left;
+	background: #fafbfd;
+}
+.win-edit-client .batch-word-name{
+	width: 320px;
+	height: 38px;
+	line-height: 38px;
+	text-align: center;
+	float: left;
+	background: #fafbfd;
+}
+.win-edit-client .batch-word-location{
+	width: 150px;
+	height: 38px;
+	line-height: 38px;
+	text-align: center;
+	float: left;
+	background: #fafbfd;
+}
+.win-edit-client .batch-word-img{
+	width: 75px;
+	height: 38px;
+	line-height: 38px;
+	text-align: center;
+	float: left;
+	background: #fafbfd;
+}
+.win-edit-client .cont-box02{
+	padding: 0px 37px;
+	height: 50px;
+	line-height: 50px;
+}
+.win-edit-client .batch-box{
+	padding: 0px;
+	margin-top: 0;
+}
+.win-edit-client .box{
+	background: #fafbfd;
+}
+/*动态创建input样式*/
+.win-add-blacklist .batch-box .batch-batch .batch-inputBox .batch-input01{
+	width: 199px;
+    height: 30px;
+    background: #fafbfd;
+    border: 1px solid #eaebec;
+    border-radius: 0;
+    float: left;
+    box-sizing: border-box;
+    margin-right: 0px;
+}
+.win-add-blacklist .batch-box .batch-batch .batch-inputBox .right-input{
+	border-bottom-left-radius: 0px;
+    border-top-left-radius: 0px;
+    margin-left: 0px;
+    box-sizing: border-box;
+    width: 150px;
+    height: 30px;
+    background: #fafbfd;
+    border: 1px solid #eaebec;
+    border-radius: 0;
+    float: left;
+}
+.win-add-blacklist .batch-box .batch-add{
+	float: left;
+    margin-left: 20px;
+}
+.win-add-blacklist .batch-box .batch-batch .batch-inputBox .batch-delete{
+	float: left;
+    margin-left: 20px;
+}
+.win-equipment-blacklist .batch-box .batch-batch .batch-inputBox .batch-input01{
+	width: 199px;
+    height: 30px;
+    background: #fafbfd;
+    border: 1px solid #eaebec;
+    border-radius: 0;
+    float: left;
+    box-sizing: border-box;
+    margin-right: 0px;
+}
+.win-equipment-blacklist .batch-box .batch-batch .batch-inputBox .right-input{
+	border-bottom-left-radius: 0px;
+    border-top-left-radius: 0px;
+    margin-left: 0px;
+    box-sizing: border-box;
+    width: 320px;
+    height: 30px;
+    background: #fafbfd;
+    border: 1px solid #eaebec;
+    border-radius: 0;
+    float: left;
+}
+.win-equipment-blacklist .batch-box .batch-add{
+	float: left;
+    margin-left: 15px;
+}
+.win-equipment-blacklist .batch-box .batch-batch .batch-inputBox .batch-delete{
+	float: left;
+    margin-left: 15px;
+}
+
+.win-edit-client .batch-box .batch-batch .batch-inputBox .batch-input01{
+	width: 199px;
+    height: 30px;
+    background: #fafbfd;
+    border: 1px solid #eaebec;
+    border-radius: 0;
+    float: left;
+    box-sizing: border-box;
+    margin-right: 0px;
+}
+.win-edit-client .batch-box .batch-batch .batch-inputBox .right-input{
+	border-bottom-left-radius: 0px;
+    border-top-left-radius: 0px;
+    margin-left: 0px;
+    box-sizing: border-box;
+    width: 320px;
+    height: 30px;
+    background: #fafbfd;
+    border: 1px solid #eaebec;
+    border-radius: 0;
+    float: left;
+}
+.win-edit-client .batch-box .batch-add{
+	float: left;
+    margin-left: 15px;
+}
+.win-edit-client .batch-box .batch-batch .batch-inputBox .batch-delete{
+	float: left;
+    margin-left: 15px;
+}
+
+.win-edit-client .mac_address{
+	float: left;
+	width:199px;
+	height:30px;
+	line-height: 30px;
+	text-align: center;
+}
+.win-add-blacklist .client_text{
+	float: left;
+	width:150px;
+	height:30px;
+	line-height: 30px;
+	text-align: center;
+}
+#app-client-layout .adress_group  .panel-tool{
+	display: none;
+}
+#app-client-layout .adress_group .panel-icon{
+	left: 5px;
+    width: 16px;
+    height: 18px;
+    background: url(../images/tree_arrow.png) no-repeat -4px 0px;
+}
+#app-client-layout .adress_group  .accordion .accordion-header{
+	background: #fff;
+}
+#app-client-layout .adress_group  .accordion .panel-header{
+	padding:0;
+}
+#app-client-layout .adress_group .accordion .panel-title{
+	color:#4f5358;
+	font-weight: normal;
+	font-size: 14px;
+	text-align: left;
+	/*border-bottom: 1px solid #ddd;*/
+	background: url(../images/client_zu.png) 24px center no-repeat;
+    padding-left:50px;
+}
+#app-client-layout .adress_group .accordion .panel-last .panel-title{
+	border-bottom: 0;
+}
+#app-client-layout .adress_group .accordion .accordion-header-selected .panel-title{
+	color:#4f5358;
+	font-weight: normal;
+	font-size: 14px;
+	text-align: left;
+}
+#app-client-layout .adress_group .adress_group_list{
+	padding:0 0 0 48px;
+	cursor: pointer;
+	height: 30px;
+	line-height: 32px;
+	position: relative;
+	margin-bottom: 10px;
+}
+#app-client-layout .adress_group_list.cur{
+	background:#dfe6ee;
+}
+#app-client-layout .adress_group .adress_group_list span.text{
+	font-size: 14px;
+	color:#4F5258;
+	background: url(../images/client_sb.png) left center no-repeat;
+	padding-left: 26px;
+	float: left;
+}
+#app-client-layout .adress_group .accordion .adress_group_list span.num{
+	float: right;
+}
+#app-client-layout .adress_group .datagrid-cell-check{
+	display: inline-block;
+	vertical-align: middle;
+	margin:0 0 3.5px 0;
+}
+
+/*终端右侧箭头*/
+#app-client-layout .right-cion{
+	width: 15px;
+	height: 20px;
+	float: left;
+	position: absolute;
+	background: url(../images/right-icon.png) no-repeat;
+	z-index: 10000;
+	top: 45%;
+	cursor: pointer;
+}
+
+/*终端详情设置*/
+#app-client-particulars-layout{
+	padding:0px;
+	margin:0px;
+	height:100%;
+	width:100%;
+	border: 0px;
+}
+
+#app-client-particulars-layout .client-region-west{
+	width:245px;
+	min-width:245px;
+	border-right:1px solid #e2e2e3;
+	height:100%;
+	box-sizing: border-box;
+}
+#app-client-particulars-layout .client-div-left .left-menu{
+	padding-top:0;
+}
+
+/*终端详情设置---左侧样式*/
+
+#app-client-particulars-layout .return-index{
+	width: 12px;
+	height: 16px;
+	float: left;
+	background: url(../images/left-icon.png) no-repeat;
+	margin-top: 6px;
+	cursor: pointer;
+}
+#app-client-particulars-layout .return-text{
+	width: 175px;
+	height: 16px;
+	float: left;
+	font-size: 14px;
+	line-height: 16px;
+	color: #5ea8d6;
+	margin-top: 6px;
+	margin-left: 10px;
+}
+#app-client-particulars-layout .client-region-west .win-nav .left-menu{
+	width: 100%;
+	height:30px;
+	margin-top:10px;
+}
+#app-client-particulars-layout .client-region-west .win-nav .nav-home-title{
+	margin-top:19px;
+	text-indent: 12px;
+	height:30px;
+	line-height:30px;
+	font-size:16px;
+}
+
+/*左侧数据样式*/
+#app-client-particulars-layout .left-div{
+	width: 100%;
+	height: 410px;
+	/*background: #f0f;*/
+	float: left;
+	overflow: auto;
+	
+	
+	margin-top: 10px;
+}
+#app-client-particulars-layout .left-div-top{
+	width: 100%;
+	height: 40px;
+	float: left;
+	border-top:1px solid #e2e2e4;
+	border-bottom:1px solid #e2e2e4;
+	
+}
+#app-client-particulars-layout .left-div-top .status{
+	width: 40%;
+	height: 40px;
+	float: left;
+	background: #f0f3f8;
+	line-height: 40px;
+	text-align: center;
+	border-right: 1px solid #e2e2e4;
+	box-sizing: border-box;
+}
+#app-client-particulars-layout .left-div-top .wireless{
+	width: 60%;
+	height: 40px;
+	float: left;
+	background: #f0f3f8;
+	line-height: 40px;
+	text-align: center;
+}
+#app-client-particulars-layout .left-div-top .status .status-icon{
+	width: 16px;
+	height: 14px;
+	float: left;
+	background: url(../images/right-status.png) no-repeat;
+	margin-left: 10px;
+	margin-top: 14px;
+	/*background: #f0f;*/
+}
+#app-client-particulars-layout .left-div-top .status .status-text{
+	float: left;
+	margin-left: 27px;
+}
+#app-client-particulars-layout .left-div-top .wireless .wireless-text{
+	float: left;
+	margin-left: 27px;
+}
+#app-client-particulars-layout .left-div-top .wireless .wireless-icon{
+	display: inline;
+    padding: 0 30px 0 0;
+    background: url(../../public/images/datagrid_icons.png) no-repeat -64px center;
+}
+#app-client-particulars-layout .group-list-particulars{
+	width: 100%;
+	height: 330px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+#app-client-particulars-layout .group-list-particulars li{
+	width:100%;
+	height: 35px;
+	line-height: 36px;
+	cursor: pointer;
+}
+#app-client-particulars-layout .li-left-connected{
+	width: 30%;
+	height: 35px;
+	float: left;
+	line-height: 35px;
+	text-align: center;
+	position:relative;
+}
+#app-client-particulars-layout .li-left-connected img{
+	vertical-align: middle;
+}
+#app-client-particulars-layout .li-left-connected .yellow{
+	width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ff7800;
+    position: absolute;
+    top:14px;
+    right:5px;
+}
+#app-client-particulars-layout .li-left-mac{
+	width: 70%;
+	height: 35px;
+	float: left;
+	line-height: 35px;
+	text-align: center;
+}
+#app-client-particulars-layout .bottom-number{
+	width: 180px;
+	height: 49px;
+	float: left;
+	/*background: #f0f;*/
+	box-sizing: border-box;
+	text-align: right;
+	line-height: 49px;
+}
+#app-client-particulars-layout .refresh-right{
+	width: 1px; 
+	height: 20px;
+	background:#6b6f77 ;
+	float: left;
+	margin-right: 10px;
+	margin-top: 15px;
+	margin-left: 20px;
+}
+#app-client-particulars-layout .refresh-icon{
+	width: 18px;
+	height: 18px;
+	float: right;
+	margin-right: 10px;
+	margin-top: 16px;
+	background: url(../images/icon-refresh.png) no-repeat;
+	
+}
+/*终端详情右侧*/
+/*设备右侧样式-------显示*/
+#app-client-particulars-layout .win-content .tabs-container{
+	margin-top:0;
+}
+#app-client-particulars-layout .panel-body{
+	overflow: hidden !important;
+}
+#client-tabs .infor-title{
+	height:25px;
+	font-weight:bold;
+	border-bottom: 1px solid #ddd;
+}
+#client-tabs .abs-row{
+	float: left;
+	width:50%;
+	height: 25px;
+	line-height: 24px;
+	margin-bottom:5px;
+}
+#client-tabs .abs-row .text{
+	display: inline-block;
+	width:140px;
+	text-align: right;
+}
+#client-tabs .abs-row .dw{
+	margin-left: 5px;
+}
+#client-tabs .wireless_jr .abs_auth_label{
+	color:#2b88dc;
+	cursor: pointer;
+}
+/*列表样式*/
+#client-tabs .cont-box02{
+	padding: 0 1px;
+	padding-top: 20px;
+}
+#client-tabs .cont-box02-left,#client-tabs .cont-box02-right{
+	width: 300px;
+	float: left;
+	border: 1px solid #dfe2e5;
+	box-sizing: border-box;
+	position: relative;
+}
+#client-tabs .cont-box02-right{
+	margin-left: 29px;
+}
+
+#client-tabs .cont-box02-left>div,#client-tabs .cont-box02-right>div{
+	width: 100%;
+	height: 30px;
+	margin-top: 10px;
+}
+#client-tabs .cont-box02-left>div>span,#client-tabs .cont-box02-right>div>span{
+	width: 100px;
+	height: 20px;
+	font-size: 14px;
+	text-align: right;
+	margin-left: 10px;
+	float: left;
+	line-height: 20px;
+}
+#client-tabs .cont-box02-left>div>select,#client-tabs .cont-box02-right>div>select{
+	height: 20px;
+	float: left;
+	margin-left: 10px;
+	width: 150px;
+}
+
+#client-tabs #left-terminal-select,#client-tabs #right-terminal-select{
+	height: 20px;
+	float: left;
+	margin-left: 10px;
+	width: 150px;
+}
+#client-tabs .cont-box02-left>div:last-child, #client-tabs .cont-box02-right>div:last-child{
+	margin-bottom: 10px;
+}
+#client-tabs .small-box-left{
+	width: 50px;
+	height: 20px;
+	border: 1px solid #dfe2e5;
+	float: left;
+	position: absolute;
+	left: 39px;
+    top: 265px;
+	z-index: 10000;
+	background: #fff;
+	text-align: center;
+	font-size: 14px;
+	line-height: 20px;
+}
+#client-tabs .small-box-right{
+	width: 50px;
+	height: 20px;
+	border: 1px solid #dfe2e5;
+	float: left;
+	position: absolute;
+	left: 368px;
+    top: 265px;
+	z-index: 10000;
+	background: #fff;
+	text-align: center;
+	font-size: 14px;
+	line-height: 20px;
+}
+
+/*设备input边框*/
+#client-input{
+	border: none;
+}
+#client-location-label{
+	border: none;
+}
+/*选项卡下所有input样式*/
+#client-tabs input{
+	font-size: 14px;
+	line-height: 20px;
+}
+#client-tabs .QoS_input input{
+	width: 80px;
+
+}
+/*左侧列表添加类*/
+.list-select{
+	background: #f0f3f8;
+}
+/*终端详情---日志样式--footer*/
+#client-tabs .window .panel-footer{
+	border: none;
+	position: initial;
+	top: initial;
+}
+#client-tabs .app-table{
+	padding: 10px;
+}
+/*终端详情---信道分析---按钮（扫描分析）*/
+#client-tabs .analyze{
+	margin-top: 10px;
+}
+/*终端详情---信道分析---文字显示*/
+#client-tabs .channel-text{
+	font-size: 14px;
+	width: 100%;
+	height: 20px;
+	line-height: 20px;
+}
+#client-tabs .result-analyze{
+	font-size: 14px;
+	width: 100%;
+	height: 21px;
+	line-height: 20px;
+	margin-top: 10px;
+}
+#client-tabs .result-analyze-icon{
+	width: 22px;
+	height: 21px;
+	float: left;
+	background: url(../images/loading-details.gif) ;
+}
+#client-tabs .result-analyze-icon{
+	float: left;
+}
+
+/*终端*/
+.client-all-traffic,.client-wireless-clients{
+	height:195px;
+}
+/*终端详情--流量--底部样式*/
+.client-footer-tools{
+	height:41px;position: relative;line-height: 40px;border-top:1px solid #ddd;margin:0px 18px;box-sizing:border-box;
+}
+.client-footer-tools .btn-network-fresh{
+	cursor: pointer;
+	width:40px;position: absolute;right: 0px;
+	height: 40px;
+	background: url(../../public/images/refresh.png) no-repeat center center;
+}
+.client-footer-tools .btn-network-fresh:hover{
+	cursor: pointer;
+	width:40px;position: absolute;right: 0px;
+	height: 40px;
+	background: url(../../public/images/refresh-hover.png) no-repeat center center;
+}
+.win-export-client .client-footer{
+	position: absolute;
+	bottom:0;
+	width:100%;
+	padding:0;
+}
+#client-tabs .abs_auth_label img{
+	vertical-align: middle;
+	margin:0 5px 2px 5px;
+}

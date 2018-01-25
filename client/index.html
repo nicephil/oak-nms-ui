@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>桌面</title>
+</head>
+<body>
+ <!-- 用户模块 -->
+ <div id="app-client-layout" class="easyui-layout client-user" fit="true">
+ 	<input type="hidden" id="indexpage" value="1">
+ 	<!--左侧布局-->
+ 	<div data-options="region:'west',border:false" class="client-region-west">
+ 		<div class="easyui-layout app-left" fit="true" class="transparent">
+			<div data-options="region:'east',border:false" class="w-sep transparent"></div>
+			<div data-options="region:'west',border:false" class="w-sep client_nav_left">
+				<div class="easyui-layout" fit="true" class="transparent">
+					<div data-options="region:'west',border:false" class="w-sep transparent"></div>
+					<div data-options="region:'center',border:false" class="transparent over-hide ncenter" style="">
+						<ul>
+							<li class="client_pc"></li>
+							<li class="client_user"></li>
+							<li class="client_rz"></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div data-options="region:'center',border:false" class="client_nav_right" style="">
+				<div class="easyui-layout" fit="true" class="transparent">
+					<div data-options="region:'west',border:false" class="w-sep transparent"></div>
+					<div data-options="region:'center',border:false" class="" style="">
+						<div class="right_nav_title">
+							<span class="nav_title_left"><span></span>过滤</span>
+							<span class="nav_title_right">清除</span>
+						</div>
+						<div class="nav-segment"></div>
+						<div class="nav_group_list">
+							<div class="easyui-accordion" data-options="multiple:true, region:'center',border:false">
+								<div title="射频" data-options="iconCls:'icon-ok'" style="overflow:auto;padding:0;">
+									<div class="client_group_list client_frequency_id">
+										<div style="" class="datagrid-cell-check"><input type="checkbox" name="xz" value="1"></div>
+										<span>5</span>
+									</div>
+									<div class="client_group_list client_frequency_id">
+										<div style="" class="datagrid-cell-check"><input type="checkbox" name="xz" value="0"></div>
+										<span>2.4G</span>
+									</div>
+								</div>
+								<div title="网络" id="client_website" data-options="iconCls:'icon-ok'" style="overflow:auto;padding:0;">
+								</div>
+								<div title="无线接入点" id="client_ap" data-options="iconCls:'icon-ok'" style="overflow:auto;padding:0;">
+								</div>
+								<div title="用户" id="client_user" data-options="iconCls:'icon-ok'" style="overflow:auto;padding:0;">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>	
+ 	</div>
+ 	<!--右侧布局-->
+	<div data-options="region:'center',border:false" class="client-region-center">
+		<div class="easyui-layout app-right"  fit="true">
+			<div data-options="region:'west',border:false" class="w-sep transparent"></div>
+			<div data-options="region:'east',border:false" class="w-sep transparent" style="position: relative;">
+				<span class="right-cion"></span>
+			</div>
+			<div data-options="region:'center',border:false" class="transparent" style="position:relative;overflow:hidden;">
+
+				<div class="win-content">
+		            <div class="right-menu">
+		                <div class="btn-group lpx15">
+							<a class="btn btn-menu-client-more" data-toggle="dropdown" href="#">添加<span class="caret"></span></a>
+							<ul class="dropdown-menu none">
+								<li class="btn-new-client disable-default">添加到地址簿</li>
+								<li class="btn-batch-new-client disable-default">添加到用户</li>
+							</ul>
+		                </div>
+		                <a class="btn lpx15 btn-edit control-client disable-default" href="javascript:void(0);">控制</a>
+		                <a class="btn lpx15 btn-edit speedlimit-client disable-default" href="javascript:void(0);">限速</a> 
+		                  <!-- search -->
+		                  <input type="text" class="input-search" placeholder="主机名/MAC">
+		                  <span class="icon-magnifier btn-search-client"></span>
+		            </div>
+		            <div class="app-table-detail">
+						<!-- 右面下拉类型部分 -->
+						<div class="menu_down none">
+							<ul>
+								<li class="btn-adddz-client">
+									<div style="" class="datagrid-cell-check cell-checked">
+										<input type="checkbox" name="xz" value="1">
+									</div>
+									<span>类型</span>
+								</li>
+								<li class="btn-adduser-client">
+									<div style="" class="datagrid-cell-check cell-checked">
+										<input type="checkbox" name="xz" value="2">
+									</div>
+									<span>主机名</span>
+								</li>
+								<li class="btn-adddz-client">
+									<div style="" class="datagrid-cell-check cell-checked">
+										<input type="checkbox" name="xz" value="3">
+									</div>
+									<span>无线接入点</span>
+								</li>
+								<li class="btn-adduser-client">
+									<div style="" class="datagrid-cell-check cell-checked">
+										<input type="checkbox" name="xz" value="4"></div>
+										<span>当前网速</span>
+									</li>
+								<li class="btn-adddz-client">
+									<div style="" class="datagrid-cell-check cell-checked">
+										<input type="checkbox" name="xz" value="5">
+									</div>
+									<span>在线时间</span>
+								</li>
+								<li class="btn-adduser-client">
+									<div style="" class="datagrid-cell-check">
+										<input type="checkbox" name="xz" value="6">
+									</div>
+									<span>IP</span>
+								</li>
+								<li class="btn-adduser-client">
+									<div style="" class="datagrid-cell-check">
+										<input type="checkbox" name="xz" value="7">
+									</div>
+									<span>外网流量</span>
+								</li>
+								<li class="btn-adduser-client">
+									<div style="" class="datagrid-cell-check">
+										<input type="checkbox" name="xz" value="8">
+									</div>
+									<span>本地流量</span>
+								</li>
+								<li class="btn-adduser-client">
+									<div style="" class="datagrid-cell-check">
+										<input type="checkbox" name="xz" value="9">
+									</div>
+									<span>总流量</span>
+								</li>
+							</ul>
+						</div>
+						<table class="easyui-datagrid tb table-client" style="height:385px;overflow: hidden;">
+						</table>
+		            </div>
+		            <!-- 分页 -->
+		            <footer>
+			            <div class="pagination-wrap">
+			            	<div id="pagination_client"></div>
+			            </div>
+		            </footer>
+		        </div>
+			</div>
+		</div>
+	</div>
+ </div>
+<!--添加到地址簿-->
+<div id="win-add-client" class="win-add-client client_yh none">
+	<div class="client-box">
+		<form method="post" action="" id="create-client">
+			<div class="cont-box">
+				<div class="cont-title">你正在将以下终端添加到地址簿：</div>
+				<div class="cont-cont">
+					<div class="input-box validate-name">
+						<input type="text" name="first_name" class="input-text input-selected indent5 name clientnameplaceholder" placeholder="iPhone7 Plus John”等共7个终端"/>
+					</div>
+				</div>
+
+				<div class="cont-title">请选择目标地址薄：</div>
+				<div class="mbdz">
+					<div class="easyui-accordion" data-options="multiple:true" style="width:552px;">
+						<div title="用户自定义" id="client_dz_list" data-options="iconCls:'icon-ok'" style="overflow:auto;">
+							
+						</div>
+					</div>
+				</div>					
+			</div>
+			
+			<div class="client-footer">
+				<div class="but-cancel cancel-hover" style="float: left;">取消</div><!-- cancel-hover为鼠标移上去效果 -->
+				<div class="but-conserve conserve-hover" style="float: right;">完成</div><!-- conserve-hover为鼠标移上去效果 -->
+			</div>
+			
+		</form>
+	</div>
+</div>
+<!--/添加到地址簿-->
+<!--添加到用户-->
+<div id="win-add-batch-client" class="win-add-batch-client client_yh none">
+	<div class="client-box">
+		<form method="post" action="" id="create-client-batch">
+			<div class="cont-box">
+				<div class="cont-title">你正在将以下终端添加到用户：</div>
+				<div class="cont-cont">
+					<div class="input-box validate-name">
+						<input type="text" name="first_name" class="input-text input-selected indent5 name clientnameplaceholder" placeholder="iPhone7 Plus John”等共7个终端"/>
+					</div>
+				</div>	
+				<div class="cont-title">请选择用户</div>			
+			</div>
+			<div class="client_userlist">
+				<input type="text" class="input-text username" placeholder="请输入用户名／邮箱／手机号进行搜索">
+				<span class="arrow_down" data-toggle="dropdown"></span>
+				<ul class="dropdown-menu open" id="client_add_user_list">
+				</ul>
+			</div>
+			<div class="client-footer">
+				<div class="but-cancel cancel-hover" style="float: left;">取消</div><!-- conserve-hover为鼠标移上去效果 -->
+				<div class="but-conserve conserve-hover" style="float: right;">完成</div><!-- cancel-hover为鼠标移上去效果 -->
+			</div>
+		</form>
+	</div>
+</div>
+<!-- 终端控制 -->
+<div id="win-control-client" class="win-control-client client_yh none">
+	<div class="client-box">
+		<form method="post" action="" id="create-client-control">
+			<div class="cont-box">
+				<div class="cont-title">你正在将以下终端进行操作：</div>
+				<div class="cont-cont">
+					<div class="input-box validate-name">
+						<input type="text" name="first_name" class="input-text input-selected name clientnameplaceholder" placeholder="iPhone7 Plus John”等共7个终端"/>
+					</div>
+				</div>	
+				<div class="cont-title">请选择目标地址薄：</div>	
+				<div class="mu_dzb">
+					<ul>
+						<li>
+							<div class="radio-wrap">
+								<span class="radio-checked normal-radio"><input type="radio" value="1" checked="checked" name="type"></span>
+								<label class="radio-label">终端登录注销，仅对Portal认证的用户有效</label>
+							</div>
+							
+						</li>
+						<li>
+							<div class="radio-wrap">
+								<span class="radio-checked normal-radio"><input type="radio" value="4" name="type"></span>
+								<label class="radio-label">
+									冻结访问一段时间
+								</label>
+							</div>
+							<div class="client_dj_time">
+								<input type="text" id="day" placeholder="10">
+								<span>天</span>
+								<input type="text" id="hours" placeholder="10">
+								<span>小时</span>
+								<input type="text" id="min" placeholder="10">
+								<span>分钟</span>
+							</div>
+						</li>
+						<li>
+							<div class="radio-wrap">
+								<span class="radio-checked"><input type="radio" value="3" name="type"></span>
+								<label class="radio-label">永久冻结访问</label>
+							</div>
+						</li>
+					</ul>
+				</div>		
+			</div>
+			<div class="client-footer">
+				<div class="but-cancel cancel-hover" style="float: left;">取消</div><!-- conserve-hover为鼠标移上去效果 -->
+				<div class="but-conserve conserve-hover" style="float: right;">完成</div><!-- cancel-hover为鼠标移上去效果 -->
+			</div>
+			
+		</form>
+	</div>
+</div>
+<!-- 终端控制 -->
+<!-- 限速 -->
+<div id="win-speedlimit-client" class="win-speedlimit-client client_yh none">
+	<div class="client-box">
+		<form method="post" action="" id="create-client-control">
+			<div class="cont-box">
+				<div class="cont-title">你正在将以下终端进行最大带宽限制：</div>
+				<div class="cont-cont">
+					<div class="input-box validate-name">
+						<input type="text" name="first_name" class="input-text input-selected indent5 name clientnameplaceholder" placeholder="iPhone7 Plus John”等共7个终端"/>
+					</div>
+				</div>	
+				<div class="cont-title">本地网络限速：</div>	
+				<div class="wl_xs">
+					<ul>
+						<li>
+							<div style="" id="localreceive" class="datagrid-cell-check"><input type="radio" name="xz" value="80"></div>
+							<span>接收：</span>
+							<input type="text" placeholder="1-1204" class="input-text">
+							<span>Mb/s</span>
+						</li>
+						<li>
+							<div style="" id="localsend" class="datagrid-cell-check"><input type="radio" name="xz" value="80"></div>
+							<span>发送：</span>
+							<input type="text" placeholder="100" class="input-text">
+							<span>Mb/s</span>
+						</li>
+					</ul>
+				</div>	
+				<div class="cont-title">广域网络限速：</div>	
+				<div class="wl_xs">
+					<ul>
+						<li>
+							<div style="" id="wideareareceive" class="datagrid-cell-check"><input type="radio" name="xz" value="80" class="radio"></div>
+							<span>接收：</span>
+							<input type="text" placeholder="1-1204" class="input-text">
+							<span>Mb/s</span>
+						</li>
+						<li>
+							<div style="" id="wideareasend" class="datagrid-cell-check"><input type="radio" name="xz" value="80" class="radio"></div>
+							<span>发送：</span>
+							<input type="text" placeholder="100" class="input-text">
+							<span>Mb/s</span>
+						</li>
+					</ul>
+				</div>		
+			</div>
+			<div class="client-footer">
+				<div class="but-cancel cancel-hover" style="float: left;">取消</div><!-- conserve-hover为鼠标移上去效果 -->
+				<div class="but-conserve conserve-hover" style="float: right;">完成</div><!-- cancel-hover为鼠标移上去效果 -->
+			</div>
+			
+		</form>
+	</div>
+</div>
+<!--添加到用户--> 
+<script src="./client/js/main.js" ></script>
+</body>
+</html>

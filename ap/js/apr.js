@@ -89,9 +89,24 @@ define(['jquery','functions'],function($,_f) {
 
         {field: 'mac', title: '无线接入点', sortable: false, align: 'center'},
 
-        {field: 'organization', title: '位置', sortable: false, align: 'center'},
+        {field: 'organization', title: '位置', sortable: false, align: 'center',formatter:function(value,row,index){
+        		return row.location;
+        }},
 
-        {field: 'flow', title: '总流量', sortable: false, align: 'center'},
+        {field: 'flow', title: '总流量', sortable: false, align: 'center',formatter:function (value,row,index){
+	    		console.log(row)
+	    		var total_bytes = row.total_bytes;
+	    		if(total_bytes<1024){
+	    			return total_bytes;
+	    		}else if(total_bytes > 1024 && total_bytes<1024*1024){
+					return total_bytes = (total_bytes/1024).toFixed(1) + 'K';
+				}else if(total_bytes >1024*1024 && total_bytes <1024*1024*1024){
+	           		return total_bytes = (total_bytes/1024/1024).toFixed(1) + 'M';
+				}else if(total_bytes > 1024*1024*1024){
+	       	     	return total_bytes = (total_bytes/1024/1024/1024).toFixed(1) + 'G';
+				}
+       		}
+        },
 
         {field: 'device_name', title: '终端', sortable: false, align: 'center'},
 
@@ -105,6 +120,8 @@ define(['jquery','functions'],function($,_f) {
      */
     var ip_table = function (data) {
 
+	//AP列表 - 网络视图  一页显示的个数
+	var network_page_size = $('.pagination-page-list option').val();
         //模拟数据
 
 
@@ -119,6 +136,19 @@ define(['jquery','functions'],function($,_f) {
 
             return false;
         }
+        $(data.list).each(function (index,data){
+			var str = data.mac;
+			var res = '';
+            	for(var i=0,len=str.length;i<len;i++){
+			    res += str[i];
+			    if(i < len -2 ){
+				    if(i % 2 == 1) {
+				    		 res = res + '-';
+				    };
+			    };
+			};
+			data.mac = res;
+		})
 
 
         $(table).datagrid({
@@ -158,14 +188,19 @@ define(['jquery','functions'],function($,_f) {
 
                 //如果当前页全部被选中，把头也构上
                 var checked = $(this).datagrid('getChecked');
+                
+	    		if(data.total <= network_page_size){
+				if (checked.length == data.total) {
+	            			$(panel).find('.datagrid-header-check').addClass('cell-checked');
+	        		}
+			}else if(data.total > network_page_size){
+				if (checked.length == network_page_size) {
 
-                if (checked.length == ip_defPageSize) {
+	           			$(panel).find('.datagrid-header-check').addClass('cell-checked');
 
-                    $(panel).find('.datagrid-header-check').addClass('cell-checked');
-
-                }
-
-
+	        		}
+			}
+                
             },
             onUncheck: function (rowIndex, rowData) {
 
@@ -636,10 +671,11 @@ define(['jquery','functions'],function($,_f) {
 	                    ip_config_list(checked_list);
 	                    //配置无线接入点协议--带宽--联动
 	                    btnSubmitConfirmWiFi();
-	                    //DHCP联动IP,
-	                   	//linkage();
+	                    //获取选中的checkbox
+	                    getChecked();
 	                },
 	                onClose: function () {
+	                	$('.three-flagstaff').remove();
 	                    onOpenDelete('#win-ap-config');//删除以前存在的窗口
 	                }
 	            });
@@ -717,9 +753,10 @@ define(['jquery','functions'],function($,_f) {
                         '</li>');
                     $('.text-checkbox').attr('checked', true);
                     //绑定时机事件
-                    ip_type_config_list(index);
+                    ip_type_config_list(index,data);
                 });
-                
+                //ap配置详情中的checkbox
+                check_box_IsChecked();
                 //初始化
                 if(data.length==1){
 	                //单条编辑
@@ -815,13 +852,11 @@ define(['jquery','functions'],function($,_f) {
      * @param ''
      * @return
      */
-    var ip_type_config_list = function (number) {
-    	
+    var ip_type_config_list = function (number,data) {
         $('.text-checkbox').unbind().bind('change', function () {
             var flag = true;
             //判断是否是批量编辑模式
             $('input[name="ip_config_id"]:checked').each(function (index, value) {
-
 
                 if (index >= 1) {
 
@@ -867,12 +902,44 @@ define(['jquery','functions'],function($,_f) {
 				//DHCP
 				$('select[name="ip_config_dhcp"]').append('<option class="three-flagstaff" selected="selected">'+str+'</option>')
 				$('select[name="ip_config_dhcp"] option:nth-child(2)').hide();
-				
-				
             }
-
+            //ap配置详情中的checkbox
+			check_box_IsChecked();
+			
         });
     };
+    
+
+    /**
+     * ap配置详情中的checkbox
+     */
+    var check_box_IsChecked = function(){
+    	var checked = $('#ip-config-li input[name="ip_config_id"]:checked');
+    	console.log(checked)
+		//如果当前页全部被选中，把头也构上
+		var checked_len = getChecked();
+		
+		var checked_All = $('.ip-left-div-title .text-checkbox');
+		
+		console.log(checked.length);
+		console.log(checked_len.length)
+		
+		if(checked.length == checked_len.length){
+			checked_All.prop('checked','checked');
+		}else{
+			checked_All.removeProp('checked');
+		}
+		checked_All.unbind().bind('change',function(){
+			checked = $('input[name="ip_config_id"]:checked');
+			if(checked.length == checked_len.length){
+				checked.removeProp('checked');
+			}else if(checked.length == 0 || checked.length != checked_len.length){
+				$('input[name="ip_config_id"]').prop('checked','checked');
+			}
+		})
+		
+    };
+    
     /*对比信息*/
    var compareAp = function(data){
    		
@@ -1001,8 +1068,8 @@ define(['jquery','functions'],function($,_f) {
     	//最大终端数
     	if(nodeleft.maxclient == false){
 			$('input[name="ip_r24_maxclients"]').val(str);
-    	}else{
-    		$('input[name="ip_r24_maxclients"]').val(data.rf_config.r24_maxclient);
+    	}else if(data[0].rf_config.r24_maxclient != undefined){
+    		$('input[name="ip_r24_maxclients"]').val(data[0].rf_config.r24_maxclient);
     	}
     	
     	
@@ -1030,7 +1097,6 @@ define(['jquery','functions'],function($,_f) {
     		//判断勾选 功率，是否全部相等
     		for(var j=0; j<result.length; j++){
     			if(r5_power != result[j].r5_power){
-    				alert(result[j].r5_power)
     				noderight.power = false;
     			}
     		}
@@ -1043,7 +1109,6 @@ define(['jquery','functions'],function($,_f) {
     	}
     	console.log(data)
     	console.log(result)
-    	console.log($('select[name="ip_r5_channel"] option'))
     	
     	//信道
     	if(noderight.channel == false){
@@ -1097,7 +1162,7 @@ define(['jquery','functions'],function($,_f) {
     	if(noderight.maxclient == false){
 			$('input[name="ip_r5_maxclients"]').val(str);
     	}else{
-    		$('input[name="ip_r5_maxclients"]').val(data.rf_config.r5_maxclient);
+    		$('input[name="ip_r5_maxclients"]').val(data[0].rf_config.r5_maxclient);
     	}
    }
     /*
@@ -1189,7 +1254,7 @@ define(['jquery','functions'],function($,_f) {
 
             $('select[name="ip_r24_channel"] option').each(function (index, value) {
 
-                if ($(value).val() == data.rf_config.r24_channel) {
+                if (data.rf_config.r24_channel != undefined && $(value).val() == data.rf_config.r24_channel) {
                 	console.log(data)
                     $(this).prop('selected', 'selected');
                 }
@@ -1197,7 +1262,7 @@ define(['jquery','functions'],function($,_f) {
 
             $('select[name="ip_r24_xy"] option').each(function (index, value) {
 
-                if ($(value).val() == data.rf_config.r24_mode) {
+                if (data.rf_config.r24_mode != undefined && $(value).val() == data.rf_config.r24_mode) {
 
                     $(this).prop('selected', 'selected');
                 }
@@ -1206,7 +1271,7 @@ define(['jquery','functions'],function($,_f) {
 
             $('select[name="ip_r24_bandwidth"] option').each(function (index, value) {
 
-                if ($(value).val() == data.rf_config.r24_bandwidth) {
+                if (data.rf_config.r24_bandwidth != undefined && $(value).val() == data.rf_config.r24_bandwidth) {
 
                     $(this).prop('selected', 'selected');
                 }
@@ -1214,14 +1279,16 @@ define(['jquery','functions'],function($,_f) {
 
             $('select[name="ip_r24_power"] option').each(function (index, value) {
 
-                if ($(value).val() == data.rf_config.r24_power) {
+                if (data.rf_config.r24_power !=undefined && $(value).val() == data.rf_config.r24_power) {
 
                     $(this).prop('selected', 'selected');
                 }
             });//功率
 
             //最多终端数
-            $('input[name="ip_r24_maxclients"]').val(data.rf_config.r24_maxclient);
+            if(data.rf_config.r24_maxclient !=undefined){
+            	$('input[name="ip_r24_maxclients"]').val(data.rf_config.r24_maxclient);
+            }
 
 
             //射频参数5g
@@ -1229,7 +1296,7 @@ define(['jquery','functions'],function($,_f) {
 
             $('select[name="ip_r5_channel"] option').each(function (index, value) {
 
-                if ($(value).val() == data.rf_config.r5_channel) {
+                if (data.rf_config.r5_channel !=undefined && $(value).val() == data.rf_config.r5_channel) {
 
                     $(this).prop('selected', 'selected');
                 }
@@ -1238,7 +1305,7 @@ define(['jquery','functions'],function($,_f) {
 
             $('select[name="ip_r5_xy"] option').each(function (index, value) {
 
-                if ($(value).val() == data.rf_config.r5_mode) {
+                if (data.rf_config.r5_mode !=undefined && $(value).val() == data.rf_config.r5_mode) {
 
                     $(this).prop('selected', 'selected');
                 }
@@ -1247,7 +1314,7 @@ define(['jquery','functions'],function($,_f) {
 
             $('select[name="ip_r5_bandwidth"] option').each(function (index, value) {
 
-                if ($(value).val() == data.rf_config.r5_bandwidth) {
+                if (data.rf_config.r5_bandwidth !=undefined && $(value).val() == data.rf_config.r5_bandwidth) {
 
                     $(this).prop('selected', 'selected');
                 }
@@ -1255,14 +1322,16 @@ define(['jquery','functions'],function($,_f) {
 
             $('select[name="ip_r5_power"] option').each(function (index, value) {
 
-                if ($(value).val() == data.rf_config.r5_power) {
+                if (data.rf_config.r5_power !=undefined && $(value).val() == data.rf_config.r5_power) {
 
                     $(this).prop('selected', 'selected');
                 }
             });//功率
 
             //最多终端数
-            $('input[name="ip_r5_maxclients"]').val(data.rf_config.r5_maxclient);
+            if(data.rf_config.r5_maxclient !=undefined){
+            	$('input[name="ip_r5_maxclients"]').val(data.rf_config.r5_maxclient);
+            }
 
 
         });

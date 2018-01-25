@@ -15,7 +15,6 @@ define(['jquery','global','functions','provide','zui'],function($,_g,_f,provide,
 	
 	//初始化布局
 	var initLayout = function(){
-		log('初始化布局');
 		//桌面核心
 		var center = $('<div/>').attr({
 	            'border': false,
@@ -40,7 +39,6 @@ define(['jquery','global','functions','provide','zui'],function($,_g,_f,provide,
 	}
 	//初始化任务栏
 	var initTaskBlank = function(){
-		log('初始化任务栏');
 		
 		//获取任务栏Layout面板容器
 		var taskBlank = target.layout('panel', taskBlankPos);
@@ -137,7 +135,6 @@ define(['jquery','global','functions','provide','zui'],function($,_g,_f,provide,
 	}
 	//初始化桌面
 	var initDesktop = function(){
-		log('初始化桌面');
         if (loadUrl.app && !loaded) {
             $.ajax({
                 url: loadUrl.app,
@@ -237,7 +234,6 @@ define(['jquery','global','functions','provide','zui'],function($,_g,_f,provide,
 	}
 	//初始化app
 	var initApp = function(apps){
-		log('初始化app');
 		
 		//桌面对象
         var wall = target.layout('panel', 'center'); 
@@ -296,7 +292,7 @@ define(['jquery','global','functions','provide','zui'],function($,_g,_f,provide,
 			var wrap = $('<span class="'+app.class+'"/>');
 			
 			//设置应用图片宽高
-            var icon = $('<img/>').height(iconSize+1).width(iconSize).attr('src', app.icon);
+            var icon = $('<img/>').height(iconSize).width(iconSize).attr('src', app.icon);
             wrap.appendTo(appItem).append(icon);
             
             //设置应用标题
@@ -404,7 +400,6 @@ define(['jquery','global','functions','provide','zui'],function($,_g,_f,provide,
     
 	//初始化开始菜单
 	var initStartMenu = function(){
-		log('初始化开始菜单');
 	}
 	//切换窗口效果
 	var switchWindow = function(uuid){
@@ -458,7 +453,6 @@ define(['jquery','global','functions','provide','zui'],function($,_g,_f,provide,
 	}
 	//打开app
 	var openApp = function(options){
-		log('打开app');
 		if(target.data('org')==undefined){
 			_alert('未获取site访问权限!');
 			return false;
@@ -525,7 +519,10 @@ define(['jquery','global','functions','provide','zui'],function($,_g,_f,provide,
                         "top": 1
                     });
                 }else if(opts.maximized) {
-                    $(this).window("restore");
+                    //$(this).window("restore");
+                    if ($(this).prev('.window-header').find('.panel-tool-restore').length == 1) {
+                    	$(this).prev('.window-header').find('.panel-tool-restore').click();
+                    }
                 }
                 
                 //切换窗口效果
@@ -536,6 +533,7 @@ define(['jquery','global','functions','provide','zui'],function($,_g,_f,provide,
             },
             onMaximize:function(){
             	target.layout('panel', 'center').parent('.layout-panel').css('top','40px');
+            	
             },
             onResize:function(width,height){
             	if(width<850){
@@ -564,7 +562,6 @@ define(['jquery','global','functions','provide','zui'],function($,_g,_f,provide,
 	}
 	//创建窗口
 	var createWindow = function(){
-		log('创建窗口');
 	}
 	//生成uuid
 	var UUID = function(){
@@ -642,7 +639,6 @@ define(['jquery','global','functions','provide','zui'],function($,_g,_f,provide,
 		},
 		//主函数
 		run:function(){
-			log('加载桌面主函数');
 			this.init();
 		}
 	}

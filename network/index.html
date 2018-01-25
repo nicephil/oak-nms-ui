@@ -10,7 +10,7 @@
  <!-- 网络模块 -->
  <div id="app-network-layout" class="easyui-layout" fit="true">
  	<!--左侧布局-->
- 	<div data-options="region:'west',border:false" class="network-region-west current-tree-node">
+ 	<div data-options="region:'west',border:false" class="network-region-west current-tree-node net-tree">
  		<div class="easyui-layout app-left" fit="true" class="transparent">
 			<div data-options="region:'east',border:false" class="w-sep transparent"></div>
 			<div data-options="region:'west',border:false" class="w-sep transparent"></div>
@@ -54,7 +54,7 @@
 			<div data-options="region:'center',border:false" class="transparent" style="position:relative;overflow:hidden;">
 				<div class="win-content">
 		            <div class="network-title easyui-tabs" id="network-tabs" fit="true" style="height:490px;margin-top: 0px; */">
-						<div title="总览"  style="overflow:auto;padding:10px;display:none;">
+						<div title="总览"  style="overflow:hidden;padding:10px;display:none;" class="network-charts">
 							<div class="network-all-traffic has-echarts" id="network-traffic-echarts"></div>
 							<div class="network-wireless-clients has-echarts" id="network-client-echarts"></div>
 							<div class="network-footer-tools">
@@ -66,8 +66,10 @@
 								</div>
 								<div style="width:auto;position: absolute;right: 40px;">
 									<label>自动刷新：</label>
-									<select>
-										<option>5分钟</option>
+									<select class="network-auto-refresh">
+										<option value="5">5分钟</option>
+										<option value="10">10分钟</option>
+										<option value="15">15分钟</option>
 									</select>
 								</div>
 								<div class="sep" style="width:auto;position: absolute;right: 40px;"></div>
@@ -78,9 +80,9 @@
 						<div title="摘要" style="padding:10px;display:none;">
 							
 						</div>
-						<!--<div title="定时访问" style="padding:20px;display:none;">
+						<div title="定时访问" style="padding:20px;display:none;">
 							暂停营运
-						</div>-->
+						</div>
 		        </div>
 			</div>
 		</div>

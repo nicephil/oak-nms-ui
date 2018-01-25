@@ -279,8 +279,8 @@ var _confirm = function(title, msg, fn){
         cancel:"取消"
     });
 	$.messager.confirm({
-        width: 650,
-        height: 290,
+        width: 480,
+        height: 220,
         title:title,
 		msg:msg,
 		fn:fn,
@@ -616,14 +616,27 @@ var getSite = function(){
 	}
 	return site;
 }
+
 //设置缓存
 var setCache = function(cls,key,val){
    $(cls).data(key,val);
 }
+
 //获取缓存
 var getCache = function(cls,key){
 	return $(cls).data(key);
 }
+
+//获取数组中的最大值
+var getMax = function(arr){
+	return Math.max.apply(null, arr);
+}
+
+//获取数组中的最小值
+var getMin = function(arr){
+	return Math.min.apply(null, arr);
+}
+
 //遮罩层
 var MaskUtil = (function(){   
     //定义遮罩层

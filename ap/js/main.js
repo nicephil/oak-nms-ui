@@ -17,7 +17,8 @@ require.config({
 		'zui':'../public/js/zui',
 		'ap':'../ap/js/ap',
 		'echarts':'../public/js/echarts',
-		'apr':'../ap/js/apr'
+		'apr':'../ap/js/apr',
+		'raty':'../ap/js/jquery.raty.min'
 	},
 	map:{
 		'*': {
@@ -26,7 +27,7 @@ require.config({
 	}
 });
 
-require(['jquery','zui','ap','apr','echarts'],function($,zui,ap,apr,echarts){
+require(['jquery','zui','ap','apr','echarts','raty'],function($,zui,ap,apr,echarts,raty){
 	//入口程序
     ap.run();
     apr.run();

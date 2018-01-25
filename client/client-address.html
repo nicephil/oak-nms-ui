@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>桌面</title>
+</head>
+<body>
+ <!-- 用户终端管理 -->
+ <div id="app-client-layout" class="easyui-layout client-user" fit="true">
+ 	<!--左侧布局-->
+ 	<div data-options="region:'west',border:false" class="client-region-west client-adress-left">
+ 		<div class="easyui-layout app-left" fit="true" class="transparent">
+			<div data-options="region:'east',border:false" class="w-sep transparent"></div>
+			<div data-options="region:'west',border:false" class="w-sep client_nav_left">
+				<div class="easyui-layout" fit="true" class="transparent">
+					<div data-options="region:'west',border:false" class="w-sep transparent"></div>
+					<div data-options="region:'center',border:false" class="transparent over-hide ncenter" style="">
+						<ul>
+							<li class="client_pc"></li>
+							<li class="client_user"></li>
+							<li class="client_rz"></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div data-options="region:'center',border:false" class="client_nav_right" style="">
+				<div class="easyui-layout" fit="true" class="transparent">
+					<div data-options="region:'west',border:false" class="w-sep transparent"></div>
+					<div data-options="region:'center',border:false" class="" style="">
+						<div class="client-div-left">
+							<div class="left-menu">
+				                <a href="#" class="btn btn-create-add" >新增</a>
+				                <div class="btn-group">
+				                  <a class="btn client-btn-menu-more" href="#">更多<span class="caret"></span></a>
+				                  <ul class="dropdown-menu none">
+				                    <li class="client-btn-edit-addlist">编辑地址簿</li>
+				                    <li class="client-btn-del-addlist">删除地址簿</li>
+				                  </ul>
+				                </div>
+				                <div class="clear"></div>
+				            </div>
+							<div class="client_company">
+								<img src="./client/images/root-location.png"> 
+                                <span>杭州分公司</span>
+							</div>
+							<div class="nav-segment"></div>
+							<div class="adress_group">
+					            <div class="easyui-accordion" data-options="multiple:true, region:'center',border:false">
+									<div title="系统内置" data-options="iconCls:'icon-ok'" style="overflow:auto;padding:0;">
+										<div class="adress_group_list cur">
+											<span class="text heimingdan">黑名单</span>
+											<span class="num">（<span id="kongzhinum"></span>）</span>
+										</div>
+									</div>
+									<div title="用户自定义" data-options="iconCls:'icon-ok'" id="usercustomaddress" style="overflow:auto;padding:0;">
+									</div>
+								</div>
+							</div>
+			            </div>
+					</div>
+				</div>
+			</div>
+		</div>	
+ 	</div>
+ 	<!--右侧布局-->
+	<div data-options="region:'center',border:false" class="client-region-center client-user-admin">
+		<div class="easyui-layout app-right"  fit="true">
+			<div data-options="region:'west',border:false" class="w-sep transparent"></div>
+			<div data-options="region:'east',border:false" class="w-sep transparent" style="position: relative;">
+				<span class="right-cion"></span>
+			</div>
+			<div data-options="region:'center',border:false" class="transparent" style="position:relative;overflow:hidden;">
+				
+				<div class="win-content">
+		            <div class="right-menu">
+						<a class="btn lpx15 btn-edit btn-menu-address" href="javascript:void(0);">添加</a>
+						<a class="btn lpx15 btn-edit edit-client none disable-default" href="javascript:void(0);">编辑</a>
+		                <a class="btn lpx15 btn-edit remove-client disable-default" href="javascript:void(0);">移除</a> 
+		                  <!-- search -->
+		                  <input type="text" class="input-search" placeholder="主机名/MAC">
+		                  <span class="icon-magnifier btn-search-client"></span>
+		            </div>
+		            <div class="app-table-detail">
+						<!-- 右面下拉类型部分 -->
+						<div class="menu_down none">
+							<ul>
+								<li class="btn-adddz-client">
+									<div style="" class="datagrid-cell-check datagrid-cell-check1 cell-checked">
+										<input type="checkbox" name="xz" value="1">
+									</div>
+									<span>类型</span>
+								</li>
+								<li class="btn-adduser-client">
+									<div style="" class="datagrid-cell-check datagrid-cell-check1 cell-checked">
+										<input type="checkbox" name="xz" value="2">
+									</div>
+									<span>主机名</span>
+								</li>
+								<li class="btn-adddz-client">
+									<div style="" class="datagrid-cell-check datagrid-cell-check1 cell-checked">
+										<input type="checkbox" name="xz" value="3">
+									</div>
+									<span>MAC</span>
+								</li>
+								<li class="btn-adduser-client">
+									<div style="" class="datagrid-cell-check datagrid-cell-check1 cell-checked">
+										<input type="checkbox" name="xz" value="4"></div>
+										<span>当前网速</span>
+									</li>
+								<li class="btn-adddz-client">
+									<div style="" class="datagrid-cell-check datagrid-cell-check1 cell-checked">
+										<input type="checkbox" name="xz" value="5">
+									</div>
+									<span>在线时间</span>
+								</li>
+								<li class="btn-adduser-client">
+									<div style="" class="datagrid-cell-check datagrid-cell-check1">
+										<input type="checkbox" name="xz" value="6">
+									</div>
+									<span>外网流量</span>
+								</li>
+								<li class="btn-adduser-client">
+									<div style="" class="datagrid-cell-check datagrid-cell-check1">
+										<input type="checkbox" name="xz" value="7">
+									</div>
+									<span>本地流量</span>
+								</li>
+								<li class="btn-adduser-client">
+									<div style="" class="datagrid-cell-check datagrid-cell-check1">
+										<input type="checkbox" name="xz" value="8">
+									</div>
+									<span>总流量</span>
+								</li>
+							</ul>
+						</div>
+						<table class="easyui-datagrid tb table-client" style="height:385px;overflow: hidden;">
+						</table>
+		            </div>
+		            <!-- 分页 -->
+		            <footer>
+			            <div class="pagination-wrap">
+			            	<div id="pagination_client"></div>
+			            </div>
+		            </footer>
+		        </div>
+			</div>
+		</div>
+	</div>
+ </div>
+<!--添加到左边新增-->
+<div id="win-addressAdd-client" class="win-addressAdd-client client_yh none">
+	<div class="client-box">
+		<form method="post" action="" id="create-client">
+			<div class="cont-box">
+				<div class="cont-title">请输入地址簿的名称：</div>
+				<div class="cont-cont">
+					<div class="input-box validate-name">
+						<input type="text" name="first_name" class="input-text input-selected indent5 name addaddressname" placeholder=""/>
+					</div>
+				</div>				
+			</div>
+			
+			<div class="client-footer">
+				<div class="but-cancel cancel-hover" style="float: left;">取消</div><!-- cancel-hover为鼠标移上去效果 -->
+				<div class="but-conserve conserve-hover" style="float: right;">完成</div><!-- conserve-hover为鼠标移上去效果 -->
+			</div>
+			
+		</form>
+	</div>
+</div>
+<!--添加到左边更多编辑地址簿-->
+<div id="win-editAdd-client" class="win-editAdd-client client_yh none">
+	<div class="client-box">
+		<form method="post" action="" id="create-client">
+			<div class="cont-box">
+				<div class="cont-title">请输入地址簿的名称：</div>
+				<div class="cont-cont">
+					<div class="input-box validate-name">
+						<input type="text" name="first_name" class="input-text input-selected indent5 name editaddressname" placeholder="办公室设备"/>
+					</div>
+				</div>				
+			</div>
+			
+			<div class="client-footer">
+				<div class="but-cancel cancel-hover" style="float: left;">取消</div><!-- cancel-hover为鼠标移上去效果 -->
+				<div class="but-conserve conserve-hover" style="float: right;">完成</div><!-- conserve-hover为鼠标移上去效果 -->
+			</div>
+			
+		</form>
+	</div>
+</div>
+<!--添加到左边更多编辑地址簿-->
+<!-- 删除 -->
+<div id="win-client-delete" class="win-client-delete client_yh none">
+	<div class="client-box">
+		<form method="post" action="" id="create-client">
+			<div class="cont-box">
+				<div class="remove_cont">
+					<div class="remove_icon"><img src="./client/images/zs.png" /></div>
+					<div class="remove_text">你正在尝试删除“<span id="addressname">办公室设备</span>”地址簿
+<br>删除后，该地址簿下的终端信息将一并删除，是否继续？</div>
+				</div>					
+			</div>
+			
+			<div class="client-footer">
+				<div class="but-cancel cancel-hover" style="float: left;">取消</div><!-- cancel-hover为鼠标移上去效果 -->
+				<div class="but-conserve conserve-hover" style="float: right;">确定</div><!-- conserve-hover为鼠标移上去效果 -->
+			</div>
+			
+		</form>
+	</div>
+</div>
+<!-- 删除 -->
+<!--添加到黑名单-->
+<div id="win-add-blacklist" class="win-add-blacklist client_yh none">
+	<div class="user-box">
+		<form method="post" action="" id="create-ap-batch">
+			<div class="cont-box">
+				<div class="cont-box02" style="height:348px">
+					<div class="batch-title-div">请输入你需要添加的黑名单信息，MAC地址为必填：</div>
+					<div class="batch-box">
+						<div class="batch-batch">
+							<div class="box">
+								<div class="batch-word-address">MAC：</div>
+								<div class="batch-word-name">主机名：</div>
+								<div class="batch-word-location">用户：</div>
+								<div class="batch-word-img"></div>
+							</div>
+							<div class="user-list">
+							</div>
+						</div>
+					</div>
+				</div>	
+				<div class="blacklist_type">
+					<ul>
+						<li>
+							<div class="radio-wrap">
+								<span class="radio-checked"><input type="radio" value="3" checked="checked" name="type"></span>
+								<label class="radio-label">永久阻止</label>
+							</div>
+							
+						</li>
+						<li>
+							<div class="radio-wrap">
+								<span class="radio-checked normal-radio"><input type="radio" value="4" name="type"></span>
+								<label class="radio-label">
+									冻结一段时间
+								</label>
+							</div>
+							<div class="client_dj_time">
+								<input type="text" id="day" placeholder="10">
+								<span>天</span>
+								<input type="text" id="hours" placeholder="10">
+								<span>小时</span>
+								<input type="text" id="min" placeholder="10">
+								<span>分钟</span>
+							</div>
+						</li>
+					</ul>
+				</div>			
+			</div>
+			
+			<div class="user-footer">
+				<div class="but-cancel cancel-hover" style="float: left;">取消</div><!-- conserve-hover为鼠标移上去效果 -->
+				<div class="but-conserve conserve-hover" style="float: right;">确定</div><!-- cancel-hover为鼠标移上去效果 -->
+			</div>
+			
+		</form>
+	</div>
+</div>
+<!--添加到黑名单-->
+<!--设备添加到地址簿-->
+<div id="win-equipment-blacklist" class="win-equipment-blacklist client_yh none">
+	<div class="user-box">
+		<form method="post" action="" id="create-ap-batch">
+			<div class="cont-box">
+				<div class="cont-box02" style="height:348px">
+					<div class="batch-title-div">请输入你需要添加的终端信息，MAC地址为必填：</div>
+					<div class="batch-box">
+						<div class="batch-batch">
+							<div class="box">
+								<div class="batch-word-address">MAC：</div>
+								<div class="batch-word-name">名称：</div>
+								<!-- <div class="batch-word-location">位置：</div> -->
+								<!-- <div class="batch-word-img"></div> -->
+							</div>
+							<div class="user-list">
+							</div>
+						</div>
+					</div>
+				</div>			
+			</div>
+			
+			<div class="user-footer">
+				<div class="but-cancel cancel-hover" style="float: left;">取消</div><!-- conserve-hover为鼠标移上去效果 -->
+				<div class="but-conserve conserve-hover" style="float: right;">确定</div><!-- cancel-hover为鼠标移上去效果 -->
+			</div>
+			
+		</form>
+	</div>
+</div>
+<!-- 移除 -->
+<div id="win-client-remove" class="win-client-remove client_yh none">
+	<div class="client-box">
+		<form method="post" action="" id="create-client">
+			<div class="cont-box">
+				<div class="remove_cont">
+					<div class="remove_icon"><img src="./client/images/zs.png" /></div>
+					<div class="remove_text">你正在尝试将"<span class="deleteclientname">Elton SIMIT iPhone</span>"等<span class="deleteclientnum">3</span>个终端从<span class="deleteclientfrom">用户"Edison Lee"</span>中移除，是否继续？</div>
+				</div>					
+			</div>
+			
+			<div class="client-footer">
+				<div class="but-cancel cancel-hover" style="float: left;">取消</div><!-- cancel-hover为鼠标移上去效果 -->
+				<div class="but-conserve conserve-hover addressremovebtn" style="float: right;">确定</div><!-- conserve-hover为鼠标移上去效果 -->
+			</div>
+			
+		</form>
+	</div>
+</div>
+<!-- 移除 -->
+<!--添加到用户-->
+<div id="win-add-batch-client" class="win-add-batch-client client_yh none">
+	<div class="client-box">
+		<form method="post" action="" id="create-client-batch">
+			<div class="cont-box">
+				<div class="cont-title">你正在将以下终端添加到地址簿：</div>
+				<div class="cont-cont">
+					<div class="input-box validate-name">
+						<input type="text" name="first_name" class="input-text input-selected indent5 name" placeholder="iPhone7 Plus John”等共7个终端"/>
+					</div>
+				</div>	
+				<div class="cont-title">请选择用户</div>			
+			</div>
+			<div class="client_userlist">
+				<input type="text" class="input-text" placeholder="请输入用户名／邮箱／手机号进行搜索">
+				<span class="arrow_down" data-toggle="dropdown"></span>
+				<ul class="dropdown-menu open">
+					<li class="">张三</li>
+					<li class="">15811113000</li>
+					<li class="">zhangsan@163.com</li>
+				</ul>
+			</div>
+			<div class="client-footer">
+				<div class="but-cancel cancel-hover" style="float: left;">取消</div><!-- conserve-hover为鼠标移上去效果 -->
+				<div class="but-conserve conserve-hover" style="float: right;">完成</div><!-- cancel-hover为鼠标移上去效果 -->
+			</div>
+			
+		</form>
+	</div>
+</div>
+<!--编辑-->
+<div id="win-edit-client" class="win-edit-client client_yh none">
+	<div class="user-box">
+		<form method="post" action="" id="create-ap-batch">
+			<div class="cont-box">
+				<div class="cont-box02" style="height:348px">
+					<div class="batch-title-div">请输入你需要添加的黑名单信息，MAC地址为必填：</div>
+					<div class="batch-box">
+						<div class="batch-batch">
+							<div class="box">
+								<div class="batch-word-address">MAC：</div>
+								<div class="batch-word-name">名称：</div>
+								<div class="batch-word-img"></div>
+							</div>
+							<div class="user-list">
+							</div>
+						</div>
+					</div>
+				</div>			
+			</div>
+			
+			<div class="user-footer">
+				<div class="but-cancel cancel-hover" style="float: left;">取消</div><!-- conserve-hover为鼠标移上去效果 -->
+				<div class="but-conserve conserve-hover" style="float: right;">确定</div><!-- cancel-hover为鼠标移上去效果 -->
+			</div>
+			
+		</form>
+	</div>
+</div>
+<!--编辑--> 
+<!--添加到用户--> 
+<script src="./client/js/main.js" ></script>
+</body>
+</html>

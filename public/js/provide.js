@@ -8,7 +8,6 @@
 /*========================================================*/
 
 define(['jquery','functions','zui'],function($,_f,zui){
-	log('加载预处理执行模块');
 	var setTooltip = function(id,msg){
 		$(id).tooltip({
 		    position: 'bottom',

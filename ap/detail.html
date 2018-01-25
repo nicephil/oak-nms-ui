@@ -430,7 +430,7 @@
 					    	
 					    	
 					    	<!--流量的选项卡-->
-					    	<!--临时
+					    	
 					    <div title="流量／终端"  style="overflow:auto;padding:20px;padding-top:10px;display:none;">
 						    	<div class="ap-all-traffic" id="chart-three"></div>
 							<div class="ap-wireless-clients"  id="chart-four"></div>
@@ -451,11 +451,11 @@
 								<div class="btn-network-fresh"></div>
 							</div>
 					    </div>
-					    	-->
+					    	
 					    	<!--流量的选项卡-->
 					    	
 					    	<!--射频的选项卡-->
-					    	<!--临时
+					  
 					    <div title="射频" style="padding:20px;display:none;padding-top: 10px;">
 							<div class="ap-all-traffic" id="chart-five"></div>
 							<div class="ap-wireless-clients"  id="chart-six"></div>
@@ -476,25 +476,53 @@
 								<div class="btn-network-fresh"></div>
 							</div>
 					    </div>
-					    	-->
+					    
 					    	<!--射频的选项卡-->
 					    	
 					    	<!--信道的选项卡-->
-					    	<!--临时
-					    <div title="信道分析" style="padding:20px;display:none;">
+					    	
+					    <div title="信道分析" style="padding:20px; padding-top: 10px;display:none;">
 							<div class="channel-text">
 								信道分析将无线接入点的扫描功能，对周边的信道进行分析，为你推荐最优的可用信道
 							</div>
 							<a href="#" class="btn analyze">扫描分析</a>
+							<a href="#" class="btn conserve-analyze" style="display: none;">保存</a>
 							<div class="result-analyze" style="display: none;">
 								<span class="result-analyze-icon"></span>
 								<span class="result-analyze-text">
 									该无线接入点射频处于关闭状态，无法进行扫描分析。你可以前往配置界面，将射频打开。
 								</span>
-								
 							</div>
+							<div class="analyze-div" style="display: none;">
+								<ul class="analyze-list">
+									<li class="analyze-24g">2.4G</li>
+									<li class="analyze-5g">5G</li>
+								</ul>
+								<div class="analyze-24g-box">
+									<ul class="analyze-24g-list">
+										<li class="first-li">
+											<span class="analyze-radio">选择</span>
+											<span class="analyze-channel">信道</span>
+											<span class="analyze-number">网络数量</span>
+											<span class="analyze-level">信道评级</span>
+										</li>
+									</ul>
+									
+								</div>
+								<div class="analyze-5g-box" style="display: none;">
+									<ul class="analyze-5g-list">
+										<li class="first-li">
+											<span class="analyze-radio">选择</span>
+											<span class="analyze-channel">信道</span>
+											<span class="analyze-number">网络数量</span>
+											<span class="analyze-level">信道评级</span>
+										</li>
+									</ul>
+								</div>
+							</div>
+							
 					    </div>
-					    	-->
+					    
 					    <!--信道的选项卡-->
 					    
 					    <!--日志的选项卡-->

@@ -1,0 +1,48 @@
+<form method="post" action="" id="create-times-network" style="height: 100%;">
+
+			<div class="cont-box" style="padding: 0 37px;">
+				<div class="cont-item" style="padding: 10px 0;">
+					第一步： 设置定时访问策略名称
+					<div class="input-box" style="padding: 15px 0;">
+						<input type="text" name="profile_name" placeholder="1-64个字符" class="input-text03 input-selected" style="padding-left:5px;height:30px;line-height: 30px;width:490px;;" />
+					</div>
+				</div>
+				<div class="cont-item" style="padding: 10px 0;">
+					第二步： 选择需要控制的终端MAC和用户
+					<div class="step-choiceBox wrap-combotree" style="margin-top: 20px;">
+						<select class="select-client" name="clients" id="msClients" multiple="multiple" style="position: relative;width: auto;">
+				            <option value="0">请选择地址簿</option>	
+				        </select>
+					</div>
+
+					<div class="step-choiceBox wrap-combotree">
+						<input class="select-user-combotree combotree-network combotree-network-hiden" style="width:524px;height:30px;line-height: 30px;"/>
+					</div>				
+				</div>
+				<div class="cont-item" style="padding: 10px 0;">
+					第三步： 选择定时器
+					<div class="select-times-box">
+						<select id="select-times" class="select-times select-style" name="clients">
+							     <option value="1">请选择定时器</option>
+								<option value="1">周未定时器</option>
+								<option value="0">工作日定时器</option>
+						</select>
+						<a href="javascript:void(0)" id="btn-add-times" class="btn-add-times">
+							<img class="img-times-add" src="./network/images/icon/icon_add.png" />
+						</a>
+					</div>
+					<div class="info-box" style="padding-top: 10px;">
+					受限时间:一 二 三 四 五 六 日 
+					<a id="btn-see-times" href="javascript:void(0)">查看</a>
+					</div>
+				</div>
+			</div>
+			<div class="network-times-footer">
+				<div class="btn-conserve btn" style="float: right;margin:12px 10px 0 37px;">保存&使用</div>
+				<div class="btn btn-sava" style="float: right;margin-top:12px;margin-left: 37px;">保存</div>
+				<div class="btn btn-cancel" style="float: right;margin-top:12px;">取消</div>
+			</div>
+
+
+
+</form>

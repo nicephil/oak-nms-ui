@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>桌面</title>
+</head>
+<body>
+    <!--终端详情-->
+    <div id="app-client-particulars-layout" class="easyui-layout" fit="true">
+ 	<!--左侧布局-->
+ 	<div data-options="region:'west',border:false" class="client-region-west">
+ 		<div class="easyui-layout app-left" fit="true" class="transparent">
+			<div data-options="region:'east',border:false" class="w-sep transparent"></div>
+			<div data-options="region:'west',border:false" class="w-sep transparent"></div>
+			<div data-options="region:'south',border:false" class="transparent" style="height: 50px; border-top:1px solid #e6e6e6">
+				<div class="bottom-number">
+					共
+					<span class="number-total"></span>
+					条记录
+				</div>
+				<div class="refresh-right"></div>
+				<div class="refresh-icon"></div>
+			</div>
+			
+			<div data-options="region:'center',border:false" class="transparent over-hide ncenter" style="">
+				<!--用户层-->
+		        <div class="win-nav client-div-left">
+		            <div class="left-menu">
+		                <span class="return-index"></span>
+		                <span class="return-text">
+		                	返回列表视图
+		                </span>
+		            </div>
+		            
+		            <div class="left-div">
+		            	<div class="left-div-top">
+		            		<span class="status">
+		            			<span class="status-text">类型</span>
+		            			<!--<span class="status-icon"></span>-->
+		            		</span>
+		            		<span class="wireless">
+		            			<span class="wireless-text">终端</span>
+		            			<!-- <span class="wireless-icon"></span> -->
+		            		</span>
+		            	</div>
+		            	<ul class="group-list-particulars">
+		            		
+		            	</ul>
+		            </div>
+		          
+		        </div>
+			</div>
+		</div>
+		
+ 	</div>
+ 	<!--右侧布局-->
+	<div data-options="region:'center',border:false" class="client-region-center">
+		<div class="easyui-layout app-right"  fit="true">
+			<div data-options="region:'west',border:false" class="w-sep transparent"></div>
+			<div data-options="region:'east',border:false" class="w-sep transparent" style="position: relative;">
+				<span class="right-cion"></span>
+			</div>
+			<div data-options="region:'center',border:false" class="transparent" style="position:relative;overflow:hidden;">
+				
+				<div class="win-content">
+		            <div class="right-menu">
+		               
+		            </div>
+		            <div id="client-tabs" class="easyui-tabs" fit="true" style="height:490px;">
+		            	<!--总览的选项卡-->
+					    <div title="总览" class="scan" style="padding:20px;display:none;">
+							<!--设备-->
+							<div class="infor-title">设备<div class="edit-base btn-edit-icon equipment" style="float:right"></div></div>
+							<div class="infor-detail" style="margin:15px 0px 0 0px;">
+								<div class="abs-row">
+									<span class="text">ssid:</span>
+									<span class="info-label client_info_ssid">iPhone 7Plus John</span>
+									<span class="info-input none"><input name="ssid_name" /></span>
+								</div>
+								<div class="abs-row">
+									<span class="text">射频:</span>
+									<span class="abs_band_label client_info_shepin">---</span>
+								</div>
+								<div class="abs-row">
+									<span class="text">MAC:</span>
+									<span class="abs_auth_label client_info_mac">22:00:b4:d1:b7:05</span>
+								</div>
+								<div class="abs-row">
+									<span class="text">在线时间:</span>
+									<span class="abs_key_label client_info_uptime">21天1小时3分钟</span>
+								</div>
+								<div class="abs-row">
+									<span class="text">IP:</span>
+									<span class="abs_auth_label client_info_ip">192.168.3.121</span>
+								</div>
+								<div class="abs-row">
+									<span class="text">网关:</span>
+									<span class="abs_key_label client_info_gateway">192.168.3.11</span>
+								</div>
+								<div class="clear"></div>
+							</div>
+							<!-- QoS -->
+							<div class="infor-title">QoS<div class="edit-base btn-edit-icon QoS" style="float:right"></div></div>
+							<div class="infor-detail QoS_input" style="margin:15px 0px 0 0px;">
+								<div class="abs-row">
+									<span class="text">本地网络限速 接收:</span>
+									<span class="info-label client_info_tx_local">无限制</span>
+									<span class="info-input none"><input name="ssid_name" /><span class="dw">Mb/s</span></span>
+								</div>
+								<div class="abs-row">
+									<span class="text">本地网络限速 发送:</span>
+									<span class="info-label client_info_rx_local">无限制</span>
+									<span class="info-input none"><input name="ssid_name" /><span class="dw">Mb/s</span></span>
+								</div>
+								<div class="abs-row">
+									<span class="text">广域网络限速 接收:</span>
+									<span class="info-label client_info_tx_wan">无限制</span>
+									<span class="info-input none"><input name="ssid_name" /><span class="dw">Mb/s</span></span>
+								</div>
+								<div class="abs-row">
+									<span class="text">广域网络限速 发送:</span>
+									<span class="info-label client_info_rx_wan">无限制</span>
+									<span class="info-input none"><input name="ssid_name" /><span class="dw">Mb/s</span></span>
+								</div>
+								<div class="clear"></div>
+							</div>
+							<!-- 射频 -->
+							<div class="infor-title" style="margin-top:10px">射频</div>
+							<div class="infor-detail" style="margin:15px 0px 0 0px;">
+								<div class="abs-row wireless_jr">
+									<span class="text">无线接入点:</span>
+									<span class="abs_auth_label client_info_device_name">Southwest</span>
+								</div>
+								<div class="abs-row">
+									<span class="text">频道:</span>
+									<span class="abs_auth_label client_info_channel">6 (2.4GHz, 20MHz）</span>
+								</div>
+								<div class="abs-row">
+									<span class="text">传输协议:</span>
+									<span class="abs_auth_label client_info_mode">802.11n</span>
+								</div>
+								<div class="abs-row">
+									<span class="text">RSSI:</span>
+									<span class="abs_auth_label client_info_rssi">-56dBm</span>
+								</div>
+								<div class="abs-row">
+									<span class="text">本地网速率:</span>
+									<span class="abs_auth_label"><span class="client_info_tx_rate_local">121Kb/s</span><img src="./client/images/wl_sj.png" alt=""><span class="client_info_rx_rate_local">3Mb/s</span><img src="./client/images/wl_sj-d.png" alt=""></span>
+								</div>
+								<div class="abs-row">
+									<span class="text">广域网速率:</span>
+									<span class="abs_auth_label"><span class="client_info_tx_rate_wan">121Kb/s</span><img src="./client/images/wl_sj.png" alt=""><span class="client_info_rx_rate_wan">3Mb/s</span><img src="./client/images/wl_sj-d.png" alt=""></span>
+								</div>
+								<div class="abs-row">
+									<span class="text">误码率:</span>
+									<span class="abs_auth_label client_info_error_rate">31%</span>
+								</div>
+								<div class="abs-row">
+									<span class="text">重试率:</span>
+									<span class="abs_auth_label client_info_retry_rate">23%</span>
+								</div>
+								<div class="abs-row">
+									<span class="text">Tx 速率:</span>
+									<span class="abs_auth_label client_info_tx_negotiate_rate">60Mbps</span>
+								</div>
+								<div class="clear"></div>
+							</div>
+					    </div>
+					    <!--总览的选项卡-->
+					    	
+					    	
+					    	<!--流量的选项卡-->
+					    <div title="流量"  style="overflow:auto;padding:20px;padding-top:10px;display:none;">
+						    	<div class="client-all-traffic" id="chart-three"></div>
+							<div class="client-wireless-clients"  id="chart-four"></div>
+							<div class="client-footer-tools">
+								<div style="width:auto;position: absolute;left:0px">
+									<label>数据范围：</label>
+									<select>
+										<option>24小时</option>
+									</select>
+								</div>
+								<div style="width:auto;position: absolute;right: 40px;">
+									<label>自动刷新：</label>
+									<select>
+										<option>5分钟</option>
+									</select>
+								</div>
+								<div class="sep" style="width:auto;position: absolute;right: 40px;"></div>
+								<div class="btn-network-fresh"></div>
+							</div>
+					    </div>
+					    	<!--流量的选项卡-->
+					    	
+					    <!--日志的选项卡-->
+					    <div title="日志" style="padding:20px;display:none;padding-top: 10px;padding-bottom:0px ;">
+					    		
+							<a href="#" class="btn export-record" >导出</a>
+							<div>
+								<div class="app-table-details" style="margin-top: 10px;height:348px">
+									<table class="tb table-log" style="height:348px;overflow: hidden;">
+									</table>
+					            </div>
+					            
+					            <footer>
+						            <div class="pagination-wrap">
+						            	<div id="pagination-client-details"></div>
+						            </div>
+					            </footer>
+				          </div>
+					    </div>
+					     <!--日志的选项卡-->
+					</div>
+		           
+		        </div>
+			</div>
+		</div>
+	</div>
+ </div> 
+ <!--终端详情-->
+ 
+ 
+</body>
+</html>

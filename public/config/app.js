@@ -18,4 +18,14 @@
 	"headIcon":"app-icon-ap",
 	"height":"550",
 	"width":"1000"
+},{
+	"id" : "4",
+	"class":"app-client-tip",
+	"title" : "终端",
+	"href":"client/index.html",
+	"icon" : "client/images/app-client.png",
+	"taskIcon" : "client/images/task-icon-client.png",
+	"headIcon":"app-icon-client",
+	"height":"550",
+	"width":"1000"
 }]

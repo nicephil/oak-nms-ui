@@ -9,10 +9,11 @@
  * @Version:       		V1.0 
  * @Copyright        	峥嵘时代
 /*========================================================*/
-define(['echarts','functions'],function(echarts,_f){
+define(['echarts','functions','multiple'],function(echarts,_f,_multiple){
 	/*******全局变量*******/
 	//弹窗容器
 	var container = $('body');
+	
 	
 	//无线树的DOM节点
 	var tree = "#app-network-layout .group-list";
@@ -42,17 +43,29 @@ define(['echarts','functions'],function(echarts,_f){
 	//左侧面板对象
 	var leftPanel = '';
 	
-	var myChartOne = '';
+	var myChartFlow = '';
 	
-	var myChartTwo = '';
+	var myChartClient = '';
+
+	//aihui
+	var table = ".win-times .table-times";
+	var pagination = '.win-times #pagination_times';
+	var defPageNumber = 1;
+	var defPageSize = 10;
+	var defPageList = [10,20,50];
+	
+	//author : ChiLei
+	var network_timing_selected_id;
+	var timer_access_selected_rowData;//选中一行的数据
+
 	
     /*初始化*/
 	var init = function(){
 		//初始化流量对象
-		myChartOne = echarts.init(document.getElementById('network-traffic-echarts'));
+		myChartFlow = echarts.init(document.getElementById('network-traffic-echarts'));
 		
 		//初始化客户端对象
-		myChartTwo = echarts.init(document.getElementById('network-client-echarts'));
+		myChartClient = echarts.init(document.getElementById('network-client-echarts'));
 
 		//初始化radio
 		initRadio();
@@ -160,17 +173,55 @@ define(['echarts','functions'],function(echarts,_f){
 	var getFlow = function(node,func,options){
 		if(node!=null){
 			var url = _IFA['network_flow_ssids']+node.id+'/flow';
-			if(options!=undefined){
-				if(options.length>0){
-					url = url+'?'+options;
-				}
-				var type = 'GET';
-				var data = '';
-				_ajax(url,type,data,function(data){
-					func(data);
-				});
+			if(options==undefined){
+				options = 'begin_time='+getTimeStamp(-1);
 			}
+			if(options.length>0){
+				url = url+'?'+options;
+			}
+			var type = 'GET';
+			var data = '';
+			_ajax(url,type,data,function(newdata){
+				func(newdata);
+			});
 		}
+	}
+	
+	/*
+	 * 获取流量统计数据--当树onselect时加载此函数
+	 * */
+	var getClients = function(node,func,options){
+		if(node!=null){
+			var url = _IFA['network_client_ssids']+node.id+'/client';
+			if(options==undefined){
+				options = 'begin_time='+getTimeStamp(-1);
+			}
+			
+			if(options.length>0){
+				url = url+'?'+options;
+			}
+			var type = 'GET';
+			var data = '';
+			_ajax(url,type,data,function(newdata){
+				func(newdata);
+			});
+		}
+	}
+	
+	/*
+	 * 加载选中节点图标
+	 * */
+	var loadEcharts = function(){
+		var node = $(tree).tree('getSelected');
+		//加载流量图表
+		getFlow(node,function(data){
+			chartFlow(data);
+		});
+		//debugger;
+		//加载终端图表
+		getClients(node,function(data){
+			chartClients(data);
+		});
 	}
 	
 	/*选择tab页面*/
@@ -180,15 +231,13 @@ define(['echarts','functions'],function(echarts,_f){
             onSelect:function(title,index){
             	switch(index){
 					case 0:
-						var node = $(tree).tree('getSelected');
-						var data = getFlow(node,function(data){
-							chartOne(data);
-						});
+						loadEcharts();
 						break;
 					case 1:console.log(1);
 					    var tab = $(this).tabs('getTab',1);
 					    $(tab).panel({
 					    	href:'network/abstract.html',
+					    	loadingMessage:'',
 					    	onLoad:function(){console.log(2);
 					    		//加载基本信息
 					    		var node = $(tree).tree('getSelected');
@@ -199,28 +248,101 @@ define(['echarts','functions'],function(echarts,_f){
 					    		
 					    		//绑定摘要事件组
 					    		bindAbstractEven();
-					    		
 					    	}
 					    });
 						break;
 					case 2:
-						break;
-				}
+						var tab = $(this).tabs('getTab', 2);
+						$(tab).panel({
+							href: 'network/times.html',
+							loadingMessage:'',
+							onLoad: function() {
+								//加载基本信息
+								var node = $(tree).tree('getSelected');
+								//新增定时访问
+								bindTimesEven();
+								
+								//获取定时访问 列表
+								//getTimerAccess();
+								//获取定时器
+								loadTimesList();
+								
+								//定时访问禁用
+								//btnEnableTimerAccess();
+								
+								//加载表格数据
+								loadTable(node.id);
+							},
+							onOpen: function() {
+
+							}
+						});
+						break;				
+            	}
 			}
 		});
+		
 	}
+    
+    /*
+     * 测试-时间戳转换字符串
+     * */
+   var timeToString = function(timeStamp){
+   		var newDate = new Date();
+   		newDate.setTime(timeStamp);
+   		var year = newDate.getFullYear();
+   		var month = newDate.getMonth()+1;
+   		var day = newDate.getDate();
+   		var hour = newDate.getHours();
+   		var minute = newDate.getMinutes();
+   		var second = newDate.getSeconds();
+   		//return year+'/'+month+'/'+day+' '+hour+':'+minute+':'+second;
+   		return hour;
+   		
+   }
+   
+   /*
+    * 获取固定时间坐标
+    * */
+   var getTimeLabel = function(index){
+   		var axisArr = new Array();
+			axisArr[0] = 'Noon';
+			axisArr[1] = '1PM';
+			axisArr[2] = '2PM';
+			axisArr[3] = '3PM';
+			axisArr[4] = '4PM';
+			axisArr[5] = '5PM';
+			axisArr[6] = '6PM';
+			axisArr[7] = '7PM';
+			axisArr[8] = '8PM';
+			axisArr[9] = '9PM';
+			axisArr[10] = '10PM';
+			axisArr[11] = '11PM';
+			axisArr[12] = 'Night';
+			axisArr[13] = '1AM';
+			axisArr[14] = '2AM';
+			axisArr[15] = '3AM';
+			axisArr[16] = '4AM';
+			axisArr[17] = '5AM';
+			axisArr[18] = '6AM';
+			axisArr[19] = '7AM';
+			axisArr[20] = '8AM';
+			axisArr[21] = '9AM';
+			axisArr[22] = '10AM';
+			axisArr[23] = '11AM';
+			axisArr[24] = 'Noon';
+		return axisArr[index];
+   }
 	
 	//定义总览流量图表
-	var chartOne = function(data){
-
+	var chartFlow = function(data){
         var colors = ['#8ec6ad', '#d14a61', '#675bba'];
-        
         var tx = [];
         var rx = [];
         var total = [];
         var dataX = [];
         var result = [];
-        
+        var tableWidth = $('.network-charts').width()-78;
         for(var i=0; i<25;i++) {
         	if(i>data.list.length-1){
         		tx=0;
@@ -245,11 +367,44 @@ define(['echarts','functions'],function(echarts,_f){
         optionOne = {
             title: {
             	text:'流量',
-                left: '0%'
+                left: 25
             },
             color: colors,
             tooltip: {
                 trigger: 'axis',
+                showTitle:true,
+                formatter: function (params, ticket, callback) { 
+                	var total_name = params[0].seriesName;
+                	var tx_name = params[1].seriesName;
+                	var rx_name = params[2].seriesName;
+                	
+					var total = params[0].value;
+					if(total>1024){
+						total = getGB(total);
+					}else{
+						total += 'M';
+					}
+					var tx = params[1].value;
+					if(tx>1024){
+						tx = getGB(tx);
+					}else{
+						tx += 'M';
+					}
+					var rx = params[2].value;
+					if(rx>1024){
+						rx = getGB(rx);
+					}else{
+						rx += 'M';
+					}
+
+					var _axisValue = getTimeLabel([params[0].dataIndex])+'<br/>';
+					var _total = params[0].marker+total_name+': '+total+'<br/>';
+					var _tx = params[1].marker+tx_name+': '+tx+'<br/>';
+					var _rx = params[2].marker+rx_name+': '+rx;
+					
+					//debugger;//调试
+					return _axisValue+_total+_tx+_rx;
+                }
             },
             legend: {
                 data:['Total', 'Tx', 'Rx'],
@@ -258,15 +413,15 @@ define(['echarts','functions'],function(echarts,_f){
             grid: {
                 top: 40,
                 bottom: 40,
-                width:630,
-                left:70
+                width:tableWidth,
+                left:50
             },
             xAxis: [
                 {
                     type: 'category',
                     boundaryGap : false,
                     axisTick:{
-                        alignWithLabel: true,
+                        alignWithLabel: false,
                     },
                     data: dataX.mark
                 }
@@ -316,19 +471,67 @@ define(['echarts','functions'],function(echarts,_f){
                     symbol: 'none',
                     data: dataX.rx
                 }
-
             ]
         };
 
-        myChartOne.setOption(optionOne, true);
+        myChartFlow.setOption(optionOne, true);
+        myChartFlow.resize();
+        //定时刷新
+        var setMinute = $('.network-auto-refresh').val()*60*1000;
+        setInterval(function () {
+            myChartFlow.setOption(optionOne, true);
+            myChartFlow.resize();
+        },setMinute);
+        //debugger;
+    }
+	
+	/*
+	 * 定义总览终端图表
+	 * */
+	var chartClients = function(data){
+		var colors = ['#8ec6ad', '#d14a61', '#675bba'];
+		var client_g24 = 0;
+        var client_g5 = 0;
+        var client_total = 0;
+        var timestamp = 0;
+        var dataX = [];
+        var maxTotal = [];
+        var tableWidth = $('.network-charts').width()-78;
 
-        var colors = ['#8ec6ad', '#d14a61', '#675bba'];
-
+        for(var i=0; i<25;i++) {
+        	if(i>data.list.length-1){
+        		client_g24=0;
+        		client_g5=0;
+        		client_total=0;
+        		timestamp=0;
+        	}else{
+        		var node = data.list[i];
+        		client_g24=node.client_24g_count;
+        		client_g5=node.client_5g_count;
+        		client_total=node.client_count;
+        		timestamp=node.timestamp;
+        	}
+        	dataX.push({
+        		'client_g24':client_g24,
+        		'client_g5':client_g5,
+        		'client_total':client_total,
+        		'timestamp':timestamp
+        	});
+        	maxTotal.push(client_total);
+        };
+        //获取总数的最大数
+        var max = getMax(maxTotal);
+        
+        //格式化数据
+        dataX  = getXdate(dataX,25,'client');
+        
+        //debugger;
         optionTwo = {
             title: {
             	text:'终端',
-                left: '0%'
+                left: 25
             },
+            color: colors,
             tooltip: {
                 trigger: 'axis',
                 axisPointer: {
@@ -336,12 +539,34 @@ define(['echarts','functions'],function(echarts,_f){
                     crossStyle: {
                         color: '#999'
                     }
+                },
+                formatter: function (params, ticket, callback) { 
+                	var total_name = params[0].seriesName;
+                	var tx_name = params[1].seriesName;
+                	var rx_name = params[2].seriesName;
+                	
+					var total = params[0].value;
+						total += '个';
+						
+					var tx = params[1].value;
+						tx += '个';
+						
+					var rx = params[2].value;
+						rx += '个';
+
+					var _axisValue = getTimeLabel([params[0].dataIndex])+'<br/>';
+					var _total = params[0].marker+total_name+': '+total+'<br/>';
+					var _tx = params[1].marker+tx_name+': '+tx+'<br/>';
+					var _rx = params[2].marker+rx_name+': '+rx;
+					
+					//debugger;//调试
+					return _axisValue+_total+_tx+_rx;
                 }
             },
            grid: {
                 top: 40,
                 bottom: 40,
-                width:630,
+                width:tableWidth,
                 left:50
             },
             legend: {
@@ -351,7 +576,7 @@ define(['echarts','functions'],function(echarts,_f){
             xAxis: [
                 {
                     type: 'category',
-                    data: [ "Noon", "3PM", "6PM", "9PM", "Ninght", "3AM", "6AM", "9AM","Noon"],
+                    data: dataX.mark,
                     axisPointer: {
                         type: 'shadow'
                     },
@@ -361,39 +586,44 @@ define(['echarts','functions'],function(echarts,_f){
                 {
                     type: 'value',
                     min: 0,
-                    max: 250,
-                    interval: 50,
+                    interval: 1,
+                    max:max+5,
                     nameGap: 10,
                     axisLabel: {
-                        formatter: '{value} M'
+                        formatter: '{value} 个'
                     }
                 }
             ],
             series: [
                 {
                     name:'Total',
-                    type:'bar',
-                    data:[2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2]
+                    type:'line',
+                    data:dataX.client_total
                 },
                 {
                     name:'2.4G',
                     type:'bar',
-                    data:[2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2]
+                    data:dataX.client_g24
                 },
                 {
                     name:'5G',
-                    type:'line',
+                    type:'bar',
                     yAxisIndex: 0,
                     symbol: 'none',
-                    data:[6.0, 2.2, 3.3, 4.5, 6.3, 10.2, 20.3, 23.4]
+                    data:dataX.client_g5
                 }
             ]
         };
-
+		
+		myChartClient.setOption(optionTwo, true);
+		myChartClient.resize();
+		//定时刷新
+        var setMinute = $('.network-auto-refresh').val()*60*1000;
         setInterval(function () {
-            myChartTwo.setOption(optionTwo, true);
-        },500);
-    }
+            myChartClient.setOption(optionTwo, true);
+            myChartClient.resize();
+        },setMinute);
+	}
 
 	/*设置radio状态*/
 	var setRadioStatus = function(key,val){
@@ -624,23 +854,25 @@ define(['echarts','functions'],function(echarts,_f){
 	var setPortalLabel = function(ele,node){
 		//获取ssid详情
 		getSsidDetail(node,function(data){
-			var tmpText = '---';
-			switch(data.auth_mode){
-				case 4:{
-					tmpText = '账户密码认证';
-					break;
-				}
-				case 2:{
-					tmpText = '短信认证';
-					break;
-				}
-				case 1:{
-					tmpText = '一键开放认证';
-					break;
-				}
-				case 128:{
-					tmpText = '微信认证';
-					break;
+			var tmpText = '---';console.log(data);
+			if(data.portal_profile != undefined){
+				switch(data.portal_profile.auth_mode){
+					case 4:{
+						tmpText = '账户密码认证';
+						break;
+					}
+					case 2:{
+						tmpText = '短信认证';
+						break;
+					}
+					case 1:{
+						tmpText = '一键开放认证';
+						break;
+					}
+					case 128:{
+						tmpText = '微信认证';
+						break;
+					}
 				}
 			}
 			$(ele).text(tmpText);
@@ -675,7 +907,7 @@ define(['echarts','functions'],function(echarts,_f){
 	 * 设置摘要AP组
 	 * */
 	var setAbstractAp = function(ele,node){
-		getApList(function(data){console.log(data);
+		getApList(function(data){
 			var tmpText = '无';
 			var wireless = getCache('.network-wireless-clients','node');
 			if(data.total>0){
@@ -692,7 +924,7 @@ define(['echarts','functions'],function(echarts,_f){
 				
 				tmpText = group_name.substring(1)+'等共'+group_number.length+'个组，共计'+data.total+'个AP';
 			}
-			if(wireless != undefined && wireless.network_policy_ids[0]==0){console.log(group_number);
+			if(wireless != undefined && wireless.network_policy_ids[0]==0){
 				if(group_number != undefined){
 					tmpText = '所有，共'+group_number.length+'个组，共计'+data.total+'个AP';
 				}
@@ -702,22 +934,28 @@ define(['echarts','functions'],function(echarts,_f){
 		},node.id);
 	}
 	
+	/*获取用户组选中数据*/
+	var getSelectUserGroups = function(groups,data){
+		var tmpText = '无';
+		if(groups.user_group_ids[0]==0){
+			tmpText = '所有，共'+data.children.length+'个组，共计'+data.user_number+'个用户';
+		}
+		if(groups.user_group_ids.length>0 && groups.user_group_ids[0]!=0){
+			tmpText = data.children[0].name+'等,共'+groups.user_group_ids.length+'个组，共计'+data.user_number+'个用户';
+		}
+		return tmpText;
+	}
 	/*
 	 * 设置摘要用户组
 	 * 待验证
 	 * */
 	var setAbstractUser = function(ele,node){
 		getGroups(function(data){
-			var tmpText = '无';
-			var group = getCache('.network-wireless-clients','node');
-			console.log(group);
-			console.log(data);
-			if(group.user_group_ids.length>1 && group.user_group_ids[0]!=0){
-				tmpText = group.substring(1)+'等共'+data.total+'个组，共计'+group.user_number+'个用户';
-			}else if(group.user_group_ids[0]==0){
-				tmpText = '所有，共'+data.total+'个组，共计'+group.user_number+'个用户';
-			}
-			$(ele).text(tmpText);
+			data = data.list[0];
+			getSsidDetail(node,function(detail){
+				$(ele).text(getSelectUserGroups(detail,data));
+			});
+			
 		});
 	}
 	
@@ -732,9 +970,7 @@ define(['echarts','functions'],function(echarts,_f){
 		 var text = $(".selector").find("option:selected").text();
 		 $('.abs_band_label').text(text);
 		 
-		 //设置密码
-		 $('.abs_key_label').text(node.key);
-		 $('input[name="abs_key"]').val(node.key);
+		 
 	
 		 /*
 		  * VPW模式： auth=6, cipher=0
@@ -743,17 +979,26 @@ define(['echarts','functions'],function(echarts,_f){
 		  */
 		 if(node.auth==6 && node.cipher==0){
 		 	$('.abs_auth_label').text('VPW模式');
+		 	//设置密码
+			 $('.abs_key_label').text('---');
+			 $('input[name="abs_key"]').val('');
 		 }else if(node.auth==5 && node.cipher==5){
 		 	$('.abs_auth_label').text('WPA/WPA2模式');
+		 	//设置密码
+			 $('.abs_key_label').text(node.key);
+			 $('input[name="abs_key"]').val(node.key);
 		 }else if(node.auth==0 && node.cipher==0){
 		 	$('.abs_auth_label').text('开放模式');
+		 	//设置密码
+			 $('.abs_key_label').text('---');
+			 $('input[name="abs_key"]').val('');
 		 }
 		 
 		 //更新其他终端
 		 setOtherclientLabel('.otherclient-label',node);
 		 
 		 //更新Portal
-		 setPortalLabel('.auth-label',node);
+		 setPortalLabel('.portal-label',node);
 		 
 		 //更新无线接入点
 		 setAbstractAp('.ap-label',node);
@@ -802,7 +1047,13 @@ define(['echarts','functions'],function(echarts,_f){
     /*获取MB*/
    	var getMB = function(k){
    		var mb = k/1024/1024;
-   		return mb.toFixed(2);
+   		return mb.toFixed(1);
+   	}
+   	
+   	/*获取GB*/
+   	var getGB = function(m){
+   		var gb = m/1024;
+   		return gb.toFixed(1)+'G';
    	}
    
     /*
@@ -833,16 +1084,27 @@ define(['echarts','functions'],function(echarts,_f){
    	 * 获取时间轴节点
    	 * @data 当前时间数组-后端返回值
    	 * @hour 设定时间间隔
+   	 * @ff	client =  终端
    	 * */
-  	var getXdate = function(data,hour){
+  	var getXdate = function(data,hour,ff){
 	  	var dataX = [];
 	  	var res = {};
+	  	
+	  	//流量数据
 	  	res.tx = [];
 	  	res.rx = [];
 	  	res.total = [];
+	  	
+	  	//终端数据
+	  	res.client_total = [];
+	  	res.client_g24 = [];
+	  	res.client_g5 = [];
+	  	
+	  	//时间戳
 	  	res.timestamp = [];
 	  	res.mark = [];
-	  
+	    
+	    //定义1小时
 	  	var time = new Date();
 	  	var mHour = 60*60*1000;
 	  	
@@ -859,16 +1121,17 @@ define(['echarts','functions'],function(echarts,_f){
 	  	var x = parseInt(timeStamp)-parseInt(dehour);
 	  	time.setTime(x);
 	  	
+	  	//获取时间戳
 	  	timeStamp = time.getTime();
 	  	
+	  	//写入时间戳
 	  	for(var i=0;i<hour;i++){
 	  	  var tx = timeStamp+ i*mHour;
 		  dataX.push(tx);
 	  	}
-	  	var ks = {
-	  		id:0,
-	  	}
-	  	$.each(dataX,function(index,node){
+
+		
+		$.each(dataX,function(index,node){
 	  		var flag = false;
 	  		var result = '';
 	  		$.each(data,function(i,n){
@@ -879,19 +1142,37 @@ define(['echarts','functions'],function(echarts,_f){
 	  			}
 	  		});
 	  		
-	  		if(flag==false){
-	  			res.tx.push(0);
-	  			res.rx.push(0);
-	  			res.total.push(0);
-	  			res.timestamp.push(0);
-	  			res.mark.push(setMark(index));
+	  		//写入终端数据
+	  		if(ff=='client'){
+	  			if(flag==false){
+		  			res.client_g24.push(0);
+		  			res.client_g5.push(0);
+		  			res.client_total.push(0);
+		  			res.timestamp.push(0);
+		  			res.mark.push(setMark(index));
+		  		}else{
+		  			res.client_g24.push(result.client_g24);
+		  			res.client_g5.push(result.client_g5);
+		  			res.client_total.push(result.client_total);
+		  			res.timestamp.push(timeToString(result.timestamp));
+		  			res.mark.push(setMark(index));
+		  		}
 	  		}else{
-	  			res.tx.push(result.tx);
-	  			res.rx.push(result.rx);
-	  			res.total.push(result.total);
-	  			res.timestamp.push(result.timestamp);
-	  			res.mark.push(setMark(index));
+	  			if(flag==false){
+		  			res.tx.push(0);
+		  			res.rx.push(0);
+		  			res.total.push(0);
+		  			res.timestamp.push(0);
+		  			res.mark.push(setMark(index));
+		  		}else{
+		  			res.tx.push(result.tx);
+		  			res.rx.push(result.rx);
+		  			res.total.push(result.total);
+		  			res.timestamp.push(timeToString(result.timestamp));
+		  			res.mark.push(setMark(index));
+		  		}	
 	  		}
+	  		
 	  	});
 	  	return res;
   	}
@@ -948,6 +1229,29 @@ define(['echarts','functions'],function(echarts,_f){
 		});
 	}
 	
+	/*
+	 * 绑定图表放大还原事件
+	 */
+	var bindEchartEven = function(){
+		//绑定放大事件
+		var network = $('#app-network-layout').parent('div');
+		var panel = $('div[w_id="'+network.attr('w_id')+'"]').panel('header');
+		panel.find('.panel-tool-max').click(function(){
+			loadEcharts();
+		});
+		
+		//绑定拖拽事件
+		$('#app-network-layout').resizable({
+		   onResize:function(e){
+		   	 loadEcharts();
+		   }
+		});
+		
+		$('.btn-network-fresh').click(function(){
+			loadEcharts();
+		});
+	}
+	
 	/*重新加载数据*/
 	var loadTree = function(){
 		/*载入树结构*/
@@ -991,17 +1295,23 @@ define(['echarts','functions'],function(echarts,_f){
 					onSelect:function(node){
 						//获取网络详情
 						getNetworkDetail(node);
+						//获取定时器
+						loadTimesList();
+						//初始化加载图表
+						loadEcharts();
 						
-						//初始化总览
-						var data = getFlow(node,function(data){
-							chartOne(data);
-						},'begin_time='+getTimeStamp(-1));
+						//设置摘要
 						if(node!=null){
 							setCloseAbsBase();
 							//设置摘要信息
 							setAbstractInfo(node);console.log(node);
+							//重载表格数据
+							loadTable(node.id);
 						}
 						
+					},
+					onResize:function(){
+						alert();
 					}
 				});
 				
@@ -1194,17 +1504,17 @@ define(['echarts','functions'],function(echarts,_f){
 		//模式
 		switch(SSID.model){
 			case "1":
-			$('.auth-label').text('虚拟私有无线网络(VPW)');
-			$('.key-label').text('---');
+			$('.win-config-network .auth-label').text('虚拟私有无线网络(VPW)');
+			$('.win-config-network .key-label').text('---');
 			break;
 			case "2":{
-				$('.auth-label').text('WPA/WPA2共享密码');
-				$('.key-label').text(SSID.key);console.log('*****');
+				$('.win-config-network .auth-label').text('WPA/WPA2共享密码');
+				$('.win-config-network .key-label').text(SSID.key);console.log('*****');
 				break;
 			}
 			case "3":
-			$('.auth-label').text('开放,不加密');
-			$('.key-label').text('---');
+			$('.win-config-network .auth-label').text('开放,不加密');
+			$('.win-config-network .key-label').text('---');
 			break;
 		}
 		
@@ -1457,13 +1767,10 @@ define(['echarts','functions'],function(echarts,_f){
 					
 					sendContent.content = SSID.send_content;console.log(SSID);
 					sendMail(sendContent);
+					destoryWindow();
+				}else{
+					destoryWindow();
 				}
-				
-				//关闭窗口
-				if(win.length>0){
-					win.window('close');
-				}
-				
 				return false;
 			}else{
 				toast('提示信息',data.error_message,'error');
@@ -1508,11 +1815,9 @@ define(['echarts','functions'],function(echarts,_f){
 			if(emlNetwork.is(':checked')){
 				//发邮件保存部署
 				btnSaveSsid(true);
-				$('.win-options-network').window('close');
 			}else{
 				//不发邮件直接保存部署
 				btnSaveSsid();
-				$('.win-options-network').window('close');
 			}
 		});
 	}
@@ -1602,6 +1907,11 @@ define(['echarts','functions'],function(echarts,_f){
 		$('.win-options-network').window('destroy');
 		$('.win-portal-network').window('destroy');
 		$('.win-access-control-network').window('destroy');
+		//销毁  添加定时访问窗口
+		$('.win-create-times-network').window('destroy');
+		//销毁  编辑定时访问窗口
+		$('.win-mod-times-network').window('destroy');
+		SSID = {};
 	}
 	
 	/*隐藏窗口-应用于下一步*/
@@ -1777,7 +2087,10 @@ define(['echarts','functions'],function(echarts,_f){
 			   	//移出下拉树列表，隐含面板
 			   	$('.win-access-control-network *').not('.select-user-combotree,.combo *').mouseenter(function(){
 			   		$('.select-user-combotree').combo('hidePanel');
-			   	})
+			   	});
+				$('.cont-item *').not('.combotree-network-hiden,.combo *').mouseenter(function(){
+			   		$('.combotree-network-hiden').combo('hidePanel');
+			   	});
 			   },
 			   onCheck:function(node,checked){
 			   	    //设置用户组白名单
@@ -2092,6 +2405,22 @@ define(['echarts','functions'],function(echarts,_f){
 		});
 	}
 	
+	//判断是否打开更多选项
+	var selectOpenOptions = function(){
+		var model = parseInt(SSID.model);
+		var access = parseInt(SSID.otherclient);
+		var portal = parseInt(SSID.portalType);
+		if((model >1 && access >1) || (model>1 && access ==1 && portal >1)){
+			$('.win-config-network .btn-next-network').addClass('none');
+			//清除用户数据
+			SSID.user_number = 0;
+			SSID.user_group_ids = [];
+			console.log(SSID);
+		}else{
+			$('.win-config-network .btn-next-network').removeClass('none');
+		}
+	};
+	
 	/*创建新增无线窗口*/
 	var openCreateSsid = function(flag){
 		if(isOpen('.win-create-ssid-network')){
@@ -2206,14 +2535,27 @@ define(['echarts','functions'],function(echarts,_f){
 				
 				//取消窗口
 				$(this).find('.btn-cancel').click(function(){
-					$(self).window('close');
+					_confirm('提示信息', '您确认此操作吗?', function(r){
+						if (r){
+							destoryWindow();
+						}
+					});
 				})
+				
+				//绑定关闭窗口
+				$(this).panel('header').find('.panel-tool-close').click(function(){
+					_confirm('提示信息', '您确认此操作吗?', function(r){
+						if (r){
+							destoryWindow();
+						}
+					});
+				});
 				
 				//在修改状态时，加载info数据
 				//loadSsidInfo(true);
 			},
-			onClose:function(){
-				destoryWindow();
+			onBeforeClose:function(){
+				return false;
 			}
 		});	
 	}
@@ -2275,11 +2617,24 @@ define(['echarts','functions'],function(echarts,_f){
 				
 				//取消窗口
 				$(this).find('.btn-cancel').click(function(){
-					$(self).window('close');
+					_confirm('提示信息', '您确认此操作吗?', function(r){
+						if (r){
+							destoryWindow();
+						}
+					});
+				});
+				
+				//绑定关闭窗口
+				$(this).panel('header').find('.panel-tool-close').click(function(){
+					_confirm('提示信息', '您确认此操作吗?', function(r){
+						if (r){
+							destoryWindow();
+						}
+					});
 				});
 			},
-			onClose:function(){
-				destoryWindow();
+			onBeforeClose:function(){
+				return false;
 			}
 		});	
 	}
@@ -2310,11 +2665,24 @@ define(['echarts','functions'],function(echarts,_f){
 				
 				//取消窗口
 				$(this).find('.btn-cancel').click(function(){
-					$(self).window('close');
+					_confirm('提示信息', '您确认此操作吗?', function(r){
+						if (r){
+							destoryWindow();
+						}
+					});
+				});
+				
+				//绑定关闭窗口
+				$(this).panel('header').find('.panel-tool-close').click(function(){
+					_confirm('提示信息', '您确认此操作吗?', function(r){
+						if (r){
+							destoryWindow();
+						}
+					});
 				});
 			},
-			onClose:function(){
-				destoryWindow();
+			onBeforeClose:function(){
+				return false;
 			}
 		});	
 	}
@@ -2345,11 +2713,24 @@ define(['echarts','functions'],function(echarts,_f){
 				
 				//取消窗口
 				$(this).find('.btn-cancel').click(function(){
-					$(self).window('close');
+					_confirm('提示信息', '您确认此操作吗?', function(r){
+						if (r){
+							destoryWindow();
+						}
+					});
+				});
+				
+				//绑定关闭窗口
+				$(this).panel('header').find('.panel-tool-close').click(function(){
+					_confirm('提示信息', '您确认此操作吗?', function(r){
+						if (r){
+							destoryWindow();
+						}
+					});
 				});
 			},
-			onClose:function(){
-				destoryWindow();
+			onBeforeClose:function(){
+				return false;
 			}
 		});	
 	}
@@ -2423,11 +2804,24 @@ define(['echarts','functions'],function(echarts,_f){
 				
 				//取消窗口
 				$(this).find('.btn-cancel').click(function(){
-					$(self).window('close');
+					_confirm('提示信息', '您确认此操作吗?', function(r){
+						if (r){
+							destoryWindow();
+						}
+					});
+				});
+				
+				//绑定关闭窗口
+				$(this).panel('header').find('.panel-tool-close').click(function(){
+					_confirm('提示信息', '您确认此操作吗?', function(r){
+						if (r){
+							destoryWindow();
+						}
+					});
 				});
 			},
-			onClose:function(){
-				destoryWindow();
+			onBeforeClose:function(){
+				return false;
 			}
 		});	
 	}
@@ -2456,9 +2850,16 @@ define(['echarts','functions'],function(echarts,_f){
 				
 				//设置配置的访问策略
 				setAccessPolicy();
+				
+				//判断是否打开更多选项
+				selectOpenOptions();
 			},
 			onLoad:function(){console.log(SSID);
 				var self = this;
+				
+				//判断是否打开更多选项
+				selectOpenOptions();
+				
 				//写入获取数据展示
 				setConfigInfo();
 				
@@ -2491,11 +2892,24 @@ define(['echarts','functions'],function(echarts,_f){
 				
 				//取消窗口
 				$(this).find('.btn-cancel').click(function(){
-					$('.win-config-network').window('close');
+					_confirm('提示信息', '您确认此操作吗?', function(r){
+						if (r){
+							destoryWindow();
+						}
+					});
+				});
+				
+				//绑定关闭窗口
+				$(this).panel('header').find('.panel-tool-close').click(function(){
+					_confirm('提示信息', '您确认此操作吗?', function(r){
+						if (r){
+							destoryWindow();
+						}
+					});
 				});
 			},
-			onClose:function(){
-				destoryWindow();
+			onBeforeClose:function(){
+				return false;
 			}
 		});	
 	}
@@ -2540,11 +2954,24 @@ define(['echarts','functions'],function(echarts,_f){
 				
 				//取消窗口
 				$(this).find('.btn-cancel').click(function(){
-					$(self).window('close');
+					_confirm('提示信息', '您确认此操作吗?', function(r){
+						if (r){
+							destoryWindow();
+						}
+					});
+				});
+				
+				//绑定关闭窗口
+				$(this).panel('header').find('.panel-tool-close').click(function(){
+					_confirm('提示信息', '您确认此操作吗?', function(r){
+						if (r){
+							destoryWindow();
+						}
+					});
 				});
 			},
-			onClose:function(){
-				destoryWindow();
+			onBeforeClose:function(){
+				return false;
 			}
 		});	
 	}
@@ -2629,11 +3056,24 @@ define(['echarts','functions'],function(echarts,_f){
 				
 				//取消窗口
 				$(this).find('.btn-cancel').click(function(){
-					$(self).window('close');
+					_confirm('提示信息', '您确认此操作吗?', function(r){
+						if (r){
+							destoryWindow();
+						}
+					});
+				});
+				
+				//绑定关闭窗口
+				$(this).panel('header').find('.panel-tool-close').click(function(){
+					_confirm('提示信息', '您确认此操作吗?', function(r){
+						if (r){
+							destoryWindow();
+						}
+					});
 				});
 			},
-			onClose:function(){
-				destoryWindow();
+			onBeforeClose:function(){
+				return false;
 			}
 		});	
 	}
@@ -2710,11 +3150,24 @@ define(['echarts','functions'],function(echarts,_f){
 				
 				//取消窗口
 				$(this).find('.btn-cancel').click(function(){
-					$(self).window('close');
+					_confirm('提示信息', '您确认此操作吗?', function(r){
+						if (r){
+							destoryWindow();
+						}
+					});
+				});
+				
+				//绑定关闭窗口
+				$(this).panel('header').find('.panel-tool-close').click(function(){
+					_confirm('提示信息', '您确认此操作吗?', function(r){
+						if (r){
+							destoryWindow();
+						}
+					});
 				});
 			},
-			onClose:function(){
-				destoryWindow();
+			onBeforeClose:function(){
+				return false;
 			}
 		});
 	}
@@ -2762,11 +3215,24 @@ define(['echarts','functions'],function(echarts,_f){
 				
 				//取消窗口
 				$(this).find('.btn-cancel').click(function(){
-					$(self).window('close');
+					_confirm('提示信息', '您确认此操作吗?', function(r){
+						if (r){
+							destoryWindow();
+						}
+					});
+				});
+				
+				//绑定关闭窗口
+				$(this).panel('header').find('.panel-tool-close').click(function(){
+					_confirm('提示信息', '您确认此操作吗?', function(r){
+						if (r){
+							destoryWindow();
+						}
+					});
 				});
 			},
-			onClose:function(){
-				destoryWindow();
+			onBeforeClose:function(){
+				return false;
 			}
 		});
 	}
@@ -2883,7 +3349,619 @@ define(['echarts','functions'],function(echarts,_f){
 		});
 	}
 	
+	/*创建终端select*/
+	var loadClientSelect = function(){
+		var url = _IFA['client__get_dz_list'];
+		var type = 'GET';
+		var data = '';
+		var args = '?org_ids='+getSite().id;		
+		url = url + args
+		_ajax(url,type,data,function(data){
+			if(data.error_code==0){
+				var str = '<option value="">请选择地址簿</option>';
+				for(var i=0;i<data.list.length;i++){
+					var item = data.list[i];
+					str += '<option value="'+item.id+'">'+item.profile_name+'</option>';
+				}
+				$(".select-client").html(str);
+				$('#msClients').change(function() {
+		        }).multipleSelect({
+		            width: 'auto'
+		        });
+			}
+		});
+	}
+	/*创建定时器select*/
+	var loadTimesList = function(){
+		var url = _IFA['network_get_component_times'];
+		var type = 'GET';
+		var data = '';
+		var args = '?org_ids='+getSite().id;		
+		url = url + args
+		_ajax(url,type,data,function(data){
+			console.log(data);
+			if(data.error_code==0){
+				setCache('.btn-mod-times','timer',data);
+				var str = "<option value='0'>请选择定时器</option>";
+				for(var i=0;i<data.list.length;i++){
+					var item = data.list[i];
+					str += '<option value="'+item.id+'">'+item.profile_name+'</option>';
+				}
+				$("#select-times").html("").html(str);
+				//选择定时器，显示受限时间
+				$('.select-times').change(function(){
+					console.log($('#select-times option:selected').val())
+					var id = $('#select-times option:selected').val();
+					var url =  _IFA['network_detail_component_times']+id;
+					var type = 'GET';
+					_ajax(url,type,'',function(data){
+						console.log(data)
+						/*for(var i=0; i<data.items.length; i++){
+							var limitationTime = data.items[i].day;
+							console.log(limitationTime)
+							//选择定时器和受限时间联动
+						}*/
+					})
+				})
+			}
+		});
+	}
+
 	
+	/*绑定定时访问策略事件*/
+	var bindTimesEven = function(){
+		$('.btn-create-times').click(function(){
+			openCreateTimes();
+		});
+		$('.btn-mod-times').click(function(){
+			if(timer_access_selected_rowData == undefined){
+				toast('提示消息', '请选择要编辑的数据', 'error');
+				return;
+			}
+			openModTimes();
+		});
+		/*定时访问更多下拉列表*/
+		$('#btn-times-more').click(function(e){
+			var self = this;
+			if($(this).next('ul').hasClass('none')){
+				$(this).next('ul').removeClass('none');
+				$(this).addClass('open');
+				e.stopPropagation();
+			}else{
+				$(this).next('ul').addClass('none');
+				$(this).removeClass('open');
+				e.stopPropagation();
+			}
+			$(this).next('ul').mouseleave(function(){
+				$(this).addClass('none');
+			});
+		});
+	}
+	//
+	   /*弹出添加定时器窗口*/
+	var openAddTimes = function(flag){
+		if(isOpen('.win-add-times-network')){
+			return false;
+		};
+		$('<div class="win-add-times-network"/>').appendTo(container);
+		$('.win-add-times-network').window({
+			width:800,
+			height:646,
+			title:'新增定时器',
+			href:'network/add-times.html',
+			headerCls:'sm-header',
+			collapsible:false,
+			minimizable:false,
+			maximizable:false,
+			resizable:false,
+			modal:true,
+			loadingMessage:'',
+			onLoad:function(){
+				var self = this;					
+				var timesbox = new Array();//定时器
+				//取消窗口
+				$(this).find('.btn-cancel').click(function(){
+					$(self).window('close');
+				});
+				$(".table-times td").click(function(){
+					var trnum = $(".table-times tr").index($(this).parent()); //当前块所在行数
+					var tdnum = $("td", $(".table-times tr").eq(trnum)).index($(this)); //当前块所在列数
+					configTimeBox(trnum,tdnum);					
+				});
+				$(".btn-conserve").click(function(){
+					toAddTimes();
+					$(self).window('close');
+				});
+			},
+			onClose:function(){
+				destoryWindow();
+			}
+		});	
+	}
+	//设定定时器块位置
+	function configTimeBox(trnum,tdnum) {
+		var startn = (trnum - 1) * 2,
+			endn = ((trnum - 1) * 2 + 8);
+		var	topn = startn>16?275:((trnum - 1) * 27 + 50),
+			leftn = ((tdnum - 1) * 91 + 89);
+		if(endn > 24) endn = 24;
+		if(tdnum >= 4) {
+			$(".config-times-box").removeClass("leftarrow").removeClass("rightarrow").addClass("rightarrow");
+		} else {
+			$(".config-times-box").removeClass("leftarrow").removeClass("rightarrow").addClass("leftarrow");
+		}
+		$(".data-times-box").css({
+			"top": topn + "px",
+			"left": leftn + "px"
+		});
+		$("#starthour").val(startn + ":00");
+		$("#endhour").val(endn + ":00");
+		$("#hourstxt").html("").html(startn + ":00 - " + endn + ":00");
+		$(".data-times-box").show();
+		//点击确认，保存定时器
+		$('.timer-ascertain').click(function(){
+			toAddTimes();
+		})
+	}
+	
+    /*弹出定时器详情(周末定时器)窗口*/
+	var openSeeTimes = function(flag){
+		if(isOpen('.win-see-times-network')){
+			return false;
+		};
+		$('<div class="win-see-times-network"/>').appendTo(container);
+		$('.win-see-times-network').window({
+			width:650,
+			height:546,
+			title:'定时器详情(周末定时器)',
+			href:'network/see-times.html',
+			headerCls:'sm-header',
+			collapsible:false,
+			minimizable:false,
+			maximizable:false,
+			resizable:false,
+			modal:true,
+			loadingMessage:'',
+			onLoad:function(){
+				var self = this;
+				//取消窗口
+				$(this).find('.btn-conserve').click(function(){
+					$(self).window('close');
+				});
+			},
+			onClose:function(){
+				destoryWindow();
+			}
+		});	
+	}
+
+	/*创建定时访问窗口*/
+	var openCreateTimes = function(flag){
+		if(isOpen('.win-create-times-network')){
+			return false;
+		};
+		$('<div class="win-create-times-network"/>').appendTo(container);
+		$('.win-create-times-network').window({
+			width:650,
+			height:546,
+			title:'定时访问策略',
+			href:'network/create-times.html',
+			headerCls:'sm-header',
+			collapsible:false,
+			minimizable:false,
+			maximizable:false,
+			resizable:false,
+			modal:true,
+			loadingMessage:'',
+			onLoad:function(){
+				var self = this;	
+				//加载用户combotree
+				loadUserCombotree();
+				//加载MAC
+				loadClientSelect();	
+				//加载定时器列表
+				loadTimesList();
+				//查看定时器详情
+				$('#btn-see-times').click(function(){
+						openSeeTimes();
+				});
+				//添加定时器
+				$('#btn-add-times').click(function(){
+						openAddTimes();
+				});
+				//保存访问策略
+				$(".btn-sava").click(function(){
+					savaTimeacls();
+				});
+				//保存&应用访问策略
+				$(".network-times-footer .btn-conserve").click(function(){
+					//var site = getSite();
+					//请求路径
+					//var url = _IFA['network_get_component_timeacls']+'?org_ids='+site.id;
+					
+					savaTimeacls();
+					//获取左侧节点id
+					var node = $(tree).tree('getSelected');
+					getSsidDetail(node,function(data){
+						console.log(data)
+						
+						var timeacl_profile_ids = [];
+						//timeacl_profile_ids.push(data.timeacl_profile_ids);
+						timeacl_profile_ids.push(node.id);
+						var datt = JSON.stringify({
+							'timeacl_profile_ids':timeacl_profile_ids
+						});
+						console.log(datt)
+						//绑定时间控制策略
+						var url = _IFA['network_bind_time_ssids_id']+node.id+'/timeacls/bind';
+						_ajax(url,'POST',datt,function(data){
+							console.log(data)
+						})
+					})
+					
+				});
+				//取消窗口
+				$(this).find('.btn-cancel').click(function(){
+					//$(self).window('close');
+					destoryWindow();
+				});
+
+			},
+			onClose:function(){
+				destoryWindow();
+				//$('.win-create-times-network').window('destory');
+			}
+		});	
+	}
+	/*编辑定时访问窗口*/
+	var openModTimes = function(){
+		var checked = $(table).datagrid('getChecked');
+		if(isOpen('.win-mod-times-network')){
+			return false;
+		};
+		$('<div class="win-mod-times-network"/>').appendTo(container);
+		$('.win-mod-times-network').window({
+			width:650,
+			height:546,
+			title:'定时访问策略',
+			href:'network/mod-times.html',
+			headerCls:'sm-header',
+			collapsible:false,
+			minimizable:false,
+			maximizable:false,
+			resizable:false,
+			modal:true,
+			loadingMessage:'',
+			onLoad:function(){
+				var self = this;	
+				//加载用户combotree
+				loadUserCombotree();
+				//加载MAC
+				loadClientSelect();				
+				//加载定时器列表
+				loadTimesList();
+				//查看定时器详情
+				$('#btn-see-times').click(function(){
+					openSeeTimes();
+				});
+				//添加定时器
+				$('#btn-add-times').click(function(){
+					openAddTimes();
+				});
+				//保存（编辑页面）访问策略
+				$(".btn-sava").click(function(){
+					//savaTimeacls();
+					updateTimeacls(network_timing_selected_id);
+					
+				});
+				//取消窗口
+				$(this).find('.btn-cancel').click(function(){
+					//$(self).window('close');
+					destoryWindow();
+				});
+
+			},
+			onClose:function(){
+				destoryWindow();
+			}
+		});	
+	}
+	/*编辑更新保存定时访问策略*/
+	var updateTimeacls = function(id){
+		var client_ids = $("#msClients");
+	    var profile_name = $("#create-times-network").find('input[name="profile_name"]');
+	    		//验证空值  	
+	    		if(!profile_name.val()){
+	    			flag = false;
+	    			toast('提示信息','定时访问名称为必填项！','warning');
+	    			profile_name.focus();
+	    			return ;
+	    		}
+	    	    var profilelen = getByteLen(profile_name.val());
+	    		if(profilelen<1||profilelen>64){
+	    			flag = false;
+	    			toast('提示信息','定时访问名称为1-64个字符！','warning');
+	    			profile_name.focus();
+	    			return ;
+	    		}
+	    			//验证MAC地址
+	    		if(!client_ids.val()){
+	    				flag = false;
+	    				toast('提示信息','终端MAC地址为必填项！','error');
+	    				return flag;
+	    		}
+		
+			var selected = $(userTree).tree('getSelected');//????? 取不到
+			var time_profile_id = $('#select-times option:selected').val();
+			
+			var timeaclsData = JSON.stringify({
+				'org_id':getSite().id,
+				'profile_name':profile_name.val(),
+				'time_profile_id':time_profile_id,
+				'client_profile_ids':client_ids.val(),	
+				'user_group_ids':SSID.white_list_user_group_ids
+			});
+
+			var type = 'PUT';
+			var url = _IFA['network_update_component_timeacls']+id;//"/config/component/timeacls";
+			_ajax(url,type,timeaclsData,function(data){
+				if(data.error_code==0){
+					toast('提示消息','操作成功','success');
+					$('.win-mod-times-network').window('close');
+					$(table).empty();
+					//刷新数据表格
+					loadTable();
+				}else{
+					toast('提示消息',data.error_message,'error');
+				}
+			});
+		
+	}
+	
+	/*保存定时访问策略*/
+	var savaTimeacls = function(){
+		var client_ids = $("#msClients");
+	    var profile_name = $("#create-times-network").find('input[name="profile_name"]');
+	    		//验证空值  	
+	    		if(!profile_name.val()){
+	    			flag = false;
+	    			toast('提示信息','定时访问名称为必填项！','warning');
+	    			profile_name.focus();
+	    			return ;
+	    		}
+	    	    var profilelen = getByteLen(profile_name.val());
+	    		if(profilelen<1||profilelen>64){
+	    			flag = false;
+	    			toast('提示信息','定时访问名称为1-64个字符！','warning');
+	    			profile_name.focus();
+	    			return ;
+	    		}
+	    			//验证MAC地址
+	    		if(!client_ids.val()){
+	    				flag = false;
+	    				toast('提示信息','终端MAC地址为必填项！','error');
+	    				return flag;
+	    		}
+		
+			var selected = $(userTree).tree('getSelected');//????? 取不到
+			var time_profile_id = $('#select-times option:selected').val();
+			var timeaclsData = JSON.stringify({
+				'org_id':getSite().id,
+				'profile_name':profile_name.val(),
+				'time_profile_id':time_profile_id,
+				'client_profile_ids':client_ids.val(),	
+				'user_group_ids':SSID.white_list_user_group_ids
+			});
+			console.log(timeaclsData);
+
+			var type = 'POST';
+			var url = _IFA['network_create_component_timeacls'];//"/config/component/timeacls";
+			_ajax(url,type,timeaclsData,function(data){
+				if(data.error_code==0){
+					toast('提示消息','操作成功','success');
+					$('.win-create-times-network').window('close');
+					$(table).empty();
+					//刷新数据表格
+					loadTable();
+				}else{
+					toast('提示消息',data.error_message,'error');
+				}
+			});
+		
+	}
+	
+	/*添加定时器*/
+	var toAddTimes = function() {
+	    var profile_name = $("#add-times-network").find('input[name="times-profile_name"]');
+	    		//验证空值  	
+	    		if(!profile_name.val()){
+	    			flag = false;
+	    			toast('提示信息','定时访问名称为必填项！','warning');
+	    			profile_name.focus();
+	    			return ;
+	    		}
+	    	    var profilelen = getByteLen(profile_name.val());
+	    		if(profilelen<1||profilelen>64){
+	    			flag = false;
+	    			toast('提示信息','定时访问名称为1-64个字符！','warning');
+	    			profile_name.focus();
+	    			return ;
+	    		}	
+	    	var times = [{
+			'day':1,//day,week,1,-7
+			'start':0,
+			'stop':120
+		}]
+		var timesData = JSON.stringify({
+				'org_id':getSite().id,
+				'profile_name':profile_name.val(),
+				'items':times
+			});
+		
+		var savaData = JSON.stringify(timesData);
+		var type = 'POST';
+		var url = _IFA['network_create_component_times'];
+		_ajax(url, type, timesData, function(data) {
+			if(data.error_code == 0) {
+				toast('提示消息', '操作成功', 'success');
+			} else {
+				toast('提示消息', data.error_message, 'error');
+			}
+		});
+	}
+	
+
+
+	/*获取访问时间控制策略列表*/
+	var getTimeacls = function(options,callback){
+		var url = _IFA['network_get_component_timeacls'];
+		var type = 'GET';
+		var data = '';
+		var args = '?org_ids='+getSite().id;
+		if(serializeJson(options)){
+			args += '&'+serializeJson(options);	
+		}
+		url = url + args
+		console.log(url);
+		_ajax(url,type,data,callback);
+	};
+	
+
+	/*字符长度*/
+	function getByteLen(val) {
+		var len = 0;
+		for(var i = 0; i < val.length; i++) {
+			var a = val.charAt(i);
+			if(a.match(/[^\x00-\xff]/ig) != null) {
+				len += 2;
+			} else {
+				len += 1;
+			}
+		}
+		return len;
+	}
+
+    /*加载表格数据*/
+	var loadTable = function(options){
+		getTimeacls(options,function(data){
+			if(data.error_code==0){
+				$(table).datagrid({
+					data:data.list,
+					columns:columns,
+					fit:true,
+					fitColumns:true,
+					scrollbarSize:0,
+					resizable:false,
+					striped:false,
+					onBeforeLoad:function(param){
+						
+					},
+					onLoadSuccess:function(){
+						if(options==undefined){
+							options = {};
+						}
+						options.total = data.total;
+						if(data.total==0){
+							insertNodata(table);
+						}else{
+							$('.win-times .nodata').removeClass();
+							$('.win-times footer').removeClass('none');
+							$(table).datagrid('getPanel').find('.datagrid-header input').removeAttr('disabled');
+						}
+					},
+					onSortColumn:function(sort, order){
+					},
+					onSelect:function(rowIndex,rowData){
+						//选中的一行数据
+						timer_access_selected_rowData = rowData;
+						network_timing_selected_id = rowData.id;
+						$(this).datagrid({
+							 rowStyler:function(index,row){
+							 	if(row.id == network_timing_selected_id){
+							 		return 'background : #0086E5';
+							 	}
+							 }
+						})
+					}
+				});
+			}
+		});
+	};
+	
+	/*定义表结构*/
+	var columns = [[
+        {field:'connected',title:'状态',width:80,sortable:false,align:'center',formatter:function (value,row,index) {
+        }},	
+
+        {field:'profile_name ',title:'策略名称',width:120,sortable:false,align:'center',formatter:function(value,row,index){
+        	return row.profile_name;
+        }},
+
+        {field:'user_group_ids ',title:'受限终端/用户',sortable:false,align:'center',formatter:function(value,row,index){
+        }},
+
+        {field:'time_profile_name',title:'定时器',sortable:false,align:'center',formatter:function(value,row,index){
+        	var data = getCache('btn-mod-times',data);
+        	var id = $('#select-times option').val();
+        	return row.time_profile_id;
+        }},
+
+    ]]; 
+
+/*定时访问禁用*/
+	var btnEnableTimerAccess = function(){
+		$('.win-times-nav .btn-delete-network').click(function(){
+			var node = $(tree).tree('getSelected');
+			getSsidDetail(node,function(data){
+				console.log(data)
+			})
+			//差一步，获取选中的数据，判断它的状态是否为启动，只有启动时，才可以禁用
+			var timeacl_profile_ids = [];
+			if(timer_access_selected_rowData == undefined || timer_access_selected_rowData == ''){
+				toast('提示消息', '请选择要禁用的数据', 'error');
+				return;
+			};
+			
+			var url = _IFA['network_unbind_ forbidden_time_ssids']+timer_access_selected_rowData.id+'/timeacls/unbind';
+			var type = 'POST';
+			_ajax(url,type,timeacl_profile_ids,function(data){
+				console.log(data);
+			})
+			
+			
+		});
+	}
+	
+
+
+	/*插入空信息*/
+	var insertNodata =  function(table){
+		$(table).datagrid('getPanel').find('.datagrid-body').append($('<div class="nodata"><img src="public/images/nodata.png" /><div>没有可以显示的数据</div></div>'));
+		var height = $('.win-times .times-table-detail').height();
+		$('.win-times .nodata').css({
+			'height':height-50+'px',
+			'line-height':height-50+'px'
+		});
+		$(table).datagrid('getPanel').find('.datagrid-header input').attr('disabled','disabled');
+		$('.win-times footer').addClass('none');
+	};	
+	
+	/*监听面板调整*/
+	var listPanel = function(){
+		//调整左侧树的滚动条
+		var center = $('#app-network-layout').layout('panel','center');
+		$(center).panel({
+			onResize:function(width,height){
+				var h = height-225;
+				//控制表格
+				$('.times-table-detail').css({
+					height:h+'px',
+					'overflow-y':'auto',
+					'overflow-x':'none'
+				});
+			}
+		});
+	}
 	/*绑定事件*/
 	var bindEven = function(){
 		
@@ -2911,8 +3989,16 @@ define(['echarts','functions'],function(echarts,_f){
 		//切换总览摘要
 		swichTraffic();
 		
+		//绑定图表加载事件
+		bindEchartEven();
+		
+		/*监听面板调整*/
+		listPanel();
+		
 		//去掉加载条
 		MaskUtil.unmask();
+		
+		
 	}
 	
     

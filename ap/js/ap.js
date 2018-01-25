@@ -1001,7 +1001,6 @@ define(['jquery','functions'],function($,_f){
 			resizable:false,
 			modal:true,
 			onOpen:function(){
-				/*alert(22)*/
 				clearForm('.update-ap-group #create-ap-group-form');
 				/*获取数据*/
 				
@@ -1327,6 +1326,9 @@ define(['jquery','functions'],function($,_f){
 				closeCreatAp();
 				//保存
 				createApMac();
+				//失焦验证
+				blurMac_address();
+				
 			},
 			onClose:function(){
 				$(this).window('destroy');
@@ -1381,18 +1383,22 @@ define(['jquery','functions'],function($,_f){
 	    		}
 		    
 			$('.ap-add-batch-equipment .batch-delete').click(function(index){
-			    	if($('.ap-add-batch-equipment .user-list .batch-inputBox').length>1){
+				
+			    	if($('.ap-add-batch-equipment .user-list .batch-inputBox').length>=1){
 			    		$(this).parent('.ap-add-batch-equipment .batch-inputBox').remove();
 			    	}else{
 			    		toast('提示消息','至少存在一条记录','warning');
 			    		return false;
 			    	};
 		    });
+		   blurMac_address();
+		    
 		});
 	};
-	/*触发批量新增用户事件*/
+	/*触发批量新增mac事件*/
 	var btnBatchAddUser = $('.ap-add-batch-equipment .batch-add').click(function(){
 		addapInfo('.ap-add-batch-equipment .user-list');
+		
 	});
 	/*mac地址输入格式*/
 	var onKeydownMac = $(document).on('keydown','.ap-add-batch-equipment .mac_address',function(){
@@ -1401,10 +1407,35 @@ define(['jquery','functions'],function($,_f){
 	});
 	/*mac地址输入格式转换*/
 	var convertMac = $(document).on('blur','.ap-add-batch-equipment .mac_address',function(){
-		console.log($(this));
+//		console.log($(this));
 		var ss= convetMac($(this).val());
 		$(this).val(ss);
 	});
+	
+	/*mac地址失焦验证*/ 
+	var blurMac_address = function(){
+		 $('.ap-add-batch-equipment .batch-inputBox .mac_address').blur(function(index){
+		    		 	if($('.ap-add-batch-equipment .user-list .batch-inputBox').length>=1){
+				    		var mac_address = $(this);
+				    		console.log(mac_address.val())
+				    		//验证空值  	
+				    		if(mac_address.val()==''){
+				    			flag = false;
+				    			toast('提示信息','mac地址为必填项！','warning');
+				    			mac_address.focus();
+				    		}else if(mac_address.val()!=''){//验证MAC地址
+				    			if(!isMac(mac_address.val())){
+				    				flag = false;
+				    				toast('提示信息','mac地址格式错误！','error');
+				    				return flag;
+				    			};
+				    		}
+				    	}else{
+				    		toast('提示消息','至少存在一条记录','warning');
+				    		return false;
+				    	};
+		    });
+	};
 	/*添加无线接入点-----保存*/
 	var createApMac = function(){
 		$('.ap-add-batch-equipment .but-conserve').click(function(){
@@ -1415,19 +1446,34 @@ define(['jquery','functions'],function($,_f){
 			if(result.list.length ==1){
 				if(!result.list[0].mac){
 					toast('提示消息','请填写mac地址','warning');
-					return
-				}
-			}else{
-				if(!isMac(result.list[length-1].mac)){
+					return;
+				};
+				if(!isMac(result.list[0].mac)){
 					toast('提示消息','请填写正确mac地址','warning');
-					return
-				}else{
-					if(!result.list[length-1].mac){
-						toast('提示消息','请填写mac地址','warning');
-						return
-					}
-				}
-			}
+					return;
+				};
+			}else{
+				for(var i = 0; i< result.list.length;i++){
+					if(!isMac(result.list[i].mac)){
+						toast('提示消息','请填写正确mac地址','warning');
+						return;
+					};
+				};
+			};
+//			if(!isMac(result.list[length-1].mac)){
+//					toast('提示消息','请填写正确mac地址','warning');
+//					return;
+//				}
+//			else{
+//				
+//				else{
+//					if(!result.list[length-1].mac){
+//						toast('提示消息','请填写mac地址','warning');
+//						return
+//					}
+//				}
+//			}
+			
 			var row = $(tree).tree('getSelected');
 			if(!row){
 				row = {};
@@ -1513,13 +1559,16 @@ define(['jquery','functions'],function($,_f){
 	 var btnApNotice = $('.ap-region-center .btn-notice-ap').click(function(){
 	 	//获取选中的记录
 	 	var row = $(tree).tree('getSelected');
+	 	console.log(row)
 		var checked = getChecked();
-		//点击切换状态
-	 	console.log(checked)
-	 	//重启切换状态
-	 	$.each(checked, function(index,data) {
-	 		
-	 	});
+		var site = getSite();
+		console.log(site)
+		console.log(checked)
+		if(!row){
+			row = {};
+			row.id = site.id;	
+		}
+	 	
 	 	//判断是多条还是单条
 		if(checked.length==0){
 			toast('提示消息','请选择要重启的设备','warning');
@@ -1537,18 +1586,28 @@ define(['jquery','functions'],function($,_f){
 			});
 			data = JSON.stringify({'ids':ids});
 		}
-		_confirm('提示信息', '您确认要重启么?', function(r){
+		
+			_confirm('提示信息', '您确认要重启么?', function(r){
 			if (r){
 				_ajax(url,type,data,function(data){
+					//重启切换状态
+				 	$.each(checked, function(index,data) {
+				 		$('.cell-checked').parent('td').next().find('span').removeClass().addClass('interrupt-status');
+				 	});
 					if(data.error_code==0){
 						toast('提示消息','操作成功','success');
-						refresh();
+						setTimeout(function(){
+							refresh();
+						},1000)
 					}else{
 						toast('提示消息',data.error_message,'error');
 					}
+					
 				});
 			}
-		});
+			});
+		
+		
 	 });
 	 
 	/*AP迁移功能*/
@@ -1707,9 +1766,28 @@ define(['jquery','functions'],function($,_f){
 					$('#ap-tabs').tabs({
 						onSelect:function(title,index){
 							switch(index){
+								case 0:{
+									
+								}
 								case 1:{
-									//flow();
-									//临时chartOne();
+									flow();
+									//获取终端图表默认数据
+									getClient();
+									
+									break;
+								}
+								case 2:{
+									channel()
+									
+									
+									
+									break;
+								}
+								case 3:{
+									
+									break;
+								}
+								case 4:{
 									getLog('',function(data){
 										var opt = {
 											page_size:defPageSize,
@@ -1717,20 +1795,6 @@ define(['jquery','functions'],function($,_f){
 										}
 										loadDetailTable(opt);
 									})
-									break;
-								}
-								case 2:{
-									channel()
-									
-									
-									//chartTwo();
-									break;
-								}
-								case 3:{
-									break;
-								}
-								case 4:{
-									
 									break;
 								}
 								
@@ -1800,7 +1864,9 @@ define(['jquery','functions'],function($,_f){
 					leftClick();
 					//获取流量图表默认数据
 					flow();
-					//
+					//获取终端图表默认数据
+					getClient();
+					//获取射频默认数据
 					channel();
 	            };
 	
@@ -1960,6 +2026,10 @@ define(['jquery','functions'],function($,_f){
 			};
 		});
 	};
+	/*刷新当前页*/
+	var refresh_tree = function(cls){
+		$(cls).trigger('click');
+	}
 	//设备保存
 	var saveEquipment = function(){
 		$('#ap-tabs .equipment-compile').click(function(){
@@ -2039,6 +2109,8 @@ define(['jquery','functions'],function($,_f){
 				if(data.error_code==0){
 					toast('提示消息','操作成功','success');
 					loadTree();
+					$('.list-select .li-left-mac').text(name);
+					refresh_tree('.list-select');
 				}else{
 					toast('提示消息',data.error_message,'error');
 				}
@@ -2272,7 +2344,7 @@ define(['jquery','functions'],function($,_f){
 	var leftClick = function(){
 		$('.win-ap-particulars .group-list-particulars li').click(function(){
 			$(this).addClass('list-select').siblings().removeClass('list-select');
-			getList();
+			
 			//设备清空数据
 		
 			console.log($('#ap-tabs .equipment-box .left-equipment>div>span:nth-child(2)').text())
@@ -2288,7 +2360,20 @@ define(['jquery','functions'],function($,_f){
 			//获取日志记录
 			var tab = $('#ap-tabs').tabs('getSelected');
 			var index = $('#ap-tabs').tabs('getTabIndex',tab);
-			if(index==1){
+			//关闭保存
+			$('#ap-tabs .frequency-compile').hide();
+			$('#ap-tabs .frequency-icon').show();
+			$('#ap-tabs .ap-show').show();
+			$('#ap-tabs .ap-hide').hide();
+			
+			$('#ap-tabs .equipment-box').show();
+			$('#ap-tabs .equipment-box-none').hide();
+			$('#ap-tabs .equipment-compile').hide();
+			$('#ap-tabs .equipment-icon').show();
+			
+			
+			if(index==3){
+				
 				getLog('',function(data){
 					var opt = {
 						page_size:defPageSize,
@@ -2297,10 +2382,16 @@ define(['jquery','functions'],function($,_f){
 					loadDetailTable(opt);
 				});
 			}
+			getList();
 			//获取流量数据
 			flow();
-//			//渲染流量
-//			chartOne();
+			//获取终端图表默认数据
+			getClient();
+			//获取射频流量数据
+			channel();
+			//信道分析
+//			analyze()
+			//chartOne();
 		});
 	}
 	//获取右侧列表数据
@@ -2341,9 +2432,84 @@ define(['jquery','functions'],function($,_f){
 					//产品型号
 					$('.ap-version-label').text(data.product_name);
 					//cpu
-					$('.ap-cpu-label').text(data.cpu_load);
+					$('.ap-cpu-label').progressbar({
+						    onChange: function(value){
+								if(data.cpu_load>0 && data.cpu_load<90){
+									$('.progressbar-value .progressbar-text').css({
+											'background':'green'
+									})
+								}else if(data.cpu_load>90 && data.cpu_load<95){
+									$('.progressbar-value .progressbar-text').css({
+											'background':'yellow'
+									})
+								}else if(data.cpu_load >95 && data.cpu_load <=100){
+									$('.progressbar-value .progressbar-text').css({
+											'background':'red'
+									})
+								}
+							}
+						});
+//					setInterval(function(){console.log(data.cpu_load);
+//						console.log($('.ap-cpu-label'));
+//						
+						//设置进度址
+						if(data.cpu_load>0 && data.cpu_load<90){
+							$('.progressbar-value .progressbar-text').css({
+									'background':'green'
+							})
+						}else if(data.cpu_load>90 && data.cpu_load<95){
+							$('.progressbar-value .progressbar-text').css({
+									'background':'yellow'
+							})
+						}else if(data.cpu_load >95 && data.cpu_load <=100){
+							$('.progressbar-value .progressbar-text').css({
+									'background':'red'
+							})
+						}
+						var value = $('.ap-cpu-label').progressbar('getValue');
+						$('.ap-cpu-label').progressbar('setValue',data.cpu_load);
+//					},500);
+//					$('.ap-cpu-label').progressbar('setValue',data.cpu_load);
+					
+					
+					
+					
 					//内存
-					$('.ap-internal-label').text(data.mem_load);
+					$('.ap-internal-label').progressbar({
+					    onChange: function(value){
+							if(data.mem_load>0 && data.mem_load<90){
+								$('.progressbar-value .progressbar-text').css({
+										'background':'green'
+								})
+							}else if(data.mem_load>90 && data.mem_load<95){
+								$('.progressbar-value .progressbar-text').css({
+										'background':'yellow'
+								})
+							}else if(data.mem_load >95 && data.mem_load <=100){
+								$('.progressbar-value .progressbar-text').css({
+										'background':'red'
+								})
+							}
+						}
+					});
+					if(data.mem_load>0 && data.mem_load<90){
+						$('.progressbar-value .progressbar-text').css({
+								'background':'green'
+						})
+					}else if(data.mem_load>90 && data.mem_load<95){
+						$('.progressbar-value .progressbar-text').css({
+								'background':'yellow'
+						})
+					}else if(data.mem_load >95 && data.mem_load <=100){
+						$('.progressbar-value .progressbar-text').css({
+								'background':'red'
+						})
+					}
+					$('.ap-internal-label').progressbar('setValue',data.mem_load);
+					
+					
+					
+					
 					//设置缓存
 					setCache('#ap-tabs .equipment','ip',data.ipv4);//ipv4
 					setCache('#ap-tabs .equipment','netmask',data.netmask);//掩码
@@ -2412,59 +2578,276 @@ define(['jquery','functions'],function($,_f){
 	};
 	//信道分析--扫描按钮
 	var analyze = function(){
+		
 		$('#ap-tabs .analyze').click(function(){
-			$('#ap-tabs .result-analyze').show();
 			
 			var _id = $('.list-select').attr('a');
 			var url = _IFA['ap_get_channel_analyse_result']+_id+'/channel/analyse';
 			console.log(url);
-			_ajax(url,'POST','',function(data){
+			_ajax(url,'GET','',function(data){
+			
 				if(data.error_code == 0){
-					console.log(data)
+					
+					//判断是否返回data值
+					if(data != '' && data!= undefined){
+						
+						//保存按钮显示
+						$('.conserve-analyze').show();
+						//信道内容显示
+						$('.analyze-div').show();	
+						//给默认节点添加下划线
+						$('#ap-tabs  .analyze-list').find('li').first().addClass('li-select');
+						//交互切换
+						tabAnalyze(data);
+						//数据渲染
+						applyAnalyze(data);
+					}else{
+						
+						//没有返回值显示信道关闭，且提示用户
+						$('.result-analyze').show();
+					}
 				}
 			})
 		})
 	}
+	//信道分析--2.4g，5g交互
+	var tabAnalyze = function(data){
+		$('#ap-tabs  .analyze-list li').click(function(){
+			$(this).addClass('li-select').siblings().removeClass('li-select');
+			console.log($('.li-select').text())
+			applyAnalyze(data)
+		})
+	}
+	//信道分析---渲染
+	var applyAnalyze = function(data){
+		console.log(data)
+		
+		if($('.li-select').hasClass('analyze-24g')){
+				//控制2.4G显示内容
+				$('.analyze-24g-box').show();
+				$('.analyze-5g-box').hide();
+				$('.analyze-24g-list li').not('.first-li').remove();
+//				var a = []
+				$.each(data.list, function(index,node) {
+					console.log(node)
+					if(node.channel <= 13){
+						var line = $('<li class="'+index+'">'
+								+'<span class="radio_24g">'+'<input type ="radio"/>'+'</span>'
+								+'<span class="channel_24g">'+node.channel+'</span>'
+								+'<span class="number_24g">'+node.ssid_number+'</span>'
+								+'<span class="level_24g" a="'+node.level+'">'+'</span>'
+								+'<span class="level_24g_img">'+'</span>'
+							+'</li>').appendTo($('.analyze-24g-list'));
+
+					    line.find('.level_24g').raty({
+							number: 10,//多少个星星设置
+							score: node.level,//初始值是设置
+							targetType: 'number',//类型选择，number是数字值，hint，是设置的数组值
+					        path      : './ap/images/',
+					        size      : 26,
+					        starOff   : 'star-off-big.png',
+					        starOn    : 'star-on-big.png',
+					        target    : '.analyze-24g-list .level_24g_img',
+					        cancel    : false,
+					        readOnly: true,
+					        precision : false,//是否包含小数
+						});
+					}
+				});
+			}else{
+				//控制5G显示内容
+				$('.analyze-24g-box').hide();
+				$('.analyze-5g-box').show();
+				$('.analyze-5g-list li').not('.first-li').remove();
+				$.each(data.list, function(index,node) {
+					if(node.channel > 13){
+						$('.analyze-5g-list').append(
+							
+						)
+						var line = $('<li>'
+								+'<span class="radio_5g">'+'<input type ="radio"/>'+'</span>'
+								+'<span class="channel_5g">'+node.channel+'</span>'
+								+'<span class="number_5g">'+node.ssid_number+'</span>'
+								+'<span class="level_5g">'+'</span>'
+								+'<span class="level_5g_img">'+'</span>'
+							+'</li>').appendTo($('.analyze-5g-list'));
+						line.find('.level_5g').raty({ 
+							number: 10,//多少个星星设置
+							score: node.level,//初始值是设置
+							targetType: 'number',//类型选择，number是数字值，hint，是设置的数组值
+					        path      : './ap/images/',
+					        size      : 26,
+					        starOff   : 'star-off-big.png',
+					        starOn    : 'star-on-big.png',
+					        target    : '.analyze-5g-list .level_5g_img',
+					        cancel    : false,
+					        readOnly: true,
+					        precision : false,//是否包含小数
+						});
+					}
+				});
+				
+			}
+	}
+	
 	//左侧树刷新
 	var refreshLoad = function(){
 		$('.refresh-icon').click(function(){
-			
+			$('.group-list-particulars').empty();
+			ajaxTree();
 		})
 	}
 	//获取流量数据
 	var flow = function(){
 		var timestamp1 = (new Date()).valueOf()-86400000;//获取前一天的时间戳
-		console.log(timestamp1);
+		
 		var _id = $('.list-select').attr('a');//获取id
 		if(_id == undefined){
 			_id = $('.group-list-particulars').find('li').first().attr('a');
 		};
-		console.log(_id);
+		
 		var url = _IFA['ap_get_device_ﬂow_stat']+_id+'/flow'+'?begin_time='+timestamp1;
-		console.log(url);
+		
 		_ajax(url,'GET','',function(data){
 			if(data.error_code == 0){
-				//临时chartOne(data);
+				chartOne(data);
 			}
 		});
 	}
+		/*
+   	 * 获取时间轴节点
+   	 * @data 当前时间数组-后端返回值
+   	 * @hour 设定时间间隔
+   	 * */
+  	var getXdate = function(data,hour){
+	  	var dataX = [];
+	  	var res = {};
+	  	res.tx = [];
+	  	res.rx = [];
+	  	res.total = [];
+	  	res.timestamp = [];
+	  	res.mark = [];
+	  
+	  	var time = new Date();
+	  	var mHour = 60*60*1000;
+	  	
+	  	//清空分秒
+	  	time.setMinutes(0);
+	  	time.setSeconds(0);
+	  	time.setMilliseconds(0);
+	  	
+	  	//获取时间戳
+	  	var timeStamp = time.getTime();
+	  	var dehour = hour*mHour;
+	  	
+	  	//前推hour小时
+	  	var x = parseInt(timeStamp)-parseInt(dehour);
+	  	time.setTime(x);
+	  	
+	  	timeStamp = time.getTime();
+	  	
+	  	for(var i=0;i<hour;i++){
+	  	  var tx = timeStamp+ i*mHour;
+		  dataX.push(tx);
+	  	}
+	  	var ks = {
+	  		id:0,
+	  	}
+	  	$.each(dataX,function(index,node){
+	  		var flag = false;
+	  		var result = '';
+	  		$.each(data,function(i,n){
+	  			if(node==n.timestamp){
+	  				flag = true;
+	  				result = n;
+	  				return false;
+	  			}
+	  		});
+	  		
+	  		if(flag==false){
+	  			res.tx.push(0);
+	  			res.rx.push(0);
+	  			res.total.push(0);
+	  			res.timestamp.push(0);
+	  			res.mark.push(setMark(index));
+	  		}else{
+	  			res.tx.push(result.tx);
+	  			res.rx.push(result.rx);
+	  			res.total.push(result.total);
+	  			res.timestamp.push(result.timestamp);
+	  			res.mark.push(setMark(index));
+	  		}
+	  	});
+	  	return res;
+  	}
+  	 /*获取MB*/
+   	var getMB = function(k){
+   		var mb = k/1024/1024;
+   		return mb.toFixed(2);
+   	}
+   	
+   
+   	/*
+     * 设置标记
+     */
+    var setMark = function(index){
+    	var result = '';
+    	var arr = [
+    		{id:0,mark:'Noon'},
+    		{id:3,mark:'3PM'},
+    		{id:6,mark:'6PM'},
+    		{id:9,mark:'9PM'},
+    		{id:12,mark:'Night'},
+    		{id:15,mark:'3AM'},
+    		{id:18,mark:'6AM'},
+    		{id:21,mark:'9AM'},
+    		{id:24,mark:'Noon'}
+    	];
+    	$.each(arr,function(id,data){
+    		if(data.id==index){
+    			result = data.mark;
+    			return false;
+    		}
+    	});
+    	return result;
+    }
 	//流量，终端图表显示
 	var chartOne = function(data){
+		
 		var myChartThree = echarts.init(document.getElementById('chart-three'));
-		var Total_data = [];
-		var Tx_data = [];
-		var Rx_data = [];
-		$(data.list).each(function(index,value){
-			Total_data.push(data.list[index].total_bytes/1024/1024);
-			Tx_data.push(data.list[index].tx_bytes/1024/1024);
-			Rx_data.push(data.list[index].rx_bytes/1024/1024);
-		});
-        var colors = ['#8ec6ad', '#d14a61', '#675bba'];
-
+		var colors = ['#8ec6ad', '#d14a61', '#675bba'];
+		var tx = [];
+        var rx = [];
+        var total = [];
+        var dataX = [];
+        var result = [];
+        
+        for(var i=0; i<25;i++) {
+        	if(i>data.list.length-1){
+        		tx=0;
+        		rx=0;
+        		total=0;
+        		timestamp=0;
+        	}else{
+        		var node = data.list[i];
+        		tx=getMB(node.tx_bytes);
+        		rx=getMB(node.rx_bytes);
+        		total=getMB(node.total_bytes);
+        		timestamp=node.timestamp;
+        	}
+        	dataX.push({
+        		'tx':tx,
+        		'rx':rx,
+        		'total':total,
+        		'timestamp':timestamp
+        	});
+        };
+        dataX  = getXdate(dataX,25);
+       
         optionThree = {
             title: {
-                text: '流量',
-                left: '5%'
+            	text:'流量',
+                left: '0%'
             },
             color: colors,
             tooltip: {
@@ -2472,11 +2855,13 @@ define(['jquery','functions'],function($,_f){
             },
             legend: {
                 data:['Total', 'Tx', 'Rx'],
-                right: "10%",
+                right: 12,
             },
             grid: {
-                top: 55,
+                top: 40,
                 bottom: 40,
+                width:630,
+                left:70
             },
             xAxis: [
                 {
@@ -2485,17 +2870,18 @@ define(['jquery','functions'],function($,_f){
                     axisTick:{
                         alignWithLabel: true,
                     },
-                    data: [ "Noon", "3PM", "6PM", "9PM", "Ninght", "3AM", "6AM", "9AM"]
+                    data: dataX.mark
                 }
             ],
             yAxis: [
                 {
                     type: 'value',
-                    name: '流量',
                     nameGap: 10,
                     axisLabel: {
-                        formatter: '{value} M'
-                    }
+                        formatter: function(value,index){
+                        	return value+'M';
+                        }
+                    },
                 }
             ],
             series: [
@@ -2514,7 +2900,7 @@ define(['jquery','functions'],function($,_f){
                         }
                     },
                     connectNulls: true,
-                    data: Total_data
+                    data: dataX.total
                 },
                 {
                     name:'Tx',
@@ -2522,7 +2908,7 @@ define(['jquery','functions'],function($,_f){
                     xAxisIndex: 0,
                     smooth: true,
                     symbol: 'none',
-                    data: Tx_data
+                    data: dataX.tx
                 },
                 {
                     name:'Rx',
@@ -2530,7 +2916,7 @@ define(['jquery','functions'],function($,_f){
                     xAxisIndex: 0,
                     smooth: true,
                     symbol: 'none',
-                    data: Rx_data
+                    data: dataX.rx
                 }
 
             ]
@@ -2539,15 +2925,61 @@ define(['jquery','functions'],function($,_f){
         setInterval(function () {
             myChartThree.setOption(optionThree, true);
         },500);
-
-        var myChartFour = echarts.init(document.getElementById('chart-four'));
-
+        
+	}
+	//获取终端图表数据
+	var getClient = function(){
+		var timestamp1 = (new Date()).valueOf()-86400000;//获取前一天的时间戳
+		
+		var _id = $('.list-select').attr('a');//获取id
+		if(_id == undefined){
+			_id = $('.group-list-particulars').find('li').first().attr('a');
+		};
+		
+		var url = _IFA['ap_get_device_ﬂow_stat']+_id+'/client'+'?begin_time='+timestamp1;
+		console.log(url);
+		_ajax(url,'GET','',function(data){
+			if(data.error_code == 0){
+				chartClient(data);
+			}
+		});
+	}
+	//渲染ap详情----终端图表
+	var chartClient = function(data){
+		console.log(data)
+		var myChartFour = echarts.init(document.getElementById('chart-four'));
         var colors = ['#8ec6ad', '#d14a61', '#675bba'];
-
+		var tx = [];
+        var rx = [];
+        var total = [];
+        var dataX = [];
+        var result = [];
+        for(var i=0; i<25;i++) {
+        	if(i>data.list.length-1){
+        		tx=0;
+        		rx=0;
+        		total=0;
+        		timestamp=0;
+        	}else{
+        		var node = data.list[i];
+        		tx=node.client_24g_count
+        		rx=node.client_5g_count
+        		total=node.client_count
+        		timestamp=node.timestamp;
+        	}
+        	dataX.push({
+        		'tx':tx,
+        		'rx':rx,
+        		'total':total,
+        		'timestamp':timestamp
+        	});
+        };
+        dataX  = getXdate(dataX,25);
+        console.log(dataX)
         optionFour = {
             title: {
                 text: '终端',
-                left: '5%'
+                left: '0%'
             },
             tooltip: {
                 trigger: 'axis',
@@ -2561,15 +2993,17 @@ define(['jquery','functions'],function($,_f){
             grid: {
                 top: 55,
                 bottom: 30,
+                width:630,
+                left:70
             },
             legend: {
-                data:['Total', 'Tx', 'Rx'],
-                right: "10%",
+                data:['2.4G', '5G', 'Total'],
+                right: 12,
             },
             xAxis: [
                 {
                     type: 'category',
-                    data: [ "Noon", "3PM", "6PM", "9PM", "Ninght", "3AM", "6AM", "9AM"],
+                    data: dataX.mark,
                     axisPointer: {
                         type: 'shadow'
                     },
@@ -2578,39 +3012,39 @@ define(['jquery','functions'],function($,_f){
             yAxis: [
                 {
                     type: 'value',
-                    name: '流量',
-                    min: 0,
-                    max: 250,
-                    interval: 50,
+//                  name: '流量',
+//                  min: 0,
+//                  max: 250,
+//                  interval: 50,
                     nameGap: 10,
                     axisLabel: {
-                        formatter: '{value} M'
+                        formatter: '{value} '
                     }
                 }
             ],
             series: [
                 {
+                    name:'5G',
+                    type:'bar',
+                    data:dataX.tx
+                },
+                {
+                    name:'2.4G',
+                    type:'bar',
+                    data:dataX.rx
+                },
+                {
                     name:'Total',
-                    type:'bar',
-                    data:[2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2]
-                },
-                {
-                    name:'Tx',
-                    type:'bar',
-                    data:[2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2]
-                },
-                {
-                    name:'Rx',
                     type:'line',
                     yAxisIndex: 0,
                     symbol: 'none',
-                    data:[6.0, 2.2, 3.3, 4.5, 6.3, 10.2, 20.3, 23.4]
+                    data:dataX.total
                 }
             ]
         };
-
+		myChartFour.setOption(optionFour, true);
         setInterval(function () {
-            myChartFour.setOption(optionFour, true);
+           
         },500);
 	}
 	//获取信道利用率数据
@@ -2625,32 +3059,137 @@ define(['jquery','functions'],function($,_f){
 			if(data.error_code == 0){
 				//chartOne(data);
 				console.log(data)
-				//临时chartTwo(data)
+				chartTwo(data)
 			};
 		});
 	};
+	/*获取射频流量信息*/
+   	var getDate = function(data,hour){
+	  	var dataX = [];
+	  	var res = {};
+	  	res.tx = [];
+	  	res.rx = [];
+	  	res.noise_5g = [];
+	  	res.noise_24g = [];
+	  	res.total = [];
+	  	res.timestamp = [];
+	  	res.mark = [];
+	  
+	  	var time = new Date();
+	  	var mHour = 60*60*1000;
+	  	
+	  	//清空分秒
+	  	time.setMinutes(0);
+	  	time.setSeconds(0);
+	  	time.setMilliseconds(0);
+	  	
+	  	//获取时间戳
+	  	var timeStamp = time.getTime();
+	  	var dehour = hour*mHour;
+	  	
+	  	//前推hour小时
+	  	var x = parseInt(timeStamp)-parseInt(dehour);
+	  	time.setTime(x);
+	  	
+	  	timeStamp = time.getTime();
+	  	
+	  	for(var i=0;i<hour;i++){
+	  	  var tx = timeStamp+ i*mHour;
+		  dataX.push(tx);
+	  	}
+	  	var ks = {
+	  		id:0,
+	  	}
+	  	$.each(dataX,function(index,node){
+	  		var flag = false;
+	  		var result = '';
+	  		$.each(data,function(i,n){
+	  			if(node==n.timestamp){
+	  				flag = true;
+	  				result = n;
+	  				return false;
+	  			}
+	  		});
+	  		
+	  		if(flag==false){
+	  			res.tx.push(0);
+	  			res.rx.push(0);
+	  			res.noise_24g.push(0);
+	  			res.noise_5g.push(0);
+	  			res.total.push(0);
+	  			res.timestamp.push(0);
+	  			res.mark.push(setMark(index));
+	  		}else{
+	  			res.tx.push(result.tx);
+	  			res.rx.push(result.rx);
+	  			res.noise_24g.push(result.noise_24g);
+	  			res.noise_5g.push(result.noise_5g);
+	  			res.total.push(result.total);
+	  			res.timestamp.push(result.timestamp);
+	  			res.mark.push(setMark(index));
+	  		}
+	  	});
+	  	return res;
+  	}
 	//射频图表显示
 	var chartTwo = function(data){
 		
 		var myChartFive = echarts.init(document.getElementById('chart-five'));
+		var tx = [];//2.4G信道
+        var rx = [];//5G信道
+       	var noise_5g = [];//5g声燥
+       	var noise_24g = [];//2.4G声燥
+        var total = [];
+        var dataX = [];
+        var result = [];
+        
+        for(var i=0; i<25;i++) {
+        	if(i>data.list.length-1){
+        		tx=0;
+        		rx=0;
+        		noise_5g = 0;
+        		noise_24g = 0;
+        		total=0;
+        		timestamp=0;
+        	}else{
+        		var node = data.list[i];
+        		tx=node.utilization_5g;
+        		rx=node.utilization_24g;
+        		noise_5g = (node.noise_5g)*-1;
+        		noise_24g = (node.noise_24g)*-1;
+//      		total=getMB(node.total_bytes);
+        		timestamp=node.timestamp;
+        	}
+        	dataX.push({
+        		'tx':tx,
+        		'rx':rx,
+        		'noise_5g':noise_5g,
+        		'noise_24g':noise_24g,
+//      		'total':total,
+        		'timestamp':timestamp
+        	});
+        };
+        dataX  = getDate(dataX,25);
+        console.log(dataX)
 		var Total_data = [];
-		var utilization_24g_data = [];//2.4G信道
-		var utilization_5g_data = [];//5G信道
-		var noise_5g_data = [];//5G声燥值
-		var noise_24g_data = [];//2.4G声燥值
-		$(data.list).each(function(index,value){
-			utilization_24g_data.push(data.list[index].utilization_24g);
-			utilization_5g_data.push(data.list[index].utilization_5g);
-			noise_24g_data.push(data.list[index].noise_24g*-1);
-			noise_5g_data.push(data.list[index].noise_5g*-1)
-		});
-		console.log(noise_24g_data)
-        var colors = ['#8ec6ad', '#d14a61', '#675bba'];
+//		var utilization_24g_data = [];//2.4G信道
+//		var utilization_5g_data = [];//5G信道
+//		var noise_5g_data = [];//5G声燥值
+//		var noise_24g_data = [];//2.4G声燥值
+//		$(data.list).each(function(index,value){
+//			utilization_24g_data.push(data.list[index].utilization_24g);
+//			utilization_5g_data.push(data.list[index].utilization_5g);
+//			noise_24g_data.push(data.list[index].noise_24g*-1);
+//			noise_5g_data.push(data.list[index].noise_5g*-1)
+//		});
+//		console.log(noise_24g_data)
+        var colors = ['#d14a61', '#675bba'];
+//      '#8ec6ad',
 		
         optionFive = {
             title: {
                 text: '信道利用率',
-                left: '5%'
+                left: '0%'
             },
             color: colors,
             tooltip: {
@@ -2658,11 +3197,13 @@ define(['jquery','functions'],function($,_f){
             },
             legend: {
                 data:['Total', '2.4G', '5G'],
-                right: "10%",
+                right: 12,
             },
             grid: {
-                top: 55,
+                top: 40,
                 bottom: 40,
+                width:630,
+                left:30
             },
             xAxis: [
                 {
@@ -2671,44 +3212,44 @@ define(['jquery','functions'],function($,_f){
                     axisTick:{
                         alignWithLabel: true,
                     },
-                    data: [ "Noon", "3PM", "6PM", "9PM", "Ninght", "3AM", "6AM", "9AM"]
+                    data: dataX.mark
                 }
             ],
             yAxis: [
                 {
                     type: 'value',
-                    name: '信道利用率',
-                    nameGap: 8,
+//                  name: '信道利用率',
+                    nameGap: 10,
                     axisLabel: {
                         formatter: '{value}'
                     }
                 }
             ],
             series: [
-                {
-                    name:'Total',
-                    type:'line',
-                    xAxisIndex: 0,
-                    smooth: true,
-                    symbol: 'none',
-                    areaStyle: {
-                        normal: {
-                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-                                offset: 1,
-                                color: '#8ec6ad'
-                            }])
-                        }
-                    },
-                    connectNulls: true,
-                    data: Total_data
-                },
+//              {
+//                  name:'Total',
+//                  type:'line',
+//                  xAxisIndex: 0,
+//                  smooth: true,
+//                  symbol: 'none',
+//                  areaStyle: {
+//                      normal: {
+//                          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+//                              offset: 1,
+//                              color: '#8ec6ad'
+//                          }])
+//                      }
+//                  },
+//                  connectNulls: true,
+//                  data: Total_data
+//              },
                 {
                     name:'2.4G',
                     type:'line',
                     xAxisIndex: 0,
                     smooth: true,
                     symbol: 'none',
-                    data: utilization_24g_data
+                    data: dataX.tx
                 },
                 {
                     name:'5G',
@@ -2716,7 +3257,7 @@ define(['jquery','functions'],function($,_f){
                     xAxisIndex: 0,
                     smooth: true,
                     symbol: 'none',
-                    data: utilization_5g_data
+                    data: dataX.rx
                 }
 
             ]
@@ -2733,7 +3274,7 @@ define(['jquery','functions'],function($,_f){
         optionSix = {
             title: {
                 text: '声燥值',
-                left: '5%'
+                left: '0%'
             },
             tooltip: {
                 trigger: 'axis',
@@ -2747,18 +3288,20 @@ define(['jquery','functions'],function($,_f){
             grid: {
                 top: 55,
                 bottom: 30,
+                width:600,
+                left:60
             },
             legend: {
                 data:['Total', '2.4G', '5G'],
-                right: "10%",
+                right: 12,
             },
             xAxis: [
                 {
                     type: 'category',
-                    data: [ "Noon",'1PM','2PM', "3PM",'4PM','5PM', "6PM",'7PM','8PM', "9PM", '10PM','11PM',"Ninght",'1AM','2AM', "3AM",'4AM','5AM', "6AM", "7AM", "8AM", "9AM", "10AM", "11AM"],
-                    axisPointer: {
-                        type: 'shadow'
-                    },
+                    data: dataX.mark
+//                  axisPointer: {
+//                      type: 'shadow'
+//                  },
                 }
             ],
             yAxis: [
@@ -2770,7 +3313,7 @@ define(['jquery','functions'],function($,_f){
 //                  interval: 50,
                     nameGap: 10,
                     axisLabel: {
-                        formatter: '{value} '
+                        formatter: '-{value}dBm '
                     }
                 }
             ],
@@ -2799,12 +3342,12 @@ define(['jquery','functions'],function($,_f){
                 {
                     name:'5G',
                     type:'bar',
-                    data:noise_5g_data
+                    data:dataX.noise_5g
                 },
                 {
                     name:'2.4G',
                     type:'bar',
-                    data:noise_24g_data
+                    data:dataX.noise_24g
                 },
                 {
                     name:'Total',
@@ -2842,6 +3385,7 @@ define(['jquery','functions'],function($,_f){
 			$('.ap-region-west .ap-div-right').hide();
 			$('.ap-left-more').show();
 			$('.btn-notice-ap').show();
+			loadTable();
 		})
 	}
 	

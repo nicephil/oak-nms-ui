@@ -16,6 +16,7 @@ require.config({
 		'jquery':'../public/js/jquery.min',
 		'zui':'../public/js/zui',
 		'echarts':'../public/js/echarts',
+		'multiple':'../network/js/multiple-select',
 		'network':'../network/js/network'
 	},
 	map:{
@@ -25,7 +26,7 @@ require.config({
 	}
 });
 
-require(['jquery','zui','echarts','network'],function($,zui,echarts,network){
+require(['jquery','zui','echarts','multiple','network'],function($,zui,echarts,multiple,network){
 	//入口程序
     network.run();
 });

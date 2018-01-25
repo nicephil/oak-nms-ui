@@ -14,7 +14,7 @@ var loaded = false;
 var iframeOpen = false;
 
 //设置桌面图标大小
-var iconSize = 62;
+var iconSize = 66;
 
 //app打开是否双击
 var dbClick = false;
@@ -147,8 +147,14 @@ _IFA['network_check_ssids'] = _HOST+'config/network/ssids/check/devices';
 //绑定时间控制策略 -POST  ID在中间做的时候处理下
 _IFA['network_bind_time_ssids'] = _HOST+'config/network/ssids/{id}/timeacls/bind';
 
+//绑定时间控制策略 -POST  {ID}后面的拼接	_HOST+'config/network/ssids/{id}/timeacls/bind';
+_IFA['network_bind_time_ssids_id'] = _HOST+'config/network/ssids/';
+
 //解绑时间控制策略-POST  ID在中间做的时候处理下
 _IFA['network_unbind_time_ssids'] = _HOST+'config/network/ssids/{id}/timeacls/unbind';
+
+//解绑时间控制策略-POST  定时访问禁用
+_IFA['network_unbind_ forbidden_time_ssids'] = _HOST+'config/network/ssids/'//{id}/timeacls/unbind;
 
 //获取portal配置列表-GET 
 _IFA['network_config_portal'] = _HOST+'config/portal/profiles';
@@ -253,6 +259,43 @@ _IFA['ap__get_event_log'] = _HOST+'logs/events';
 
 //日志详情导出
 _IFA['ap__export_log'] = _HOST+'logs/events/export';
+
+//获取在线终端列表
+_IFA['client__get_client_list'] = _HOST+'monitor/clients?org_ids=';
+//获取在线终端详情
+_IFA['client__get_client_info'] = _HOST+'monitor/clients/info';
+//创建终端地址簿
+_IFA['client__add_dz'] = _HOST+'config/clients/profiles';
+//添加终端到用户
+_IFA['client__add_client_user'] = _HOST+'config/clients/info';
+//添加终端访问控制
+_IFA['client__add_client_acl'] = _HOST+'config/clients/acl';
+//添加终端限速
+_IFA['client__add_client_ratelimit'] = _HOST+'config/clients/ratelimit';
+//在线终端注销
+_IFA['client__add_client_logout'] = _HOST+'monitor/clients/logout';
+//添加终端到地址簿
+_IFA['client__add_client_dz'] = _HOST+'config/clients/profiles';
+//获取终端地址簿列表
+_IFA['client__get_dz_list'] = _HOST+'config/clients/profiles';
+//更新终端地址簿列表
+_IFA['client__edit_dz'] = _HOST+'config/clients/profiles/';
+//删除终端地址簿列表
+_IFA['client__delete_dz'] = _HOST+'config/clients/profiles/';
+//获取终端访问控制概要
+_IFA['client__get_acl_summary'] = _HOST+'config/clients/acl/summary';
+//获取终端访问控制列表
+_IFA['client__get_acl_list'] = _HOST+'config/clients/acl?org_ids=';
+//获取地址簿终端列表
+_IFA['client__get_profiles_list'] = _HOST+'config/clients/profiles';
+//移除终端访问控制
+_IFA['client__get_acl_delete'] = _HOST+'config/clients/acl/delete';
+//移除地址簿终端
+_IFA['client__get_profiles_delete'] = _HOST+'config/clients/profiles';
+//配置终端信息
+_IFA['client__edit_client'] = _HOST+'config/clients/info';
+
+
 
 
 
